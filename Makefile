@@ -34,8 +34,8 @@
 # Default port
 PORT = 8080
 
-# Website directory
-WEBSITE_DIR = tsf-website-redesign
+# Website directory (. = current directory, since files are in repo root)
+WEBSITE_DIR = .
 
 # Chrome profile for development (change "Profile 3" to your profile)
 # Your profiles:
