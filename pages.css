@@ -1,0 +1,830 @@
+/* ============================================
+   THREE STARS FASHION - INNER PAGES STYLES
+   Updated for consistent beige/off-white theme
+   Section 508 compliant contrasts
+   ============================================ */
+
+/* ============================================
+   PAGE HERO
+   ============================================ */
+.page-hero {
+    position: relative;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-32) var(--container-padding) var(--space-16);
+    text-align: center;
+    overflow: hidden;
+    background-color: var(--color-background);
+}
+
+.page-hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.page-hero-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at 50% 30%, rgba(27, 42, 78, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(229, 34, 34, 0.05) 0%, transparent 40%);
+}
+
+.page-hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+}
+
+.page-label {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: var(--font-bold);
+    letter-spacing: 0.3em;
+    color: var(--color-accent);
+    margin-bottom: var(--space-6);
+}
+
+.page-title {
+    font-family: var(--font-heading);
+    font-size: clamp(var(--text-4xl), 7vw, var(--text-6xl));
+    font-weight: var(--font-semibold);
+    line-height: 1.1;
+    color: var(--color-navy);
+}
+
+.page-title .light {
+    font-weight: var(--font-light);
+}
+
+.page-title .bold {
+    font-weight: var(--font-bold);
+}
+
+/* ============================================
+   CONTENT SECTIONS - Light Theme
+   ============================================ */
+.content-section {
+    padding: var(--space-24) var(--container-padding);
+    background-color: var(--color-background);
+}
+
+.content-grid {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-16);
+    align-items: center;
+}
+
+.content-grid.reverse {
+    direction: rtl;
+}
+
+.content-grid.reverse>* {
+    direction: ltr;
+}
+
+.content-text {
+    padding-right: var(--space-8);
+}
+
+.content-grid.reverse .content-text {
+    padding-right: 0;
+    padding-left: var(--space-8);
+}
+
+.content-title {
+    font-family: var(--font-heading);
+    font-size: clamp(var(--text-2xl), 4vw, var(--text-4xl));
+    font-weight: var(--font-semibold);
+    line-height: 1.2;
+    margin-bottom: var(--space-8);
+    color: var(--color-navy);
+}
+
+.content-title .italic {
+    font-style: italic;
+    font-weight: var(--font-light);
+}
+
+.content-body {
+    color: var(--color-text-secondary);
+    font-family: var(--font-body);
+    font-size: var(--text-lg);
+    line-height: 1.8;
+}
+
+.content-body p {
+    margin-bottom: var(--space-6);
+}
+
+.content-body p:last-child {
+    margin-bottom: 0;
+}
+
+.content-body strong {
+    color: var(--color-navy);
+    font-weight: var(--font-semibold);
+}
+
+.content-image {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(27, 42, 78, 0.15);
+}
+
+.content-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.content-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, rgba(27, 42, 78, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+/* ============================================
+   VALUES SECTION - Light Theme
+   ============================================ */
+.values-section {
+    padding: var(--space-24) var(--container-padding);
+    background-color: var(--color-background-alt);
+}
+
+.values-grid {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-6);
+    margin-top: var(--space-16);
+}
+
+.value-card {
+    background-color: var(--color-white);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8);
+    transition: var(--transition-base);
+    box-shadow: 0 4px 20px rgba(27, 42, 78, 0.08);
+}
+
+.value-card:hover {
+    box-shadow: 0 12px 40px rgba(27, 42, 78, 0.15);
+    transform: translateY(-8px);
+}
+
+.value-icon {
+    color: var(--color-accent);
+    margin-bottom: var(--space-6);
+}
+
+.value-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    font-weight: var(--font-semibold);
+    margin-bottom: var(--space-4);
+    color: var(--color-navy);
+}
+
+.value-desc {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+}
+
+/* ============================================
+   VISION SECTION - Light Theme
+   ============================================ */
+.vision-section {
+    position: relative;
+    padding: var(--space-32) var(--container-padding);
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background-color: var(--color-background);
+}
+
+.vision-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.vision-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(27, 42, 78, 0.03) 0%, rgba(229, 34, 34, 0.05) 50%, rgba(27, 42, 78, 0.03) 100%);
+}
+
+.vision-pattern {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    background-image: radial-gradient(circle, rgba(27, 42, 78, 0.08) 1px, transparent 1px);
+    background-size: 30px 30px;
+}
+
+.vision-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.vision-title {
+    font-family: var(--font-heading);
+    font-size: clamp(var(--text-2xl), 4vw, var(--text-4xl));
+    font-weight: var(--font-semibold);
+    line-height: 1.3;
+    margin-bottom: var(--space-8);
+    color: var(--color-navy);
+}
+
+.vision-title .italic {
+    font-style: italic;
+    font-weight: var(--font-light);
+}
+
+.vision-title .bold {
+    font-weight: var(--font-bold);
+}
+
+.vision-desc {
+    font-family: var(--font-body);
+    font-size: var(--text-lg);
+    color: var(--color-text-secondary);
+    line-height: 1.8;
+    margin-bottom: var(--space-6);
+}
+
+/* ============================================
+   SERVICES SECTION - Light Theme with 3D Boxes
+   ============================================ */
+.services-section {
+    padding: var(--space-24) var(--container-padding);
+    background-color: var(--color-background);
+}
+
+.services-grid {
+    max-width: var(--container-max);
+    margin: var(--space-16) auto 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-8);
+}
+
+.service-card {
+    position: relative;
+    background-color: var(--color-background-alt);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    padding: var(--space-10);
+    transition: var(--transition-base);
+    box-shadow: 0 8px 30px rgba(27, 42, 78, 0.1);
+}
+
+.service-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 50px rgba(27, 42, 78, 0.18);
+}
+
+.service-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: var(--transition-base);
+}
+
+.service-card:hover::before {
+    transform: scaleX(1);
+}
+
+.service-number {
+    font-family: var(--font-heading);
+    font-size: var(--text-6xl);
+    font-weight: var(--font-bold);
+    color: rgba(27, 42, 78, 0.1);
+    line-height: 1;
+    margin-bottom: var(--space-4);
+}
+
+.service-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    font-weight: var(--font-semibold);
+    margin-bottom: var(--space-4);
+    color: var(--color-navy);
+}
+
+.service-desc {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    margin-bottom: var(--space-6);
+}
+
+.service-features {
+    list-style: none;
+}
+
+.service-features li {
+    position: relative;
+    padding-left: var(--space-6);
+    margin-bottom: var(--space-3);
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--color-navy);
+}
+
+.service-features li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--color-accent);
+    font-weight: var(--font-bold);
+}
+
+/* ============================================
+   FACILITIES GRID - Light Theme with 3D Effect
+   ============================================ */
+.facilities-section {
+    padding: var(--space-24) var(--container-padding);
+    background-color: var(--color-background);
+}
+
+.facilities-full-grid {
+    max-width: var(--container-max);
+    margin: var(--space-16) auto 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+}
+
+.facility-full-card {
+    position: relative;
+    background-color: var(--color-white);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: var(--transition-base);
+    box-shadow: 0 8px 30px rgba(27, 42, 78, 0.1);
+}
+
+.facility-full-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 25px 60px rgba(27, 42, 78, 0.2);
+}
+
+.facility-full-image {
+    height: 250px;
+    background-size: cover;
+    background-position: center;
+}
+
+.facility-full-content {
+    padding: var(--space-6);
+}
+
+.facility-full-location {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+    letter-spacing: 0.1em;
+    color: var(--color-accent);
+    text-transform: uppercase;
+    margin-bottom: var(--space-2);
+}
+
+.facility-full-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    font-weight: var(--font-semibold);
+    margin-bottom: var(--space-3);
+    color: var(--color-navy);
+}
+
+.facility-full-desc {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--space-4);
+}
+
+.facility-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+}
+
+.facility-feature {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    padding: var(--space-1) var(--space-3);
+    background-color: rgba(229, 34, 34, 0.1);
+    color: var(--color-accent);
+    border-radius: var(--radius-full);
+    font-weight: var(--font-medium);
+}
+
+/* ============================================
+   CERTIFICATIONS SECTION - Light Theme
+   ============================================ */
+.certifications-section {
+    padding: var(--space-24) var(--container-padding);
+    background-color: var(--color-background);
+}
+
+.certifications-grid {
+    max-width: var(--container-max);
+    margin: var(--space-16) auto 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-6);
+}
+
+.cert-card {
+    background-color: var(--color-white);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8);
+    text-align: center;
+    box-shadow: 0 8px 30px rgba(27, 42, 78, 0.08);
+    transition: var(--transition-base);
+}
+
+.cert-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 50px rgba(27, 42, 78, 0.15);
+}
+
+.cert-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto var(--space-6);
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-white);
+}
+
+.cert-icon svg {
+    width: 40px;
+    height: 40px;
+}
+
+.cert-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+    margin-bottom: var(--space-3);
+    color: var(--color-navy);
+}
+
+.cert-desc {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+}
+
+/* Certification Image Card */
+.cert-image-card {
+    background-color: var(--color-white);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(27, 42, 78, 0.08);
+    transition: var(--transition-base);
+    cursor: pointer;
+}
+
+.cert-image-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 50px rgba(27, 42, 78, 0.18);
+}
+
+.cert-image-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: var(--transition-base);
+}
+
+.cert-image-card:hover img {
+    transform: scale(1.05);
+}
+
+.cert-image-card .cert-content {
+    padding: var(--space-4);
+    text-align: center;
+}
+
+.cert-image-card .cert-name {
+    font-family: var(--font-heading);
+    font-size: var(--text-base);
+    font-weight: var(--font-semibold);
+    color: var(--color-navy);
+}
+
+/* View Certifications Button */
+.view-certs-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-4) var(--space-8);
+    background-color: var(--color-accent);
+    color: var(--color-white);
+    border: none;
+    border-radius: var(--radius-full);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    font-weight: var(--font-semibold);
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: var(--transition-base);
+    box-shadow: 0 4px 15px rgba(229, 34, 34, 0.3);
+    margin-top: var(--space-8);
+}
+
+.view-certs-btn:hover {
+    background-color: var(--color-accent-dark);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(229, 34, 34, 0.4);
+}
+
+/* ============================================
+   CONTACT SECTION - Light Theme
+   ============================================ */
+.contact-section {
+    padding: var(--space-24) var(--container-padding);
+    background-color: var(--color-background);
+}
+
+.contact-grid {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-16);
+}
+
+.contact-info {
+    padding-right: var(--space-8);
+}
+
+.contact-title {
+    font-family: var(--font-heading);
+    font-size: clamp(var(--text-2xl), 4vw, var(--text-4xl));
+    font-weight: var(--font-semibold);
+    line-height: 1.2;
+    margin-bottom: var(--space-8);
+    color: var(--color-navy);
+}
+
+.contact-title .italic {
+    font-style: italic;
+    font-weight: var(--font-light);
+}
+
+.contact-details {
+    margin-bottom: var(--space-10);
+}
+
+.contact-item {
+    display: flex;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+}
+
+.contact-item-icon {
+    width: 48px;
+    height: 48px;
+    background-color: rgba(229, 34, 34, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-accent);
+    flex-shrink: 0;
+}
+
+.contact-item-content h4 {
+    font-family: var(--font-heading);
+    font-size: var(--text-base);
+    font-weight: var(--font-semibold);
+    margin-bottom: var(--space-1);
+    color: var(--color-navy);
+}
+
+.contact-item-content p,
+.contact-item-content a {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+}
+
+.contact-item-content a:hover {
+    color: var(--color-accent);
+}
+
+.contact-form {
+    background-color: var(--color-white);
+    border-radius: var(--radius-lg);
+    padding: var(--space-10);
+    box-shadow: 0 8px 30px rgba(27, 42, 78, 0.1);
+}
+
+.form-group {
+    margin-bottom: var(--space-6);
+}
+
+.form-label {
+    display: block;
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    margin-bottom: var(--space-2);
+    color: var(--color-navy);
+}
+
+.form-input,
+.form-textarea {
+    width: 100%;
+    padding: var(--space-4);
+    background-color: var(--color-background);
+    border: 2px solid rgba(27, 42, 78, 0.1);
+    border-radius: var(--radius-md);
+    color: var(--color-navy);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    transition: var(--transition-base);
+}
+
+.form-input:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    background-color: var(--color-white);
+    box-shadow: 0 0 0 4px rgba(229, 34, 34, 0.1);
+}
+
+.form-textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+    color: rgba(27, 42, 78, 0.4);
+}
+
+.form-submit {
+    width: 100%;
+    padding: var(--space-4) var(--space-8);
+    background-color: var(--color-accent);
+    color: var(--color-white);
+    border: none;
+    border-radius: var(--radius-full);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    font-weight: var(--font-bold);
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: var(--transition-base);
+    box-shadow: 0 4px 15px rgba(229, 34, 34, 0.3);
+}
+
+.form-submit:hover {
+    background-color: var(--color-accent-dark);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(229, 34, 34, 0.4);
+}
+
+/* ============================================
+   MAP SECTION
+   ============================================ */
+.map-section {
+    height: 400px;
+    background-color: var(--color-background-alt);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.map-placeholder {
+    text-align: center;
+    color: var(--color-text-secondary);
+}
+
+.map-placeholder svg {
+    width: 48px;
+    height: 48px;
+    margin-bottom: var(--space-4);
+    opacity: 0.5;
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================ */
+@media (max-width: 1200px) {
+    .values-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .certifications-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .facilities-full-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .content-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-10);
+    }
+
+    .content-text {
+        padding-right: 0;
+    }
+
+    .content-grid.reverse .content-text {
+        padding-left: 0;
+    }
+
+    .services-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .contact-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-10);
+    }
+
+    .contact-info {
+        padding-right: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .page-hero {
+        min-height: 50vh;
+        padding-top: var(--space-24);
+    }
+
+    .values-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .certifications-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .facilities-full-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .certifications-grid {
+        grid-template-columns: 1fr;
+    }
+}

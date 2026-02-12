@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Facilities | Three Stars Fashion - Alexandria Free Zone Manufacturing Hub</title>
+    <meta name="description"
+        content="Explore Three Stars Fashion's world-class manufacturing facilities in Alexandria Free Zone, Egypt. Printing, sewing, cutting, and administrative buildings.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="pages.css">
+    <style>
+        /* Facilities Page Specific Styles - Enhanced 3D Effects */
+        .facilities-grid-new {
+            max-width: var(--container-max);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-8);
+            padding: 0 var(--container-padding);
+        }
+
+        .facility-box {
+            position: relative;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            background-color: var(--color-white);
+            box-shadow:
+                0 10px 30px rgba(27, 42, 78, 0.12),
+                0 4px 10px rgba(27, 42, 78, 0.08);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .facility-box:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow:
+                0 25px 60px rgba(27, 42, 78, 0.2),
+                0 15px 30px rgba(27, 42, 78, 0.15);
+        }
+
+        .facility-box.clickable {
+            cursor: pointer;
+        }
+
+        /* Dark overlay with "View Gallery" text on the image area */
+        .facility-box.clickable::before {
+            content: 'View Gallery';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(27, 42, 78, 0.6);
+            color: var(--color-white);
+            font-family: var(--font-body);
+            font-size: var(--text-lg);
+            font-weight: var(--font-semibold);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            opacity: 0;
+            transition: opacity 0.35s ease;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .facility-box.clickable:hover::before {
+            opacity: 1;
+        }
+
+        .facility-box-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .facility-box:hover .facility-box-image {
+            transform: scale(1.08);
+        }
+
+        .facility-box-content {
+            padding: var(--space-6);
+            background-color: var(--color-white);
+            position: relative;
+            z-index: 1;
+        }
+
+        .facility-box-title {
+            font-family: var(--font-heading);
+            font-size: var(--text-xl);
+            font-weight: var(--font-semibold);
+            color: var(--color-navy);
+            margin-bottom: var(--space-2);
+        }
+
+        .facility-box-desc {
+            font-family: var(--font-body);
+            font-size: var(--text-sm);
+            color: var(--color-text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Gallery Modal Styles */
+        .gallery-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(27, 42, 78, 0.95);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .gallery-container {
+            max-width: 1200px;
+            width: 90%;
+            max-height: 90vh;
+            position: relative;
+        }
+
+        .gallery-close {
+            position: absolute;
+            top: -50px;
+            right: 0;
+            background: none;
+            border: none;
+            color: var(--color-white);
+            font-size: var(--text-3xl);
+            cursor: pointer;
+            padding: 10px;
+            transition: var(--transition-base);
+        }
+
+        .gallery-close:hover {
+            color: var(--color-accent);
+            transform: scale(1.1);
+        }
+
+        .gallery-title {
+            font-family: var(--font-heading);
+            font-size: var(--text-2xl);
+            color: var(--color-white);
+            text-align: center;
+            margin-bottom: var(--space-6);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--space-4);
+            max-height: 70vh;
+            overflow-y: auto;
+            padding: var(--space-4);
+        }
+
+        /* Gallery Item with 3D Magnification Effect */
+        .gallery-item {
+            aspect-ratio: 4/3;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.08) translateY(-8px);
+            box-shadow:
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 10px 20px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .facilities-grid-new {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .facilities-grid-new {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== Lightbox Overlay ===== */
+        .lightbox-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+
+        .lightbox-image {
+            max-width: 90vw;
+            max-height: 85vh;
+            object-fit: contain;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            display: block;
+            border-radius: var(--radius-md);
+        }
+
+        .lightbox-btn {
+            position: absolute;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            padding: 16px;
+            transition: color 0.2s ease, transform 0.2s ease;
+            font-family: var(--font-body);
+        }
+
+        .lightbox-btn:hover {
+            color: #fff;
+            transform: scale(1.15);
+        }
+
+        .lightbox-btn:focus-visible {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 4px;
+            border-radius: var(--radius-sm);
+        }
+
+        .lightbox-close {
+            top: 20px;
+            right: 20px;
+            font-size: 2.4rem;
+            line-height: 1;
+        }
+
+        .lightbox-prev,
+        .lightbox-next {
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2.8rem;
+            line-height: 1;
+        }
+
+        .lightbox-prev:hover,
+        .lightbox-next:hover {
+            transform: translateY(-50%) scale(1.15);
+        }
+
+        .lightbox-prev {
+            left: 16px;
+        }
+
+        .lightbox-next {
+            right: 16px;
+        }
+
+        .lightbox-counter {
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.7);
+            font-family: var(--font-body);
+            font-size: var(--text-sm);
+            font-weight: var(--font-medium);
+            letter-spacing: 0.1em;
+        }
+
+        /* Responsive: stack arrows below image on small screens */
+        @media (max-width: 600px) {
+            .lightbox-prev {
+                left: 4px;
+                font-size: 2rem;
+            }
+
+            .lightbox-next {
+                right: 4px;
+                font-size: 2rem;
+            }
+
+            .lightbox-close {
+                top: 10px;
+                right: 10px;
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <header class="header" id="header">
+        <nav class="nav">
+            <a href="index.html" class="logo">
+                <img src="assets/Brands/tsflogo.png" alt="Three Stars Fashion" class="logo-img">
+                <span class="logo-company-name">Three Stars Fashion</span>
+            </a>
+            <div class="nav-right">
+                <a href="https://www.linkedin.com/company/three-stars-fashion-group/posts/?feedView=all" target="_blank"
+                    class="social-link" aria-label="LinkedIn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
+                    </svg>
+                </a>
+                <button class="menu-open-btn" id="menuOpenBtn" aria-label="Open menu">
+                    <span class="menu-text">MENU</span>
+                    <span class="hamburger">
+                        <span class="line"></span>
+                        <span class="line"></span>
+                        <span class="line"></span>
+                    </span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Full Screen Menu -->
+    <div class="fullscreen-menu" id="fullscreenMenu">
+        <button class="menu-close-btn" id="menuCloseBtn" aria-label="Close menu">
+            <span class="menu-text">CLOSE</span>
+            <span class="close-icon">×</span>
+        </button>
+        <div class="menu-content">
+            <div class="menu-visual">
+                <div class="menu-visual-bg"></div>
+            </div>
+            <div class="menu-links">
+                <nav class="menu-nav">
+                    <a href="index.html" class="menu-link">
+                        <span class="link-number">01</span>
+                        <span class="link-text">Home</span>
+                    </a>
+                    <a href="about.html" class="menu-link">
+                        <span class="link-number">02</span>
+                        <span class="link-text">About Us</span>
+                    </a>
+                    <a href="services.html" class="menu-link">
+                        <span class="link-number">03</span>
+                        <span class="link-text">Services</span>
+                    </a>
+                    <a href="facilities.html" class="menu-link active">
+                        <span class="link-number">04</span>
+                        <span class="link-text">Our Facilities</span>
+                    </a>
+                    <a href="certifications.html" class="menu-link">
+                        <span class="link-number">05</span>
+                        <span class="link-text">Certifications</span>
+                    </a>
+                    <a href="logistics.html" class="menu-link">
+                        <span class="link-number">06</span>
+                        <span class="link-text">Logistics</span>
+                    </a>
+                    <a href="contact.html" class="menu-link">
+                        <span class="link-number">07</span>
+                        <span class="link-text">Contact</span>
+                    </a>
+                </nav>
+                <div class="menu-footer">
+                    <div class="menu-contact">
+                        <p>info@tsf.com.eg</p>
+                        <p>+2 03 4500550</p>
+                    </div>
+                    <div class="menu-location">
+                        <p>Alexandria Free Zone</p>
+                        <p>Egypt</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Hero -->
+    <section class="page-hero">
+        <div class="page-hero-bg">
+            <div class="page-hero-gradient"></div>
+        </div>
+        <div class="page-hero-content">
+            <span class="page-label reveal-up">OUR FACILITIES</span>
+            <h1 class="page-title reveal-up">
+                <span class="light">World-class</span> manufacturing<br>
+                <span class="bold">infrastructure</span>
+            </h1>
+        </div>
+    </section>
+
+    <!-- Gradient Divider -->
+    <div class="gradient-divider"></div>
+
+    <!-- Facilities Intro -->
+    <section class="content-section">
+        <div class="section-header centered" style="max-width: var(--container-max); margin: 0 auto;">
+            <span class="section-label reveal-up">ALEXANDRIA FREE ZONE</span>
+            <h2 class="section-title reveal-up">
+                <span class="light">Strategic location,</span> <span class="bold">optimal operations</span>
+            </h2>
+            <p class="section-subtitle reveal-up">
+                Located in the prestigious Alexandria Public Free Zone, our facilities benefit from
+                Egypt's strategic position at the crossroads of Europe, Africa, and the Middle East.
+            </p>
+        </div>
+    </section>
+
+    <!-- Facilities Grid - 7 Boxes -->
+    <section class="content-section" style="padding-top: 0;">
+        <div class="facilities-grid-new">
+            <!-- Box 1: Three Stars Printing Facility (Unclickable) -->
+            <div class="facility-box reveal-up">
+                <img src="assets/Buildings/Printing Facility.jpg" alt="Three Stars Printing Facility"
+                    class="facility-box-image">
+                <div class="facility-box-content">
+                    <h3 class="facility-box-title">Three Stars Printing Facility</h3>
+                    <p class="facility-box-desc">Our dedicated printing facility houses 4 advanced screen printing
+                        machines, delivering vibrant, durable prints with a production capacity exceeding 6,000 pieces
+                        per day.</p>
+                </div>
+            </div>
+
+            <!-- Box 2: Administrative Building (Unclickable) -->
+            <div class="facility-box reveal-up">
+                <img src="assets/Buildings/Adminstrative Building.jpg" alt="Administrative Building"
+                    class="facility-box-image">
+                <div class="facility-box-content">
+                    <h3 class="facility-box-title">Administrative Building</h3>
+                    <p class="facility-box-desc">The nerve center of our operations, housing administrative and
+                        technical offices, our precision cutting department, and extensive fabric storage facilities.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Box 3: TSF Building (B) - Production Hub (Unclickable) -->
+            <div class="facility-box reveal-up">
+                <img src="assets/Buildings/TSF Building (B).jpg" alt="TSF Building B - Production Hub"
+                    class="facility-box-image">
+                <div class="facility-box-content">
+                    <h3 class="facility-box-title">TSF Building (B) - Production Hub</h3>
+                    <p class="facility-box-desc">Our primary production building encompasses the sewing department,
+                        packing area, accessories store, and finished goods warehouse for seamless operations.</p>
+                </div>
+            </div>
+
+            <!-- Box 4: Cutting Area (Clickable) -->
+            <div class="facility-box clickable reveal-up" data-gallery="cutting">
+                <img src="assets/Cutting Area/2.jpg" alt="Cutting Area" class="facility-box-image">
+                <div class="facility-box-content">
+                    <h3 class="facility-box-title">Cutting Area</h3>
+                    <p class="facility-box-desc">Precision cutting with advanced CAD technology and automated cutting
+                        machines for accurate pattern execution.</p>
+                </div>
+            </div>
+
+            <!-- Box 5: Printing Facility (Clickable) -->
+            <div class="facility-box clickable reveal-up" data-gallery="printing">
+                <img src="assets/Printing Facility/4.jpg" alt="Printing Facility" class="facility-box-image">
+                <div class="facility-box-content">
+                    <h3 class="facility-box-title">Printing Facility</h3>
+                    <p class="facility-box-desc">Screen printing with multi-color capability and 6,000+ pieces daily
+                        production capacity.</p>
+                </div>
+            </div>
+
+            <!-- Box 6: Production (Clickable) -->
+            <div class="facility-box clickable reveal-up" data-gallery="production">
+                <img src="assets/Production/1.jpg" alt="Production Floor" class="facility-box-image">
+                <div class="facility-box-content">
+                    <h3 class="facility-box-title">Production</h3>
+                    <p class="facility-box-desc">State-of-the-art sewing lines with 3,100+ machines and expert craftsmen
+                        delivering quality garments.</p>
+                </div>
+            </div>
+
+            <!-- Box 7: Warehousing (Clickable) -->
+            <div class="facility-box clickable reveal-up" data-gallery="warehousing">
+                <img src="assets/Warehousing/9.jpg" alt="Warehousing" class="facility-box-image">
+                <div class="facility-box-content">
+                    <h3 class="facility-box-title">Warehousing</h3>
+                    <p class="facility-box-desc">Full warehousing and logistics management for raw materials and
+                        finished goods.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Modals -->
+    <!-- Cutting Area Gallery -->
+    <div class="gallery-modal" id="cutting-gallery">
+        <div class="gallery-container">
+            <button class="gallery-close" aria-label="Close gallery">&times;</button>
+            <h3 class="gallery-title">Cutting Area Gallery</h3>
+            <div class="gallery-grid">
+                <div class="gallery-item"><img src="assets/Cutting Area/1 (1).jpg" alt="Cutting Area 1"></div>
+                <div class="gallery-item"><img src="assets/Cutting Area/2.jpg" alt="Cutting Area 2"></div>
+                <div class="gallery-item"><img src="assets/Cutting Area/3.jpg" alt="Cutting Area 3"></div>
+                <div class="gallery-item"><img src="assets/Cutting Area/4.jpg" alt="Cutting Area 4"></div>
+                <div class="gallery-item"><img src="assets/Cutting Area/5.jpg" alt="Cutting Area 5"></div>
+                <div class="gallery-item"><img src="assets/Cutting Area/7.jpg" alt="Cutting Area 7"></div>
+                <div class="gallery-item"><img src="assets/Cutting Area/8.jpg" alt="Cutting Area 8"></div>
+                <div class="gallery-item"><img src="assets/Cutting Area/9.jpg" alt="Cutting Area 9"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Printing Facility Gallery -->
+    <div class="gallery-modal" id="printing-gallery">
+        <div class="gallery-container">
+            <button class="gallery-close" aria-label="Close gallery">&times;</button>
+            <h3 class="gallery-title">Printing Facility Gallery</h3>
+            <div class="gallery-grid">
+                <div class="gallery-item"><img src="assets/Printing Facility/4.jpg" alt="Printing Facility 4"></div>
+                <div class="gallery-item"><img src="assets/Printing Facility/5.jpg" alt="Printing Facility 5"></div>
+                <div class="gallery-item"><img src="assets/Printing Facility/6.jpg" alt="Printing Facility 6"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Production Gallery -->
+    <div class="gallery-modal" id="production-gallery">
+        <div class="gallery-container">
+            <button class="gallery-close" aria-label="Close gallery">&times;</button>
+            <h3 class="gallery-title">Production Gallery</h3>
+            <div class="gallery-grid">
+                <div class="gallery-item"><img src="assets/Production/1.jpg" alt="Production 1"></div>
+                <div class="gallery-item"><img src="assets/Production/2.jpg" alt="Production 2"></div>
+                <div class="gallery-item"><img src="assets/Production/3.jpg" alt="Production 3"></div>
+                <div class="gallery-item"><img src="assets/Production/5.jpg" alt="Production 5"></div>
+                <div class="gallery-item"><img src="assets/Production/12.jpg" alt="Production 12"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Warehousing Gallery -->
+    <div class="gallery-modal" id="warehousing-gallery">
+        <div class="gallery-container">
+            <button class="gallery-close" aria-label="Close gallery">&times;</button>
+            <h3 class="gallery-title">Warehousing Gallery</h3>
+            <div class="gallery-grid">
+                <div class="gallery-item"><img src="assets/Warehousing/4.jpg" alt="Warehousing 4"></div>
+                <div class="gallery-item"><img src="assets/Warehousing/6.jpg" alt="Warehousing 6"></div>
+                <div class="gallery-item"><img src="assets/Warehousing/7.jpg" alt="Warehousing 7"></div>
+                <div class="gallery-item"><img src="assets/Warehousing/8.jpg" alt="Warehousing 8"></div>
+                <div class="gallery-item"><img src="assets/Warehousing/9.jpg" alt="Warehousing 9"></div>
+                <div class="gallery-item"><img src="assets/Warehousing/11.jpg" alt="Warehousing 11"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="stats-grid">
+            <div class="stat-item reveal-up">
+                <span class="stat-number" data-count="85000">0</span>
+                <span class="stat-suffix">+</span>
+                <span class="stat-label">Daily Production Capacity</span>
+            </div>
+            <div class="stat-item reveal-up">
+                <span class="stat-number" data-count="3100">0</span>
+                <span class="stat-suffix">+</span>
+                <span class="stat-label">Sewing Machines</span>
+            </div>
+            <div class="stat-item reveal-up">
+                <span class="stat-number" data-count="10">0</span>
+                <span class="stat-label">Manufacturing Factories</span>
+            </div>
+            <div class="stat-item reveal-up">
+                <span class="stat-text">24/7</span>
+                <span class="stat-label">Operations Capability</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="cta-bg">
+            <div class="cta-gradient"></div>
+        </div>
+        <div class="cta-content">
+            <h2 class="cta-title reveal-up">
+                Want to <span class="italic">visit our facilities</span>?
+            </h2>
+            <p class="cta-text reveal-up">
+                We welcome partners and prospective clients to tour our manufacturing
+                facilities and see our capabilities firsthand.
+            </p>
+            <a href="contact.html" class="btn-cta reveal-up">
+                <span>SCHEDULE A VISIT</span>
+                <span class="btn-arrow">→</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="gradient-divider"></div>
+        <div class="footer-content">
+            <div class="footer-main">
+                <div class="footer-brand">
+                    <a href="index.html" class="footer-logo">
+                        <img src="assets/Brands/tsflogo.png" alt="Three Stars Fashion" class="footer-logo-img">
+                        <span class="footer-company-name">Three Stars Fashion</span>
+                    </a>
+                </div>
+                <div class="footer-nav">
+                    <div class="footer-nav-group">
+                        <a href="index.html">Home</a>
+                        <a href="about.html">About Us</a>
+                        <a href="services.html">Services</a>
+                        <a href="facilities.html">Our Facilities</a>
+                    </div>
+                    <div class="footer-nav-group">
+                        <a href="certifications.html">Certifications</a>
+                        <a href="logistics.html">Logistics</a>
+                        <a href="contact.html">Contact Us</a>
+                    </div>
+                </div>
+                <div class="footer-social">
+                    <a href="https://www.linkedin.com/company/three-stars-fashion-group/posts/?feedView=all"
+                        target="_blank" aria-label="LinkedIn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-info">
+                <div class="footer-contact">
+                    <p><strong>Factory / Head Office:</strong></p>
+                    <p>Street No. 7 - Public Free Zone Amreya</p>
+                    <p>Alexandria, Egypt | Postal Code: 23512</p>
+                    <p>Tel: +2 03 4500550 | +2 011 41333589</p>
+                    <p>Email: <a href="mailto:info@tsf.com.eg">info@tsf.com.eg</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Three Stars Fashion. All rights reserved.</p>
+                <a href="#">Privacy Policy</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // ===== Gallery Lightbox (Singleton, Class-Based) =====
+        class GalleryLightbox {
+            constructor(itemSelector, gridSelector) {
+                this.itemSelector = itemSelector;
+                this.gridSelector = gridSelector;
+                this.images = [];
+                this.currentIndex = 0;
+                this.isOpen = false;
+                this.triggerElement = null;   // for focus-restore on close
+                this.overlay = null;
+                this.imgElement = null;
+                this.counter = null;
+                this.focusableEls = [];
+
+                this.init();
+            }
+
+            init() {
+                // 1. Build the singleton DOM once
+                this.createDOM();
+
+                // 2. Delegate clicks on gallery items (works even in modals)
+                document.addEventListener('click', (e) => {
+                    const item = e.target.closest(this.itemSelector);
+                    if (!item) return;
+
+                    // Scope images to the same grid
+                    const grid = item.closest(this.gridSelector);
+                    if (!grid) return;
+
+                    const allItems = grid.querySelectorAll(this.itemSelector);
+                    this.images = Array.from(allItems).map(el => {
+                        const img = el.querySelector('img') || el;
+                        return {
+                            full: img.dataset.fullSrc || img.src,
+                            alt: img.alt || ''
+                        };
+                    });
+
+                    const clickedIndex = Array.from(allItems).indexOf(item);
+                    this.triggerElement = item;
+                    this.open(clickedIndex >= 0 ? clickedIndex : 0);
+                });
+
+                // 3. Global keyboard handler
+                document.addEventListener('keydown', (e) => {
+                    if (!this.isOpen) return;
+                    if (e.key === 'Escape') { e.stopPropagation(); this.close(); }
+                    if (e.key === 'ArrowLeft') this.prev();
+                    if (e.key === 'ArrowRight') this.next();
+                    // Focus trap: Tab cycles within lightbox
+                    if (e.key === 'Tab') this.trapFocus(e);
+                });
+            }
+
+            createDOM() {
+                const div = document.createElement('div');
+                div.classList.add('lightbox-overlay');
+                div.setAttribute('role', 'dialog');
+                div.setAttribute('aria-modal', 'true');
+                div.setAttribute('aria-label', 'Image lightbox');
+                div.innerHTML = `
+                    <button class="lightbox-btn lightbox-close" aria-label="Close lightbox">&times;</button>
+                    <button class="lightbox-btn lightbox-prev" aria-label="Previous image">&#10094;</button>
+                    <div class="lightbox-content">
+                        <img src="" alt="" class="lightbox-image">
+                    </div>
+                    <button class="lightbox-btn lightbox-next" aria-label="Next image">&#10095;</button>
+                    <div class="lightbox-counter"></div>
+                `;
+                document.body.appendChild(div);
+
+                // Cache elements
+                this.overlay = div;
+                this.imgElement = div.querySelector('.lightbox-image');
+                this.counter = div.querySelector('.lightbox-counter');
+                this.focusableEls = Array.from(div.querySelectorAll('button'));
+
+                // Event delegation for buttons + backdrop click
+                div.addEventListener('click', (e) => {
+                    if (e.target === div || e.target.classList.contains('lightbox-close'))
+                        this.close();
+                    if (e.target.classList.contains('lightbox-prev')) this.prev();
+                    if (e.target.classList.contains('lightbox-next')) this.next();
+                });
+            }
+
+            open(index) {
+                this.currentIndex = index;
+                this.isOpen = true;
+                this.overlay.classList.add('active');
+                this.updateView();
+                // Move focus into lightbox (close button)
+                this.focusableEls[0].focus();
+            }
+
+            close() {
+                this.isOpen = false;
+                this.overlay.classList.remove('active');
+                // Restore focus to the thumbnail that opened the lightbox
+                if (this.triggerElement) this.triggerElement.focus();
+            }
+
+            prev() {
+                this.currentIndex = (this.currentIndex - 1 + this.images.length) % this.images.length;
+                this.updateView();
+            }
+
+            next() {
+                this.currentIndex = (this.currentIndex + 1) % this.images.length;
+                this.updateView();
+            }
+
+            updateView() {
+                const current = this.images[this.currentIndex];
+                this.imgElement.src = current.full;
+                this.imgElement.alt = current.alt;
+                this.counter.textContent = `${this.currentIndex + 1} / ${this.images.length}`;
+            }
+
+            // Keep Tab focus cycling within the lightbox buttons
+            trapFocus(e) {
+                const first = this.focusableEls[0];
+                const last = this.focusableEls[this.focusableEls.length - 1];
+                if (e.shiftKey) {
+                    if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+                } else {
+                    if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+                }
+            }
+        }
+
+        // ===== Gallery Modal + Lightbox Initialization =====
+        document.addEventListener('DOMContentLoaded', function () {
+            const clickableBoxes = document.querySelectorAll('.facility-box.clickable');
+            const modals = document.querySelectorAll('.gallery-modal');
+            const closeButtons = document.querySelectorAll('.gallery-close');
+
+            // Open gallery modal
+            clickableBoxes.forEach(box => {
+                box.addEventListener('click', function () {
+                    const galleryId = this.dataset.gallery + '-gallery';
+                    const modal = document.getElementById(galleryId);
+                    if (modal) {
+                        modal.classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                    }
+                });
+            });
+
+            // Close gallery modal
+            closeButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    this.closest('.gallery-modal').classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+            });
+
+            // Close on background click
+            modals.forEach(modal => {
+                modal.addEventListener('click', function (e) {
+                    if (e.target === this) {
+                        this.classList.remove('active');
+                        document.body.style.overflow = '';
+                    }
+                });
+            });
+
+            // Close gallery modal on escape (only when lightbox is NOT open)
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') {
+                    modals.forEach(modal => {
+                        modal.classList.remove('active');
+                    });
+                    document.body.style.overflow = '';
+                }
+            });
+
+            // Initialize the lightbox (singleton, handles all galleries)
+            new GalleryLightbox('.gallery-item', '.gallery-grid');
+        });
+    </script>
+</body>
+
+</html>

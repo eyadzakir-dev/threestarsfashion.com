@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<!-- Logistics page showcasing Green Point Logistics partnership -->
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logistics | Three Stars Fashion + Green Point Logistics - Complete Supply Chain Solutions</title>
+    <meta name="description"
+        content="Discover the integrated supply chain of Three Stars Fashion and Green Point Logistics - Complete vertical integration from manufacturing to global delivery.">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="pages.css">
+
+    <style>
+        /* ============================================
+           LOGISTICS PAGE - GREEN ACCENT OVERRIDES
+           Theme: Beige/Off-white with Green Accents
+           ============================================ */
+
+        /* Green color palette for GPL integration */
+        :root {
+            --color-gpl-green: #1D8348;
+            --color-gpl-green-light: #27AE60;
+            --color-gpl-green-dark: #145A32;
+            --color-gpl-gradient: linear-gradient(135deg, #1D8348 0%, #27AE60 50%, #145A32 100%);
+        }
+
+        /* Override accent colors for this page */
+        .logistics-page .section-label {
+            color: var(--color-gpl-green);
+        }
+
+        .logistics-page .page-label {
+            color: var(--color-gpl-green-light);
+        }
+
+        /* Hero Section - Green gradient accents */
+        .logistics-hero {
+            position: relative;
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            padding: var(--space-32) var(--container-padding) var(--space-16);
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-navy-dark) 100%);
+        }
+
+        .logistics-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            background: var(--color-gpl-gradient);
+            opacity: 0.15;
+            clip-path: polygon(30% 0, 100% 0, 100% 100%, 0% 100%);
+        }
+
+        .logistics-hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: var(--container-max);
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .logistics-hero .hero-label {
+            color: var(--color-gpl-green-light);
+            font-family: var(--font-body);
+            font-size: var(--text-sm);
+            font-weight: var(--font-bold);
+            letter-spacing: 0.2em;
+            margin-bottom: var(--space-6);
+            display: inline-block;
+        }
+
+        .logistics-hero .hero-title {
+            font-family: var(--font-heading);
+            font-size: clamp(var(--text-4xl), 6vw, var(--text-6xl));
+            font-weight: var(--font-bold);
+            line-height: 1.1;
+            margin-bottom: var(--space-6);
+            color: var(--color-white);
+        }
+
+        .logistics-hero .hero-title .light {
+            font-weight: var(--font-light);
+        }
+
+        .logistics-hero .hero-subtitle {
+            font-family: var(--font-body);
+            font-size: var(--text-xl);
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 700px;
+            margin: 0 auto var(--space-8);
+            line-height: 1.7;
+        }
+
+        /* Partnership Section */
+        .partnership-section {
+            padding: var(--space-24) var(--container-padding);
+            background-color: var(--color-background);
+        }
+
+        .partnership-container {
+            max-width: var(--container-max);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-16);
+            align-items: center;
+        }
+
+        .partnership-text h2 {
+            font-family: var(--font-heading);
+            font-size: var(--text-4xl);
+            color: var(--color-navy);
+            margin-bottom: var(--space-6);
+            line-height: 1.2;
+        }
+
+        .partnership-text h2 .green-highlight {
+            color: var(--color-gpl-green);
+        }
+
+        .partnership-text p {
+            font-family: var(--font-body);
+            font-size: var(--text-lg);
+            color: var(--color-text-secondary);
+            line-height: 1.8;
+            margin-bottom: var(--space-6);
+        }
+
+        .partnership-stats {
+            display: flex;
+            gap: var(--space-8);
+            margin-top: var(--space-8);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: var(--font-heading);
+            font-size: var(--text-4xl);
+            font-weight: var(--font-bold);
+            color: var(--color-gpl-green);
+        }
+
+        .stat-label {
+            font-family: var(--font-body);
+            font-size: var(--text-sm);
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .partnership-logos {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-6);
+            padding: var(--space-12);
+            background-color: var(--color-white);
+            border-radius: var(--radius-xl);
+            box-shadow: 0 15px 50px rgba(27, 42, 78, 0.1);
+        }
+
+        .partner-logo {
+            max-width: 120px;
+            height: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .partner-logo:hover {
+            transform: scale(1.05);
+        }
+
+        .partner-plus {
+            font-size: var(--text-4xl);
+            color: var(--color-gpl-green);
+            font-weight: var(--font-bold);
+        }
+
+        /* Services Grid */
+        .services-grid-section {
+            padding: var(--space-24) var(--container-padding);
+            background-color: var(--color-background-alt);
+        }
+
+        .services-grid-container {
+            max-width: var(--container-max);
+            margin: 0 auto;
+        }
+
+        .services-grid-container .section-header {
+            text-align: center;
+            margin-bottom: var(--space-12);
+        }
+
+        .logistics-services-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-6);
+        }
+
+        .logistics-service-card {
+            background-color: var(--color-white);
+            border-radius: var(--radius-xl);
+            padding: var(--space-8);
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(27, 42, 78, 0.08);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logistics-service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--color-gpl-gradient);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .logistics-service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .logistics-service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 60px rgba(27, 42, 78, 0.15);
+        }
+
+        .service-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto var(--space-6);
+            background: linear-gradient(135deg, rgba(29, 131, 72, 0.1) 0%, rgba(39, 174, 96, 0.1) 100%);
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .logistics-service-card:hover .service-icon {
+            background: var(--color-gpl-gradient);
+        }
+
+        .service-icon svg {
+            width: 40px;
+            height: 40px;
+            stroke: var(--color-gpl-green);
+            transition: stroke 0.3s ease;
+        }
+
+        .logistics-service-card:hover .service-icon svg {
+            stroke: var(--color-white);
+        }
+
+        .logistics-service-card h3 {
+            font-family: var(--font-heading);
+            font-size: var(--text-xl);
+            color: var(--color-navy);
+            margin-bottom: var(--space-3);
+        }
+
+        .logistics-service-card p {
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            color: var(--color-text-muted);
+            line-height: 1.6;
+        }
+
+        /* Process Timeline */
+        .process-section {
+            padding: var(--space-24) var(--container-padding);
+            background-color: var(--color-background);
+        }
+
+        .process-container {
+            max-width: var(--container-max);
+            margin: 0 auto;
+        }
+
+        .process-container .section-header {
+            text-align: center;
+            margin-bottom: var(--space-16);
+        }
+
+        .process-timeline {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: relative;
+        }
+
+        .process-timeline::before {
+            content: '';
+            position: absolute;
+            top: 50px;
+            left: 10%;
+            right: 10%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--color-navy) 0%, var(--color-gpl-green) 50%, var(--color-gpl-green-light) 100%);
+            border-radius: 2px;
+            z-index: 0;
+        }
+
+        .process-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            padding: 0 var(--space-4);
+        }
+
+        .step-number {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto var(--space-6);
+            background: var(--color-white);
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-size: var(--text-3xl);
+            font-weight: var(--font-bold);
+            color: var(--color-gpl-green);
+            box-shadow: 0 10px 40px rgba(27, 42, 78, 0.15);
+            transition: all 0.3s ease;
+            border: 4px solid var(--color-gpl-green);
+        }
+
+        .process-step:hover .step-number {
+            background: var(--color-gpl-green);
+            color: var(--color-white);
+            transform: scale(1.1);
+        }
+
+        .process-step h4 {
+            font-family: var(--font-heading);
+            font-size: var(--text-xl);
+            color: var(--color-navy);
+            margin-bottom: var(--space-3);
+        }
+
+        .process-step p {
+            font-family: var(--font-body);
+            font-size: var(--text-base);
+            color: var(--color-text-muted);
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .logistics-cta-section {
+            padding: var(--space-24) var(--container-padding);
+            background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-navy-dark) 100%);
+            text-align: center;
+        }
+
+        .logistics-cta-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .logistics-cta-container h2 {
+            font-family: var(--font-heading);
+            font-size: var(--text-4xl);
+            color: var(--color-white);
+            margin-bottom: var(--space-4);
+        }
+
+        .logistics-cta-container p {
+            font-family: var(--font-body);
+            font-size: var(--text-lg);
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: var(--space-10);
+        }
+
+        .gpl-cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-5) var(--space-12);
+            background-color: var(--color-accent);
+            color: var(--color-white);
+            border: none;
+            border-radius: var(--radius-full);
+            font-family: var(--font-body);
+            font-size: var(--text-lg);
+            font-weight: var(--font-semibold);
+            letter-spacing: 0.05em;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 30px rgba(229, 34, 34, 0.4);
+        }
+
+        .gpl-cta-btn:hover {
+            background-color: var(--color-accent-dark);
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(229, 34, 34, 0.5);
+        }
+
+        .gpl-cta-btn svg {
+            width: 24px;
+            height: 24px;
+            transition: transform 0.3s ease;
+        }
+
+        .gpl-cta-btn:hover svg {
+            transform: translateX(4px);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .partnership-container {
+                grid-template-columns: 1fr;
+                gap: var(--space-10);
+            }
+
+            .logistics-services-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .process-timeline {
+                flex-direction: column;
+                gap: var(--space-8);
+            }
+
+            .process-timeline::before {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .logistics-services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .partnership-stats {
+                flex-direction: column;
+                gap: var(--space-4);
+            }
+        }
+    </style>
+</head>
+
+<body class="logistics-page">
+    <!-- Navigation -->
+    <header class="header" id="header">
+        <nav class="nav">
+            <a href="index.html" class="logo">
+                <img src="assets/Brands/tsflogo.png" alt="Three Stars Fashion" class="logo-img">
+                <span class="logo-company-name">Three Stars Fashion</span>
+            </a>
+            <div class="nav-right">
+                <a href="https://www.linkedin.com/company/three-stars-fashion-group/posts/?feedView=all" target="_blank"
+                    class="social-link" aria-label="LinkedIn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
+                    </svg>
+                </a>
+                <button class="menu-open-btn" id="menuOpenBtn" aria-label="Open menu">
+                    <span class="menu-text">MENU</span>
+                    <span class="hamburger">
+                        <span class="line"></span>
+                        <span class="line"></span>
+                        <span class="line"></span>
+                    </span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Full Screen Menu -->
+    <div class="fullscreen-menu" id="fullscreenMenu">
+        <button class="menu-close-btn" id="menuCloseBtn" aria-label="Close menu">
+            <span class="menu-text">CLOSE</span>
+            <span class="close-icon">×</span>
+        </button>
+        <div class="menu-content">
+            <div class="menu-visual">
+                <div class="menu-visual-bg"></div>
+            </div>
+            <div class="menu-links">
+                <nav class="menu-nav">
+                    <a href="index.html" class="menu-link">
+                        <span class="link-number">01</span>
+                        <span class="link-text">Home</span>
+                    </a>
+                    <a href="about.html" class="menu-link">
+                        <span class="link-number">02</span>
+                        <span class="link-text">About Us</span>
+                    </a>
+                    <a href="services.html" class="menu-link">
+                        <span class="link-number">03</span>
+                        <span class="link-text">Services</span>
+                    </a>
+                    <a href="facilities.html" class="menu-link">
+                        <span class="link-number">04</span>
+                        <span class="link-text">Our Facilities</span>
+                    </a>
+                    <a href="certifications.html" class="menu-link">
+                        <span class="link-number">05</span>
+                        <span class="link-text">Certifications</span>
+                    </a>
+                    <a href="logistics.html" class="menu-link active">
+                        <span class="link-number">06</span>
+                        <span class="link-text">Logistics</span>
+                    </a>
+                    <a href="contact.html" class="menu-link">
+                        <span class="link-number">07</span>
+                        <span class="link-text">Contact</span>
+                    </a>
+                </nav>
+                <div class="menu-footer">
+                    <div class="menu-contact">
+                        <p>info@tsf.com.eg</p>
+                        <p>+2 03 4500550</p>
+                    </div>
+                    <div class="menu-location">
+                        <p>Alexandria Free Zone</p>
+                        <p>Egypt</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="logistics-hero">
+        <div class="logistics-hero-content">
+            <span class="hero-label reveal-up">VERTICAL INTEGRATION</span>
+            <h1 class="hero-title reveal-up">
+                <span class="light">Complete Supply Chain</span><br>
+                <span class="bold">Excellence</span>
+            </h1>
+            <p class="hero-subtitle reveal-up">
+                From precision manufacturing to priority global delivery — experience seamless
+                vertical integration that ensures quality at every stage of your garment journey.
+            </p>
+        </div>
+    </section>
+
+    <!-- Gradient Divider -->
+    <div class="gradient-divider"></div>
+
+    <!-- Partnership Section -->
+    <section class="partnership-section">
+        <div class="partnership-container">
+            <div class="partnership-text reveal-up">
+                <span class="section-label">THE PARTNERSHIP</span>
+                <h2>
+                    <span class="light">TSF +</span> <span class="green-highlight">GPL</span><br>
+                    <span class="bold">100% Integrated</span> Supply Chain
+                </h2>
+                <p>
+                    Three Stars Fashion Group and Green Point Logistics have joined forces to
+                    offer a complete, end-to-end supply chain solution. This strategic partnership
+                    eliminates the traditional gaps between manufacturing and delivery, providing
+                    our clients with unparalleled control, visibility, and efficiency.
+                </p>
+                <p>
+                    From the moment your order enters production to the day it arrives at your
+                    doorstep, every touchpoint is managed by our integrated team of experts —
+                    ensuring consistency, quality, and on-time delivery.
+                </p>
+                <div class="partnership-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">40+</span>
+                        <span class="stat-label">Countries Served</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">98%</span>
+                        <span class="stat-label">On-Time Delivery</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">15+</span>
+                        <span class="stat-label">Years Experience</span>
+                    </div>
+                </div>
+            </div>
+            <div class="partnership-logos reveal-up">
+                <img src="assets/Brands/tsflogo.png" alt="Three Stars Fashion" class="partner-logo">
+                <span class="partner-plus">+</span>
+                <img src="assets/Greenpoint/logo.webp" alt="Green Point Logistics" class="partner-logo">
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Grid Section -->
+    <section class="services-grid-section">
+        <div class="services-grid-container">
+            <div class="section-header">
+                <span class="section-label reveal-up">LOGISTICS CAPABILITIES</span>
+                <h2 class="section-title reveal-up">
+                    <span class="light">Comprehensive</span> <span class="bold">logistics</span> solutions
+                </h2>
+            </div>
+            <div class="logistics-services-grid">
+                <!-- Card 1: Global Freight -->
+                <div class="logistics-service-card reveal-up">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z" />
+                            <circle cx="12" cy="10" r="3" />
+                        </svg>
+                    </div>
+                    <h3>Global Freight</h3>
+                    <p>Air, sea, and land transportation with optimized routes across continents for maximum efficiency.
+                    </p>
+                </div>
+
+                <!-- Card 2: Customs Clearance -->
+                <div class="logistics-service-card reveal-up" style="--delay: 0.1s">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M9 12l2 2 4-4" />
+                            <path d="M12 3a9 9 0 1 0 9 9" />
+                            <path d="M12 3v4" />
+                            <path d="M21 3l-3 3" />
+                        </svg>
+                    </div>
+                    <h3>Expert Customs Clearance</h3>
+                    <p>Specialized Egyptian customs expertise ensuring smooth, compliant shipments with minimal delays.
+                    </p>
+                </div>
+
+                <!-- Card 3: Warehousing -->
+                <div class="logistics-service-card reveal-up" style="--delay: 0.2s">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z" />
+                            <polyline points="9 22 9 12 15 12 15 22" />
+                        </svg>
+                    </div>
+                    <h3>Secure Warehousing</h3>
+                    <p>Climate-controlled facilities with state-of-the-art inventory management systems.</p>
+                </div>
+
+                <!-- Card 4: GOH Specialist -->
+                <div class="logistics-service-card reveal-up" style="--delay: 0.3s">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M4 6h16" />
+                            <path d="M12 6v14" />
+                            <path d="M8 10l4 -4 4 4" />
+                            <path d="M6 18h12" />
+                        </svg>
+                    </div>
+                    <h3>GOH Specialist Shipping</h3>
+                    <p>Garment-on-hanger solutions preserving quality and presentation from factory to retail floor.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process Timeline Section -->
+    <section class="process-section">
+        <div class="process-container">
+            <div class="section-header">
+                <span class="section-label reveal-up">THE JOURNEY</span>
+                <h2 class="section-title reveal-up">
+                    <span class="light">Your</span> <span class="bold">1-2-3</span> <span class="light">process</span>
+                </h2>
+            </div>
+            <div class="process-timeline">
+                <!-- Step 1 -->
+                <div class="process-step reveal-up">
+                    <div class="step-number">1</div>
+                    <h4>Precision Manufacturing</h4>
+                    <p>Expert craftsmanship in our state-of-the-art facilities with 3,100+ machines and skilled
+                        artisans.</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="process-step reveal-up" style="--delay: 0.2s">
+                    <div class="step-number">2</div>
+                    <h4>Rigorous Quality Control</h4>
+                    <p>Multi-stage inspection processes ensuring every garment meets international quality standards.
+                    </p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="process-step reveal-up" style="--delay: 0.4s">
+                    <div class="step-number">3</div>
+                    <h4>Priority Global Delivery</h4>
+                    <p>Fast-tracked logistics with real-time tracking and optimized shipping routes worldwide.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="logistics-cta-section">
+        <div class="logistics-cta-container reveal-up">
+            <h2>Ready to streamline your supply chain?</h2>
+            <p>Visit Green Point Logistics to learn more about our comprehensive logistics solutions.</p>
+            <a href="https://gpl.com.eg/" target="_blank" class="gpl-cta-btn">
+                <span>Visit GPL Logistics</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="gradient-divider"></div>
+        <div class="footer-content">
+            <div class="footer-main">
+                <div class="footer-brand">
+                    <a href="index.html" class="footer-logo">
+                        <img src="assets/Brands/tsflogo.png" alt="Three Stars Fashion" class="footer-logo-img">
+                        <span class="footer-company-name">Three Stars Fashion</span>
+                    </a>
+                </div>
+                <div class="footer-nav">
+                    <div class="footer-nav-group">
+                        <a href="index.html">Home</a>
+                        <a href="about.html">About Us</a>
+                        <a href="services.html">Services</a>
+                        <a href="facilities.html">Our Facilities</a>
+                    </div>
+                    <div class="footer-nav-group">
+                        <a href="certifications.html">Certifications</a>
+                        <a href="logistics.html">Logistics</a>
+                        <a href="contact.html">Contact Us</a>
+                    </div>
+                </div>
+                <div class="footer-social">
+                    <a href="https://www.linkedin.com/company/three-stars-fashion-group/posts/?feedView=all"
+                        target="_blank" aria-label="LinkedIn">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-info">
+                <div class="footer-contact">
+                    <p><strong>Factory / Head Office:</strong></p>
+                    <p>Street No. 7 - Public Free Zone Amreya</p>
+                    <p>Alexandria, Egypt | Postal Code: 23512</p>
+                    <p>Tel: +2 03 4500550 | +2 011 41333589</p>
+                    <p>Email: <a href="mailto:info@tsf.com.eg">info@tsf.com.eg</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Three Stars Fashion. All rights reserved.</p>
+                <a href="#">Privacy Policy</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
