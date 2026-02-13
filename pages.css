@@ -760,6 +760,86 @@
 }
 
 /* ============================================
+   FAQ SECTION - Native <details>/<summary> Accordion
+   ============================================ */
+.faq-section {
+    padding: var(--space-24) var(--container-padding);
+    background-color: var(--color-background);
+}
+
+.faq-list {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.faq-item {
+    background-color: var(--color-white);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 4px 20px rgba(27, 42, 78, 0.08);
+    overflow: hidden;
+    transition: var(--transition-base);
+}
+
+.faq-item:hover {
+    box-shadow: 0 8px 30px rgba(27, 42, 78, 0.14);
+}
+
+/* Summary replaces a custom button */
+.faq-question {
+    cursor: pointer;
+    padding: var(--space-6);
+    color: var(--color-navy);
+    font-family: var(--font-body);
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+    list-style: none;
+    /* Hides default triangle */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+    transition: var(--transition-base);
+}
+
+/* Hide default marker in WebKit */
+.faq-question::-webkit-details-marker {
+    display: none;
+}
+
+/* Custom chevron via pseudo-element */
+.faq-question::after {
+    content: "▼";
+    font-size: var(--text-sm);
+    color: var(--color-gray-400);
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+}
+
+.faq-item[open] .faq-question::after {
+    transform: rotate(180deg);
+    color: var(--color-accent);
+}
+
+.faq-question:hover {
+    color: var(--color-accent);
+}
+
+.faq-answer {
+    padding: 0 var(--space-6) var(--space-6) var(--space-6);
+    color: var(--color-text-secondary);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: 1.8;
+}
+
+.faq-answer p {
+    margin: 0;
+}
+
+/* ============================================
    RESPONSIVE ADJUSTMENTS
    ============================================ */
 @media (max-width: 1200px) {
