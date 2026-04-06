@@ -523,6 +523,14 @@ button {
     transition-delay: 0.4s;
 }
 
+.fullscreen-menu.active .menu-link:nth-child(8) {
+    transition-delay: 0.45s;
+}
+
+.fullscreen-menu.active .menu-link:nth-child(9) {
+    transition-delay: 0.5s;
+}
+
 .link-number {
     font-size: var(--text-sm);
     color: var(--color-gray-400);
