@@ -1143,6 +1143,14 @@ button {
     display: flex;
     gap: var(--space-16);
     animation: logoScroll 30s linear infinite;
+    will-change: transform;
+}
+
+@media (max-width: 768px) {
+    .logo-track {
+        animation-duration: 15s;
+        gap: var(--space-10);
+    }
 }
 
 @keyframes logoScroll {
