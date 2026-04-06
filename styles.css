@@ -305,6 +305,36 @@ button {
     z-index: var(--z-modal);
 }
 
+/* Header CTA Button */
+.header-cta {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1.25rem;
+    background-color: var(--color-accent);
+    color: var(--color-white);
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: var(--radius-full);
+    transition: all var(--transition-normal) ease;
+    white-space: nowrap;
+}
+
+.header-cta:hover {
+    background-color: var(--color-accent-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(229, 34, 34, 0.4);
+}
+
+@media (max-width: 768px) {
+    .header-cta {
+        display: none;
+    }
+}
+
 .social-link {
     color: var(--color-white);
     opacity: 0.7;
