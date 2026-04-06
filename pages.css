@@ -740,23 +740,15 @@
    MAP SECTION
    ============================================ */
 .map-section {
-    height: 400px;
     background-color: var(--color-background-alt);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    overflow: hidden;
 }
 
-.map-placeholder {
-    text-align: center;
-    color: var(--color-text-secondary);
-}
-
-.map-placeholder svg {
-    width: 48px;
-    height: 48px;
-    margin-bottom: var(--space-4);
-    opacity: 0.5;
+.map-section iframe {
+    display: block;
+    width: 100%;
+    min-height: 450px;
+    border: none;
 }
 
 /* ============================================
