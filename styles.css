@@ -1117,6 +1117,7 @@ button {
     margin-top: var(--space-16);
     overflow: hidden;
     position: relative;
+    width: 100%;
 }
 
 .customers-logos::before,
@@ -1141,25 +1142,27 @@ button {
 
 .logo-track {
     display: flex;
-    gap: var(--space-16);
+    width: max-content;
     animation: logoScroll 30s linear infinite;
     will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
 
-@media (max-width: 768px) {
-    .logo-track {
-        animation-duration: 15s;
-        gap: var(--space-10);
-    }
+.logo-group {
+    display: flex;
+    align-items: center;
+    gap: var(--space-16);
+    padding-right: var(--space-16);
 }
 
 @keyframes logoScroll {
     0% {
-        transform: translateX(0);
+        transform: translate3d(0, 0, 0);
     }
 
     100% {
-        transform: translateX(-50%);
+        transform: translate3d(-50%, 0, 0);
     }
 }
 
@@ -1168,7 +1171,6 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: var(--space-8);
 }
 
 .brand-svg {
@@ -1627,6 +1629,25 @@ button {
 
     .menu-links {
         padding: var(--space-16) var(--space-6);
+    }
+
+    .logo-track {
+        animation-duration: 15s;
+    }
+
+    .logo-group {
+        gap: var(--space-8);
+        padding-right: var(--space-8);
+    }
+
+    .brand-svg {
+        height: 28px;
+        max-width: 100px;
+    }
+
+    .customers-logos::before,
+    .customers-logos::after {
+        width: 60px;
     }
 
     .footer-bottom {
