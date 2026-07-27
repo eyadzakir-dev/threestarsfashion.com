@@ -1,0 +1,103 @@
+---
+// Label/value specification rows — the engineering-document workhorse for
+// capacity, lead time and compliance facts. Buyers compare specifications, so
+// figures belong in a table, never in prose.
+// Values are tabular so a column of figures aligns.
+export interface SpecRow {
+  label: string;
+  value: string | number;
+  /** Appended in grey after the value. */
+  unit?: string;
+}
+
+interface Props {
+  rows: SpecRow[];
+  caption?: string;
+  /** Tighter row padding for long tables. */
+  dense?: boolean;
+  onDark?: boolean;
+  /** Set false when values are words rather than figures. */
+  numericValues?: boolean;
+  class?: string;
+}
+const {
+  rows, caption, dense = false, onDark = false,
+  numericValues = true, class: className = '',
+} = Astro.props;
+---
+<table class:list={['spec', dense && 'spec--dense', onDark && 'spec--on-dark', numericValues && 'spec--numeric', className]}>
+  {caption && <caption class="spec__caption">{caption}</caption>}
+  <tbody>
+    {rows.map((r) => (
+      <tr class="spec__row">
+        <th scope="row" class="spec__label">{r.label}</th>
+        <td class="spec__value">
+          <span class="spec__figure">{r.value}</span>{r.unit && <span class="spec__unit">{r.unit}</span>}
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+<style>
+  .spec {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-ui);
+    /* 2px navy rule for a structural start, per the borders spec */
+    border-top: var(--border-mid) solid var(--rule-strong);
+  }
+  .spec--on-dark { border-top-color: var(--rule-on-dark-mid) }
+
+  .spec__caption {
+    caption-side: top;
+    text-align: left;
+    padding-bottom: var(--space-3);
+    font-size: var(--fs-label);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .spec--on-dark .spec__caption { color: var(--text-on-dark-muted) }
+
+  .spec__row { border-bottom: var(--border-hair) solid var(--rule-hair) }
+  .spec--on-dark .spec__row { border-bottom-color: var(--rule-on-dark) }
+
+  .spec__label,
+  .spec__value { padding-block: var(--space-4); vertical-align: baseline }
+  .spec--dense .spec__label,
+  .spec--dense .spec__value { padding-block: var(--space-2) }
+
+  .spec__label {
+    text-align: left;
+    font-size: var(--fs-body-sm);
+    font-weight: var(--weight-regular);
+    color: var(--text-body);
+    padding-right: var(--space-6);
+  }
+  .spec--on-dark .spec__label { color: var(--text-on-dark-body) }
+
+  .spec__value { text-align: right; white-space: nowrap }
+
+  .spec__figure {
+    font-weight: var(--weight-semibold);
+    color: var(--text-display);
+    font-size: var(--fs-body-sm);
+  }
+  .spec--numeric .spec__figure {
+    font-family: var(--font-numeral);
+    font-variant-numeric: var(--numeric-tabular);
+    font-feature-settings: "tnum" 1, "lnum" 1;
+    letter-spacing: -0.01em;
+  }
+  .spec--on-dark .spec__figure { color: var(--text-on-dark) }
+
+  .spec__unit {
+    margin-left: var(--space-2);
+    font-size: var(--fs-caption);
+    font-weight: var(--weight-medium);
+    color: var(--text-muted);
+  }
+  .spec--on-dark .spec__unit { color: var(--text-on-dark-muted) }
+</style>

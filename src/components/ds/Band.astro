@@ -1,0 +1,44 @@
+---
+// Section wrapper. Two background colours per page maximum: cream and one dark.
+// No gradients — the previous site's gradient dividers, blurred orbs and radial
+// washes are deliberately gone.
+interface Props {
+  surface?: 'page' | 'sunken' | 'navy' | 'void';
+  /** Draws the engineering grid field behind a dark band. */
+  grid?: boolean;
+  tight?: boolean;
+  id?: string;
+  class?: string;
+}
+const {
+  surface = 'page', grid = false, tight = false, id, class: className = '',
+} = Astro.props;
+const dark = surface === 'navy' || surface === 'void';
+---
+<section
+  id={id}
+  class:list={['band', `band--${surface}`, tight && 'band--tight', className]}
+>
+  {grid && dark && <span aria-hidden="true" class="band__grid tsg-grid-field"></span>}
+  <div class="band__inner"><slot /></div>
+</section>
+
+<style>
+  .band { position: relative; padding-block: var(--section-y) }
+  .band--tight { padding-block: var(--section-y-tight) }
+
+  .band--page { background: var(--surface-page) }
+  .band--sunken { background: var(--surface-sunken) }
+  .band--navy { background: var(--surface-navy); color: var(--text-on-dark-body) }
+  .band--void { background: var(--surface-void); color: var(--text-on-dark-body) }
+
+  .band__grid { position: absolute; inset: 0; opacity: 0.45; pointer-events: none }
+
+  .band__inner {
+    position: relative;
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--page-pad);
+  }
+</style>

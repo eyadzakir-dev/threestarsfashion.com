@@ -1,0 +1,208 @@
+---
+// Full-bleed numbered menu overlay. Playfair for the numbered links.
+//
+// Ported from the legacy fullscreen menu, with the accessibility gaps closed:
+// the legacy markup had no aria-expanded, no aria-controls, no aria-modal and no
+// focus trap. Five close paths are preserved (button, link click, Escape,
+// backdrop click, and focus returning to the opener).
+const LINKS = [
+  { href: '/', label: 'Overview' },
+  { href: '/about', label: 'About Us' },
+  { href: '/services', label: 'Capability' },
+  { href: '/facilities', label: 'Our Facilities' },
+  { href: '/certifications', label: 'Certifications' },
+  { href: '/logistics', label: 'Logistics' },
+  { href: '/faq', label: 'FAQ' },
+  { href: '/contact', label: 'Contact' },
+];
+---
+<div
+  class="menu"
+  id="fullscreenMenu"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Site menu"
+  hidden
+>
+  <div class="menu__inner">
+    <button type="button" class="menu__close" id="menuCloseBtn" aria-label="Close menu">
+      <span>Close</span>
+      <span class="menu__close-glyph" aria-hidden="true">&#215;</span>
+    </button>
+
+    <nav class="menu__nav" aria-label="All pages">
+      {LINKS.map((l, i) => (
+        <a href={l.href} class="menu__link">
+          <span class="menu__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+          <span class="menu__label">{l.label}</span>
+        </a>
+      ))}
+    </nav>
+
+    <div class="menu__foot">
+      <div>
+        <p class="menu__foot-label">Contact</p>
+        <p><a href="mailto:info@tsf.com.eg">info@tsf.com.eg</a></p>
+        <p><a href="tel:+20234500550">+2 03 4500550</a></p>
+      </div>
+      <div>
+        <p class="menu__foot-label">Location</p>
+        <p>Alexandria Free Zone</p>
+        <p>Egypt</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .menu {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-overlay);
+    background: var(--surface-void);
+    overflow-y: auto;
+    /* transform + opacity only */
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: var(--motion-overlay);
+  }
+  .menu[hidden] { display: none }
+  .menu[data-open='true'] { opacity: 1; transform: none }
+
+  .menu__inner {
+    min-height: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding: var(--space-8) var(--page-pad) var(--space-16);
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: var(--space-12);
+  }
+
+  .menu__close {
+    justify-self: end;
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: var(--hit-min);
+    font-family: var(--font-ui);
+    font-size: var(--fs-label);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--text-on-dark);
+  }
+  .menu__close-glyph { font-size: 1.5rem; line-height: 1 }
+
+  .menu__nav { display: grid; align-content: center; gap: var(--space-1) }
+
+  .menu__link {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-6);
+    padding-block: var(--space-3);
+    text-decoration: none;
+    border-bottom: var(--border-hair) solid var(--rule-on-dark);
+    transition: transform var(--dur-fast) var(--ease-spring);
+  }
+  .menu__link:hover { transform: translateX(var(--nudge-x)); text-decoration: none }
+
+  .menu__num {
+    font-family: var(--font-numeral);
+    font-size: var(--fs-label);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-label);
+    color: var(--text-accent);
+    font-variant-numeric: var(--numeric-tabular);
+    min-width: 2.5ch;
+  }
+  .menu__label {
+    font-family: var(--font-display);
+    font-size: var(--fs-display-3);
+    font-weight: var(--weight-regular);
+    line-height: var(--lh-display);
+    color: var(--text-on-dark);
+  }
+  .menu__link:hover .menu__label { color: var(--text-on-dark) }
+
+  .menu__foot {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 220px));
+    gap: var(--space-10);
+    border-top: var(--border-hair) solid var(--rule-on-dark);
+    padding-top: var(--space-6);
+    font-size: var(--fs-body-sm);
+    color: var(--text-on-dark-body);
+  }
+  .menu__foot a { color: var(--text-on-dark-body) }
+  .menu__foot a:hover { color: var(--text-on-dark) }
+  .menu__foot-label {
+    font-size: var(--fs-label);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--text-on-dark-label);
+    margin-bottom: var(--space-2);
+  }
+</style>
+
+<script>
+  // Small, self-contained, no library. The menu cannot be CSS-only: it needs a
+  // focus trap and Escape handling to be usable with a keyboard.
+  const overlay = document.getElementById('fullscreenMenu');
+  const openBtn = document.getElementById('menuOpenBtn');
+  const closeBtn = document.getElementById('menuCloseBtn');
+
+  if (overlay && openBtn && closeBtn) {
+    const FOCUSABLE = 'a[href], button:not([disabled])';
+    let lastFocused: HTMLElement | null = null;
+
+    const open = () => {
+      lastFocused = document.activeElement as HTMLElement;
+      overlay.hidden = false;
+      // Next frame so the transition runs from the hidden state.
+      requestAnimationFrame(() => overlay.dataset.open = 'true');
+      openBtn.setAttribute('aria-expanded', 'true');
+      document.documentElement.style.overflow = 'hidden';
+      closeBtn.focus();
+    };
+
+    const close = () => {
+      delete overlay.dataset.open;
+      openBtn.setAttribute('aria-expanded', 'false');
+      document.documentElement.style.overflow = '';
+      const done = () => { overlay.hidden = true; };
+      // Respect the transition, but never leave it stuck open.
+      overlay.addEventListener('transitionend', done, { once: true });
+      setTimeout(done, 400);
+      (lastFocused ?? openBtn).focus();
+    };
+
+    openBtn.addEventListener('click', open);
+    closeBtn.addEventListener('click', close);
+
+    // Navigating away closes it; on a static site the click also unloads.
+    overlay.querySelectorAll('.menu__link').forEach((l) =>
+      l.addEventListener('click', close)
+    );
+
+    // Backdrop click: only when the click is the overlay itself, not its content.
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay || e.target === overlay.firstElementChild) close();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (overlay.hidden) return;
+      if (e.key === 'Escape') { close(); return; }
+      if (e.key !== 'Tab') return;
+      // Focus trap
+      const items = Array.from(overlay.querySelectorAll<HTMLElement>(FOCUSABLE))
+        .filter((el) => el.offsetParent !== null);
+      if (!items.length) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+  }
+</script>

@@ -1,0 +1,85 @@
+---
+// Closing band. Navy surface, one primary red action, one quiet secondary.
+import Eyebrow from './Eyebrow.astro';
+import Button from './Button.astro';
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  body?: string;
+  actionLabel?: string;
+  actionHref?: string;
+  secondaryLabel?: string;
+  secondaryHref?: string;
+  class?: string;
+}
+const {
+  eyebrow, title, body, actionLabel, actionHref,
+  secondaryLabel, secondaryHref, class: className = '',
+} = Astro.props;
+---
+<section class:list={['callout', className]}>
+  <span aria-hidden="true" class="callout__grid tsg-grid-field"></span>
+  <div class="callout__inner">
+    <div class="callout__copy">
+      {eyebrow && <Eyebrow tone="onDark">{eyebrow}</Eyebrow>}
+      <h2 class="callout__title">{title}</h2>
+      {body && <p class="callout__body">{body}</p>}
+    </div>
+    {(actionLabel || secondaryLabel) && (
+      <div class="callout__actions">
+        {actionLabel && actionHref && <Button href={actionHref} arrow>{actionLabel}</Button>}
+        {secondaryLabel && secondaryHref && (
+          <Button href={secondaryHref} variant="onDark">{secondaryLabel}</Button>
+        )}
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .callout {
+    position: relative;
+    background: var(--surface-navy);
+    border-top: var(--keyline-accent);
+    padding-block: var(--section-y);
+    overflow: hidden;
+  }
+  .callout__grid { position: absolute; inset: 0; opacity: 0.3; pointer-events: none }
+
+  .callout__inner {
+    position: relative;
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--page-pad);
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: var(--space-12);
+    align-items: end;
+  }
+  .callout__copy { display: grid; gap: var(--space-5) }
+
+  .callout__title {
+    font-family: var(--font-display);
+    font-size: var(--fs-display-3);
+    font-weight: var(--weight-semibold);
+    line-height: var(--lh-display);
+    letter-spacing: var(--tracking-display);
+    color: var(--text-on-dark);
+    max-width: 26ch;
+    text-wrap: pretty;
+  }
+  .callout__body {
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--text-on-dark-body);
+    max-width: 56ch;
+    text-wrap: pretty;
+  }
+  .callout__actions { display: flex; flex-wrap: wrap; gap: var(--space-4) }
+
+  @media (max-width: 992px) {
+    .callout__inner { grid-template-columns: 1fr; align-items: start }
+  }
+</style>

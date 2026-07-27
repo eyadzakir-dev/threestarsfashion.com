@@ -1,0 +1,27 @@
+---
+// Uppercase wide-tracked label. 11-12px, semibold, 0.18em tracking.
+// Ported from the design system's components/foundation/Eyebrow.
+interface Props {
+  tone?: 'accent' | 'quiet' | 'onDark' | 'slate';
+  as?: 'span' | 'div' | 'p';
+  class?: string;
+}
+const { tone = 'accent', as: Tag = 'span', class: className = '' } = Astro.props;
+---
+<Tag class:list={['eyebrow', `eyebrow--${tone}`, className]}><slot /></Tag>
+
+<style>
+  .eyebrow {
+    display: block;
+    font-family: var(--font-ui);
+    font-size: var(--fs-label);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    line-height: var(--lh-tight);
+  }
+  .eyebrow--accent { color: var(--text-accent) }
+  .eyebrow--quiet { color: var(--text-muted) }
+  .eyebrow--onDark { color: var(--text-on-dark-muted) }
+  .eyebrow--slate { color: var(--text-on-dark-label) }
+</style>

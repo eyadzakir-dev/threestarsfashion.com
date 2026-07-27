@@ -1,0 +1,216 @@
+---
+// Sticky header, the only fixed element. Nav active state is a 2px red
+// underline, never a filled pill.
+//
+// MOTION: on scroll the header gains a solid backdrop. That is animated as the
+// OPACITY OF A PSEUDO-ELEMENT, not background-color and not backdrop-filter, so
+// the transform-and-opacity rule holds. Driven by CSS animation-timeline:
+// scroll() — linear, because it is scroll-driven — with an @supports fallback
+// to a permanently solid header (never a JS scroll listener).
+//
+// The design system specifies 76px condensing to 60px. Height is a layout
+// property, so it is NOT animated here; the header stays 76px and only the
+// backdrop resolves. Deliberate: a height animation on a sticky element is
+// exactly the kind of thing that costs INP.
+import MediaSlot from '../MediaSlot.astro';
+
+interface Props {
+  activeNav?: string | null;
+}
+const { activeNav = null } = Astro.props;
+
+const NAV = [
+  { href: '/about', label: 'About' },
+  { href: '/services', label: 'Capability' },
+  { href: '/facilities', label: 'Facilities' },
+  { href: '/certifications', label: 'Compliance' },
+  { href: '/logistics', label: 'Logistics' },
+];
+const LINKEDIN = 'https://www.linkedin.com/company/three-stars-fashion-group/posts/?feedView=all';
+---
+<header class="hdr" id="siteHeader">
+  <span aria-hidden="true" class="hdr__backdrop"></span>
+  <div class="hdr__inner">
+    <a href="/" class="hdr__brand" aria-label="Three Stars Fashion — home">
+      <MediaSlot
+        dir="assets/Brands"
+        basename="tsflogo"
+        alt=""
+        aspectRatio="1 / 1"
+        fit="contain"
+        eager
+        posterOnly
+        class="hdr__mark"
+      />
+      <span class="hdr__wordmark">Three Stars Fashion</span>
+    </a>
+
+    <nav class="hdr__nav" aria-label="Primary">
+      {NAV.map((n) => (
+        <a
+          href={n.href}
+          class:list={['hdr__link', activeNav === n.href && 'hdr__link--active']}
+          aria-current={activeNav === n.href ? 'page' : undefined}
+        >{n.label}</a>
+      ))}
+    </nav>
+
+    <div class="hdr__right">
+      <a href="/contact" class="hdr__cta">Submit an inquiry</a>
+      <a href={LINKEDIN} target="_blank" rel="noopener noreferrer" class="hdr__social" aria-label="Three Stars Fashion on LinkedIn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+          <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
+        </svg>
+      </a>
+      <button
+        type="button"
+        class="hdr__menu"
+        id="menuOpenBtn"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="fullscreenMenu"
+      >
+        <span class="hdr__menu-text">Menu</span>
+        <span class="hdr__menu-glyph" aria-hidden="true">
+          <span class="hdr__menu-line"></span>
+          <span class="hdr__menu-line"></span>
+        </span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<style>
+  .hdr {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+    height: var(--header-h);
+  }
+
+  /* The animated backdrop. Opacity only. */
+  .hdr__backdrop {
+    position: absolute;
+    inset: 0;
+    background: var(--surface-navy);
+    border-bottom: var(--border-hair) solid var(--rule-on-dark);
+    opacity: 1;
+    pointer-events: none;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    .hdr__backdrop {
+      opacity: 0;
+      animation: hdr-solidify linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 var(--header-h);
+    }
+  }
+  @keyframes hdr-solidify { to { opacity: 1 } }
+
+  /* Reduced motion: solid immediately rather than resolving. */
+  @media (prefers-reduced-motion: reduce) {
+    .hdr__backdrop { animation: none; opacity: 1 }
+  }
+
+  .hdr__inner {
+    position: relative;
+    height: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--page-pad);
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+  }
+
+  .hdr__brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+  .hdr__brand:hover { text-decoration: none }
+  .hdr :global(.media-slot.hdr__mark) { width: 32px; background: none }
+  .hdr :global(.media-slot.hdr__mark .media-slot__poster) { filter: none }
+
+  .hdr__wordmark {
+    font-family: var(--font-display);
+    font-size: var(--fs-heading-3);
+    font-weight: var(--weight-semibold);
+    color: var(--text-on-dark);
+    white-space: nowrap;
+  }
+
+  .hdr__nav { display: flex; gap: var(--space-6); margin-inline: auto }
+  .hdr__link {
+    position: relative;
+    padding-block: var(--space-2);
+    font-family: var(--font-ui);
+    font-size: var(--fs-label-lg);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-button);
+    text-transform: uppercase;
+    color: var(--text-on-dark-body);
+    text-decoration: none;
+  }
+  /* Colour change on hover is instant — that is what makes it mechanical. */
+  .hdr__link:hover { color: var(--text-on-dark); text-decoration: none }
+  .hdr__link--active { color: var(--text-on-dark) }
+  .hdr__link--active::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: var(--border-mid);
+    background: var(--rule-accent);
+  }
+
+  .hdr__right { display: flex; align-items: center; gap: var(--space-5); flex-shrink: 0 }
+
+  .hdr__cta {
+    font-family: var(--font-ui);
+    font-size: var(--fs-label-lg);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-button);
+    text-transform: uppercase;
+    color: var(--text-on-dark);
+    text-decoration: none;
+    padding: var(--pad-control-y-sm) var(--pad-control-x-sm);
+    border: var(--border-hair) solid var(--rule-on-dark-mid);
+    transition: transform var(--dur-fast) var(--ease-spring);
+  }
+  .hdr__cta:hover {
+    transform: translateY(var(--lift-hover));
+    background: var(--action-fill);
+    border-color: var(--action-fill);
+    color: var(--text-on-accent);
+    text-decoration: none;
+  }
+
+  .hdr__social { display: grid; place-items: center; color: var(--text-on-dark-muted) }
+  .hdr__social:hover { color: var(--text-on-dark) }
+
+  .hdr__menu {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: var(--hit-min);
+    font-family: var(--font-ui);
+    font-size: var(--fs-label);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--text-on-dark);
+  }
+  .hdr__menu-glyph { display: grid; gap: 4px; width: 18px }
+  .hdr__menu-line { height: 1px; background: currentColor }
+
+  @media (max-width: 1100px) { .hdr__nav { display: none } }
+  @media (max-width: 760px) {
+    .hdr__cta, .hdr__wordmark { display: none }
+    .hdr__inner { justify-content: space-between }
+  }
+</style>

@@ -1,0 +1,98 @@
+---
+// A capacity figure treated as typography: tabular numeral, red unit, uppercase
+// label. Numerals are a first-class element, not body text.
+//
+// COUNTER BEHAVIOUR (an approved deviation from "CSS scroll-driven only"):
+// a pure-CSS @property + counter() count-up cannot render a thousands
+// separator, and the design system mandates `85,000` never `85000`. So the
+// formatted figure sits in the HTML — correct with JS off and correct for
+// screen readers — and a tiny IntersectionObserver animates it. That is neither
+// a scroll library nor a scroll listener, so it stays inside CLAUDE.md.
+// See src/scripts/counters.ts for the pinned en-US locale and the unobserve.
+interface Props {
+  /** Pre-formatted with separators, e.g. '85,000'. */
+  value: string | number;
+  /** Unit or qualifier, set in red at ~42% of the numeral size. */
+  suffix?: string;
+  label?: string;
+  footnote?: string;
+  size?: 'hero' | 'xl' | 'lg' | 'md';
+  onDark?: boolean;
+  align?: 'start' | 'center';
+  /** Hairline rule above the figure. */
+  rule?: boolean;
+  /** Count up on first view. Only for pure integers. */
+  animate?: boolean;
+  class?: string;
+}
+const {
+  value, suffix, label, footnote, size = 'lg', onDark = false,
+  align = 'start', rule = true, animate = false, class: className = '',
+} = Astro.props;
+
+// Only animate a value that is genuinely an integer with separators; '24/7'
+// and 'Duty-free' must never be fed to a counter.
+const numeric = typeof value === 'number'
+  ? value
+  : /^[\d,]+$/.test(String(value)) ? Number(String(value).replace(/,/g, '')) : null;
+const canAnimate = animate && numeric !== null;
+---
+<div
+  class:list={['stat', `stat--${size}`, onDark && 'stat--on-dark', `stat--${align}`, rule && 'stat--rule', className]}
+>
+  <p class="stat__figure">
+    <span
+      class="stat__value"
+      data-count={canAnimate ? String(numeric) : undefined}
+    >{value}</span>{suffix && <span class="stat__suffix">{suffix}</span>}
+  </p>
+  {label && <p class="stat__label">{label}</p>}
+  {footnote && <p class="stat__footnote">{footnote}</p>}
+</div>
+
+<style>
+  .stat { display: grid; gap: var(--space-3) }
+  .stat--center { justify-items: center; text-align: center }
+  .stat--rule { border-top: var(--border-hair) solid var(--rule-hair); padding-top: var(--space-4) }
+  .stat--on-dark.stat--rule { border-top-color: var(--rule-on-dark) }
+
+  .stat__figure {
+    display: flex;
+    align-items: baseline;
+    gap: 0.08em;
+    font-family: var(--font-numeral);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-numeral);
+    line-height: var(--lh-numeral);
+    font-variant-numeric: var(--numeric-tabular);
+    font-feature-settings: "tnum" 1, "lnum" 1;
+    color: var(--text-display);
+  }
+  .stat--on-dark .stat__figure { color: var(--text-on-dark) }
+
+  .stat--hero .stat__figure { font-size: var(--fs-numeral-hero) }
+  .stat--xl .stat__figure { font-size: var(--fs-numeral-xl) }
+  .stat--lg .stat__figure { font-size: var(--fs-numeral-lg) }
+  .stat--md .stat__figure { font-size: var(--fs-numeral-md) }
+
+  /* Units sit at ~42% of the numeral size, in red. */
+  .stat__suffix { font-size: 0.42em; color: var(--text-accent); font-weight: var(--weight-semibold) }
+
+  .stat__label {
+    font-family: var(--font-ui);
+    font-size: var(--fs-label);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .stat--on-dark .stat__label { color: var(--text-on-dark-muted) }
+
+  .stat__footnote {
+    font-size: var(--fs-caption);
+    line-height: var(--lh-body);
+    color: var(--text-muted);
+    max-width: 34ch;
+  }
+  .stat--on-dark .stat__footnote { color: var(--text-on-dark-muted) }
+</style>

@@ -1,0 +1,67 @@
+---
+// Customer logos, always rendered desaturated. Third-party trademarks are shown
+// as supplied SVGs — never recoloured, never on a tinted tile.
+//
+// The legacy site duplicated the whole strip and ran a CSS marquee. This is a
+// static grid instead: a marquee animates transform continuously, which is
+// motion with no informational payload, and it makes the marks harder to read.
+import MediaSlot from '../MediaSlot.astro';
+
+export interface Logo {
+  /** Directory under public/, e.g. "assets/Brands". */
+  dir: string;
+  /** File stem, e.g. "nike". */
+  basename: string;
+  name: string;
+}
+
+interface Props {
+  logos: Logo[];
+  columns?: number;
+  class?: string;
+}
+const { logos, columns = 6, class: className = '' } = Astro.props;
+---
+<ul class:list={['wall', className]} style={`--wall-cols: ${columns};`}>
+  {logos.map((l) => (
+    <li class="wall__item">
+      <MediaSlot
+        dir={l.dir}
+        basename={l.basename}
+        alt={l.name}
+        aspectRatio="3 / 2"
+        fit="contain"
+        posterOnly
+        class="wall__logo"
+      />
+    </li>
+  ))}
+</ul>
+
+<style>
+  .wall {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(var(--wall-cols), 1fr);
+    gap: var(--border-hair);
+    background: var(--rule-hair);
+    border: var(--border-hair) solid var(--rule-hair);
+  }
+  .wall__item {
+    display: grid;
+    place-items: center;
+    padding: var(--space-6);
+    background: var(--surface-raised);
+  }
+  /* Desaturated by default; full colour is never used for third-party marks. */
+  .wall :global(.media-slot.wall__logo) { background: none; width: 100% }
+  .wall :global(.media-slot.wall__logo .media-slot__poster) {
+    filter: saturate(0) contrast(1.05) opacity(0.62);
+    transition: filter var(--dur-fast) var(--ease-spring);
+  }
+
+  @media (max-width: 992px) { .wall { grid-template-columns: repeat(4, 1fr) } }
+  @media (max-width: 560px) { .wall { grid-template-columns: repeat(2, 1fr) } }
+</style>

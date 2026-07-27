@@ -1,0 +1,87 @@
+---
+// 11-13px semibold uppercase, 0.08em tracking. Square corners — no pills.
+// Hover lifts 2px and the arrow nudges 4px; colour changes are instant, which
+// is what makes the interface feel mechanical rather than soft.
+// One primary (red) action per view.
+interface Props {
+  href: string;
+  variant?: 'primary' | 'secondary' | 'ghost' | 'onDark';
+  arrow?: boolean;
+  external?: boolean;
+  class?: string;
+}
+const {
+  href, variant = 'primary', arrow = false, external = false, class: className = '',
+} = Astro.props;
+const rel = external ? 'noopener noreferrer' : undefined;
+const target = external ? '_blank' : undefined;
+---
+<a
+  href={href}
+  class:list={['btn', `btn--${variant}`, className]}
+  rel={rel}
+  target={target}
+><span class="btn__label"><slot /></span>{arrow && <span class="btn__arrow" aria-hidden="true">&#8594;</span>}</a>
+
+<style>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: var(--hit-min);
+    padding: var(--pad-control-y) var(--pad-control-x);
+    border-radius: var(--radius-none);
+    font-family: var(--font-ui);
+    font-size: var(--fs-label-lg);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-button);
+    text-transform: uppercase;
+    text-decoration: none;
+    /* transform only — never colour, size or shadow */
+    transition: transform var(--dur-fast) var(--ease-spring);
+    will-change: transform;
+  }
+  .btn:hover { transform: translateY(var(--lift-hover)); text-decoration: none }
+  .btn:active { transform: translateY(var(--lift-press)) }
+
+  .btn__arrow { transition: transform var(--dur-fast) var(--ease-spring) }
+  .btn:hover .btn__arrow { transform: translateX(var(--nudge-x)) }
+
+  .btn--primary {
+    background: var(--action-fill);
+    color: var(--text-on-accent);
+    border: var(--border-mid) solid var(--action-fill);
+  }
+  .btn--primary:hover {
+    background: var(--action-fill-hover);
+    border-color: var(--action-fill-hover);
+    color: var(--text-on-accent);
+  }
+  .btn--primary:active { background: var(--action-fill-press); border-color: var(--action-fill-press) }
+
+  .btn--secondary {
+    background: transparent;
+    color: var(--text-display);
+    border: var(--border-mid) solid var(--rule-strong);
+  }
+  .btn--secondary:hover { background: var(--rule-strong); color: var(--text-on-dark) }
+
+  .btn--ghost {
+    background: transparent;
+    color: var(--text-accent);
+    border: 0;
+    padding-inline: 0;
+  }
+  .btn--ghost:hover { color: var(--red-600) }
+
+  .btn--onDark {
+    background: transparent;
+    color: var(--text-on-dark);
+    border: var(--border-hair) solid var(--rule-on-dark-mid);
+  }
+  .btn--onDark:hover {
+    background: var(--cream-000);
+    color: var(--navy-700);
+    border-color: var(--cream-000);
+  }
+</style>

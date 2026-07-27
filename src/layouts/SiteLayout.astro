@@ -1,0 +1,100 @@
+---
+/**
+ * Layout for redesigned pages (steps 7-8). The legacy Layout.astro remains only
+ * for pages not yet rebuilt, and is deleted once step 8 finishes.
+ *
+ * Head tag order and content are carried over from Layout.astro so the SEO
+ * floor holds: per-page title, canonical, description, og/twitter, and the
+ * Organization JSON-LD on the homepage.
+ */
+import SiteHeader from '../components/ds/SiteHeader.astro';
+import MenuOverlay from '../components/ds/MenuOverlay.astro';
+import SiteFooter from '../components/ds/SiteFooter.astro';
+
+import '../styles/fonts.css';
+import '../styles/tokens.css';
+import '../styles/base.css';
+
+interface Props {
+  title: string;
+  description: string;
+  canonical: string;
+  ogTitle: string;
+  ogDescription: string;
+  ogUrl: string;
+  twitterTitle: string;
+  twitterDescription: string;
+  activeNav?: string | null;
+  /** Hero-first pages sit under a transparent header. */
+  headerOverlay?: boolean;
+}
+
+const {
+  title, description, canonical, ogTitle, ogDescription, ogUrl,
+  twitterTitle, twitterDescription, activeNav = null, headerOverlay = false,
+} = Astro.props;
+
+const OG_IMAGE = 'https://threestarsfashion.com/assets/og-image.jpg';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/assets/favicon/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon/favicon.svg">
+    <link rel="shortcut icon" href="/assets/favicon/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+    <link rel="manifest" href="/assets/favicon/site.webmanifest">
+    <link rel="canonical" href={canonical}>
+    <title>{title}</title>
+    <meta name="description" content={description}>
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Three Stars Fashion Group">
+    <meta property="og:title" content={ogTitle}>
+    <meta property="og:description" content={ogDescription}>
+    <meta property="og:url" content={ogUrl}>
+    <meta property="og:image" content={OG_IMAGE}>
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content={twitterTitle}>
+    <meta name="twitter:description" content={twitterDescription}>
+    <meta name="twitter:image" content={OG_IMAGE}>
+    <link rel="preload" href="/fonts/montserrat-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/playfair-display-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <slot name="head" />
+</head>
+
+<body class:list={[headerOverlay && 'has-header-overlay']}>
+    <a href="#main" class="skip">Skip to content</a>
+    <SiteHeader activeNav={activeNav} />
+    <MenuOverlay />
+    <main id="main"><slot /></main>
+    <SiteFooter />
+    <slot name="tail" />
+</body>
+
+</html>
+
+<style>
+  /* Header sits over a hero on pages that open with one. */
+  .has-header-overlay :global(.hdr) { margin-bottom: calc(-1 * var(--header-h)) }
+
+  .skip {
+    position: absolute;
+    left: var(--space-4);
+    top: var(--space-4);
+    z-index: var(--z-modal);
+    padding: var(--space-3) var(--space-4);
+    background: var(--surface-accent);
+    color: var(--text-on-accent);
+    font-size: var(--fs-label);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    text-decoration: none;
+    transform: translateY(-200%);
+  }
+  .skip:focus-visible { transform: none }
+</style>

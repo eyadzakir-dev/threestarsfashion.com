@@ -1,0 +1,57 @@
+---
+// Makes the certification list scannable with scope, rather than plain text.
+// Certificates are issued to a facility, so scope matters to an auditor.
+interface Props {
+  name: string;
+  /** e.g. "Gold" for WRAP. */
+  grade?: string;
+  scope?: string;
+  class?: string;
+}
+const { name, grade, scope, class: className = '' } = Astro.props;
+---
+<div class:list={['cert', className]}>
+  <p class="cert__name">
+    {name}{grade && <span class="cert__grade">{grade}</span>}
+  </p>
+  {scope && <p class="cert__scope">{scope}</p>}
+</div>
+
+<style>
+  .cert {
+    display: grid;
+    gap: var(--space-1);
+    padding: var(--space-5) var(--space-6);
+    background: var(--surface-raised);
+    border: var(--border-hair) solid var(--rule-hair);
+    border-top: var(--border-mid) solid var(--rule-strong);
+    border-radius: var(--radius-none);
+    transition: transform var(--dur-fast) var(--ease-spring);
+  }
+  .cert:hover { transform: translateY(var(--lift-hover)); border-top-color: var(--rule-accent) }
+
+  .cert__name {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    font-family: var(--font-ui);
+    font-size: var(--fs-heading-3);
+    font-weight: var(--weight-semibold);
+    color: var(--text-display);
+    line-height: var(--lh-tight);
+  }
+  /* Grade is a qualifier, so it takes the red accent like a numeral unit. */
+  .cert__grade {
+    font-size: var(--fs-label);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--text-accent);
+  }
+  .cert__scope {
+    font-size: var(--fs-caption);
+    line-height: var(--lh-body);
+    color: var(--text-muted);
+    text-wrap: pretty;
+  }
+</style>

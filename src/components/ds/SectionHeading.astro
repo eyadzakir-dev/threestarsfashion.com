@@ -1,0 +1,65 @@
+---
+// The headline device: a light-weight lead fragment plus a semibold subject in
+// one headline. This replaces italics as the means of emphasis.
+// Playfair Display, display sizes only.
+import Eyebrow from './Eyebrow.astro';
+
+interface Props {
+  eyebrow?: string;
+  /** Light-weight lead fragment, e.g. "Ten factories." */
+  lead?: string;
+  /** Semibold subject, e.g. "One production line of record." */
+  title: string;
+  standfirst?: string;
+  size?: 'display-1' | 'display-2' | 'display-3';
+  align?: 'start' | 'center';
+  onDark?: boolean;
+  class?: string;
+}
+const {
+  eyebrow, lead, title, standfirst, size = 'display-2',
+  align = 'start', onDark = false, class: className = '',
+} = Astro.props;
+---
+<div class:list={['heading', `heading--${size}`, `heading--${align}`, onDark && 'heading--on-dark', className]}>
+  {eyebrow && <Eyebrow tone={onDark ? 'onDark' : 'accent'}>{eyebrow}</Eyebrow>}
+  <h2 class="heading__title">
+    {lead && <span class="heading__lead">{lead}</span>}
+    {lead && ' '}<span class="heading__subject">{title}</span>
+  </h2>
+  {standfirst && <p class="heading__standfirst">{standfirst}</p>}
+</div>
+
+<style>
+  .heading { display: grid; gap: var(--space-5) }
+  .heading--center { justify-items: center; text-align: center }
+
+  .heading__title {
+    font-family: var(--font-display);
+    line-height: var(--lh-display);
+    letter-spacing: var(--tracking-display);
+    color: var(--text-display);
+    text-wrap: pretty;
+    max-width: 24ch;
+    margin: 0;
+  }
+  .heading--center .heading__title { max-width: 32ch }
+  .heading--on-dark .heading__title { color: var(--text-on-dark) }
+
+  .heading--display-1 .heading__title { font-size: var(--fs-display-1) }
+  .heading--display-2 .heading__title { font-size: var(--fs-display-2) }
+  .heading--display-3 .heading__title { font-size: var(--fs-display-3) }
+
+  .heading__lead { font-weight: var(--weight-light) }
+  .heading__subject { font-weight: var(--weight-semibold) }
+
+  .heading__standfirst {
+    font-family: var(--font-ui);
+    font-size: var(--fs-body-lg);
+    line-height: var(--lh-body);
+    color: var(--text-body);
+    max-width: 62ch;
+    text-wrap: pretty;
+  }
+  .heading--on-dark .heading__standfirst { color: var(--text-on-dark-body) }
+</style>

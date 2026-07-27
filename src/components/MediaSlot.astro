@@ -1,113 +1,81 @@
 ---
 /**
  * MediaSlot — every visual position on the site goes through this component.
- * No bare <img> or <video> in section markup.
+ * No bare <img> or <video> in section markup, ever.
  *
- * It always renders the poster, and emits a <video> ONLY if
- * public/assets/slots/{slotName}/loop.mp4 exists at build time. That is the
- * whole point: real footage gets added later by dropping a file at the path,
- * with no code change. A slot with no media at all renders an empty framed
- * placeholder rather than collapsing the layout — that is the deliberate state
- * of the `facilities` slot, which is awaiting real footage and must never be
- * filled with generated facility imagery.
+ * It always renders the poster, and emits a <video> ONLY if a loop.mp4 exists in
+ * the slot directory at build time. That is the whole point: real footage gets
+ * added later by dropping a file at the path, with no code change. A position
+ * with no media at all renders an empty framed placeholder rather than
+ * collapsing the layout — the deliberate state of the `facilities` slot, which
+ * is awaiting real footage and must never be filled with generated facility
+ * imagery.
  *
- * Sources are resolved with node:fs at module scope, which runs during the
- * static build (and per-request in `astro dev`), so the check is free at runtime.
+ * Two addressing modes:
+ *   slotName            -> public/assets/slots/{slotName}/{basename}.*
+ *   dir                 -> public/{dir}/{basename}.*   (any path under public/)
+ * The second exists so the legacy factory photography can also render through
+ * this component instead of a bare <img>.
  */
-import { existsSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import { resolveMedia } from '../lib/media';
 
 interface Props {
-  slotName: string;
-  /**
-   * File stem within the slot directory. Defaults to "poster", which covers
-   * every single-image slot. ProcessScroll needs it because its six frames are
-   * one positional sequence inside a single slot directory
-   * (assets/slots/process/01-yarn.avif … 06-pack.avif) rather than one slot per
-   * frame — the component depends on that exact naming.
-   */
+  /** Named slot under assets/slots/. Mutually exclusive with `dir`. */
+  slotName?: string;
+  /** Explicit directory under public/, e.g. "assets/Buildings". */
+  dir?: string;
+  /** File stem. Defaults to "poster" for slots. */
   basename?: string;
-  /** CSS aspect-ratio value, e.g. "16 / 9". Reserves space so nothing shifts. */
+  /** CSS aspect-ratio value. Reserves space so nothing shifts. */
   aspectRatio?: string;
   alt: string;
   /**
    * Render the poster only, never the video, even if loop.mp4 exists.
-   * Required wherever many slots share a viewport: six autoplaying loops in one
-   * pinned section (ProcessScroll) would be brutal on mobile, and a future
+   * Required wherever many positions share a viewport: six autoplaying loops in
+   * one pinned section (ProcessScroll) would be brutal on mobile, and a future
    * loop.mp4 drop must not silently turn them all on.
    */
   posterOnly?: boolean;
-  /** Above-the-fold slots should not lazy-load — it delays LCP. */
+  /** Above-the-fold positions should not lazy-load — it delays LCP. */
   eager?: boolean;
-  class?: string;
-  /** Applies the brand's quieter photography treatment (--img-filter-quiet). */
+  /** Applies the quieter photography treatment (--img-filter-quiet). */
   quiet?: boolean;
+  /** object-fit override; "contain" for logos. */
+  fit?: 'cover' | 'contain';
+  class?: string;
 }
 
 const {
-  slotName,
-  basename: stemProp = 'poster',
-  aspectRatio = '16 / 9',
-  alt,
-  posterOnly = false,
-  eager = false,
+  slotName, dir, basename = 'poster', aspectRatio = '16 / 9', alt,
+  posterOnly = false, eager = false, quiet = false, fit = 'cover',
   class: className = '',
-  quiet = false,
 } = Astro.props;
 
-const PUBLIC_DIR = 'public';
-const slotDir = join('assets', 'slots', slotName);
+if (!slotName && !dir) throw new Error('MediaSlot needs either slotName or dir');
 
-// Poster: prefer AVIF, fall back through WebP to JPG. Whichever exists wins.
-const posterCandidates = [`${stemProp}.avif`, `${stemProp}.webp`, `${stemProp}.jpg`, `${stemProp}.png`];
-const posters = posterCandidates
-  .map((f) => ({ file: f, rel: `/${slotDir}/${f}`, abs: join(PUBLIC_DIR, slotDir, f) }))
-  .filter((p) => existsSync(p.abs));
+const mediaDir = dir ?? `assets/slots/${slotName}`;
+const m = await resolveMedia(mediaDir, basename);
 
-const avif = posters.find((p) => p.file.endsWith('.avif'));
-const webp = posters.find((p) => p.file.endsWith('.webp'));
-const raster = posters.find((p) => /\.(jpg|png)$/.test(p.file));
-const fallback = raster ?? webp ?? avif;
-
-// Intrinsic dimensions come from a sidecar written by scripts/fetch_media.mjs,
-// so width/height are explicit and CLS stays at zero. CLS is currently 0.000
-// site-wide and has no headroom — it can only get worse (BASELINE.md).
-let dims: { width: number; height: number } | null = null;
-const dimsPath = join(PUBLIC_DIR, slotDir, `${stemProp}.json`);
-if (existsSync(dimsPath)) {
-  try {
-    const { width, height } = JSON.parse(
-      await import('node:fs/promises').then((fs) => fs.readFile(dimsPath, 'utf8'))
-    );
-    if (width && height) dims = { width, height };
-  } catch { /* fall through to aspect-ratio only */ }
-}
-
-const videoMp4 = join(PUBLIC_DIR, slotDir, 'loop.mp4');
-const videoWebm = join(PUBLIC_DIR, slotDir, 'loop.webm');
-const hasMp4 = !posterOnly && existsSync(videoMp4);
-const hasWebm = !posterOnly && existsSync(videoWebm);
-const hasVideo = hasMp4 || hasWebm;
-
-const hasPoster = fallback != null;
-const sizeOf = (p: string) => (existsSync(p) ? statSync(p).size : 0);
+const hasVideo = !posterOnly && (m.mp4 !== null || m.webm !== null);
+const hasPoster = m.fallback !== null;
+const state = hasVideo ? 'video' : hasPoster ? 'poster' : 'empty';
 ---
 
 <figure
-  class:list={['media-slot', quiet && 'media-slot--quiet', className]}
+  class:list={['media-slot', quiet && 'media-slot--quiet', `media-slot--${fit}`, className]}
   style={`--slot-aspect: ${aspectRatio};`}
-  data-slot={stemProp === 'poster' ? slotName : `${slotName}/${stemProp}`}
-  data-state={hasVideo ? 'video' : hasPoster ? 'poster' : 'empty'}
+  data-slot={slotName ?? mediaDir}
+  data-state={state}
 >
   {hasPoster && (
     <picture>
-      {avif && <source srcset={avif.rel} type="image/avif" />}
-      {webp && <source srcset={webp.rel} type="image/webp" />}
+      {m.avif && <source srcset={m.avif} type="image/avif" />}
+      {m.webp && <source srcset={m.webp} type="image/webp" />}
       <img
-        src={fallback!.rel}
+        src={m.fallback}
         alt={alt}
-        width={dims?.width}
-        height={dims?.height}
+        width={m.width ?? undefined}
+        height={m.height ?? undefined}
         loading={eager ? 'eager' : 'lazy'}
         decoding={eager ? 'sync' : 'async'}
         fetchpriority={eager ? 'high' : 'auto'}
@@ -124,12 +92,12 @@ const sizeOf = (p: string) => (existsSync(p) ? statSync(p).size : 0);
       playsinline
       autoplay
       preload="none"
-      poster={fallback?.rel}
+      poster={m.fallback ?? undefined}
       aria-hidden="true"
       tabindex="-1"
     >
-      {hasWebm && <source src={`/${slotDir}/loop.webm`} type="video/webm" />}
-      {hasMp4 && <source src={`/${slotDir}/loop.mp4`} type="video/mp4" />}
+      {m.webm && <source src={m.webm} type="video/webm" />}
+      {m.mp4 && <source src={m.mp4} type="video/mp4" />}
     </video>
   )}
 
@@ -146,6 +114,9 @@ const sizeOf = (p: string) => (existsSync(p) ? statSync(p).size : 0);
     aspect-ratio: var(--slot-aspect);
     overflow: hidden;
     background: var(--surface-navy-deep);
+    /* Contain stacking: without this the video's layer escaped the figure and
+       painted over the hero copy and its protection scrim. */
+    isolation: isolate;
   }
 
   .media-slot__poster,
@@ -157,17 +128,18 @@ const sizeOf = (p: string) => (existsSync(p) ? statSync(p).size : 0);
     object-fit: cover;
     filter: var(--img-filter);
   }
+  .media-slot--contain .media-slot__poster,
+  .media-slot--contain .media-slot__video { object-fit: contain }
 
   .media-slot--quiet .media-slot__poster,
-  .media-slot--quiet .media-slot__video {
-    filter: var(--img-filter-quiet);
-  }
+  .media-slot--quiet .media-slot__video { filter: var(--img-filter-quiet) }
 
-  /* Video sits above the poster once it has frames to show. */
-  .media-slot__video { z-index: var(--z-base); }
+  /* The video already paints above the poster by DOM order. It must NOT carry a
+     z-index: that created a layer which escaped the figure and covered the hero
+     headline and CTA. */
 
-  /* The awaiting-real-media state: the engineering grid field, not a broken
-     image. Reads as restrained rather than empty. */
+  /* Awaiting-real-media: the engineering grid field, not a broken image.
+     Reads as restrained rather than empty. */
   .media-slot__empty {
     position: absolute;
     inset: 0;
@@ -178,11 +150,11 @@ const sizeOf = (p: string) => (existsSync(p) ? statSync(p).size : 0);
   }
 
   /* Reduced motion: hide the video and let the poster show. A display:none
-     video does not autoplay, so this needs no JavaScript. If a slot somehow
-     has a video but no poster, keep the video visible rather than showing
-     nothing — degrading must never hide content. */
+     video does not autoplay, so this needs no JavaScript. The :has() guard
+     keeps a video-only position visible rather than showing nothing —
+     degrading must never hide content. */
   @media (prefers-reduced-motion: reduce) {
-    .media-slot[data-state='video'] .media-slot__video { display: none; }
+    .media-slot[data-state='video'] .media-slot__video { display: none }
     .media-slot[data-state='video']:not(:has(.media-slot__poster)) .media-slot__video {
       display: block;
     }

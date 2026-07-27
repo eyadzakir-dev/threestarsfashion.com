@@ -1,0 +1,102 @@
+---
+// Capability tile: photography in a square frame, hairline box, 2px top rule
+// that goes red on hover. That red keyline is the system's one decorative
+// device. Elevation is flat — cards get no shadow.
+import MediaSlot from '../MediaSlot.astro';
+import Eyebrow from './Eyebrow.astro';
+
+interface Props {
+  index?: string;
+  title: string;
+  description: string;
+  meta?: string;
+  /** Named slot under assets/slots/, or an explicit dir under public/. */
+  slotName?: string;
+  dir?: string;
+  basename?: string;
+  alt?: string;
+  href?: string;
+  class?: string;
+}
+const {
+  index, title, description, meta, slotName, dir, basename, alt, href, class: className = '',
+} = Astro.props;
+const Tag = href ? 'a' : 'div';
+const hasMedia = Boolean(slotName || dir);
+---
+<Tag class:list={['cap-card', href && 'cap-card--link', className]} href={href}>
+  {hasMedia && (
+    <div class="cap-card__media">
+      <MediaSlot
+        slotName={slotName}
+        dir={dir}
+        basename={basename}
+        alt={alt ?? title}
+        aspectRatio="3 / 4"
+        posterOnly
+      />
+      {index && <span class="cap-card__index" aria-hidden="true">{index}</span>}
+    </div>
+  )}
+  <div class="cap-card__body">
+    <h3 class="cap-card__title">{title}</h3>
+    <p class="cap-card__desc">{description}</p>
+    {meta && <Eyebrow tone="quiet" as="p" class="cap-card__meta">{meta}</Eyebrow>}
+  </div>
+</Tag>
+
+<style>
+  .cap-card {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    border: var(--border-hair) solid var(--rule-hair);
+    /* 2px top rule: navy at rest, red on hover */
+    border-top: var(--border-mid) solid var(--rule-strong);
+    border-radius: var(--radius-none);
+    background: var(--surface-raised);
+    text-decoration: none;
+    color: inherit;
+    transition: transform var(--dur-fast) var(--ease-spring);
+    will-change: transform;
+  }
+  .cap-card--link:hover {
+    transform: translateY(var(--lift-hover));
+    border-top-color: var(--rule-accent);
+    text-decoration: none;
+  }
+  .cap-card--link:active { transform: translateY(var(--lift-press)) }
+
+  .cap-card__media { position: relative }
+
+  /* A red index chip in the top-left of the frame. */
+  .cap-card__index {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: var(--space-2) var(--space-3);
+    background: var(--surface-accent);
+    color: var(--text-on-accent);
+    font-family: var(--font-numeral);
+    font-size: var(--fs-label);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-label);
+    font-variant-numeric: var(--numeric-tabular);
+  }
+
+  .cap-card__body { display: grid; gap: var(--space-3); padding: var(--pad-card) }
+
+  .cap-card__title {
+    font-family: var(--font-display);
+    font-size: var(--fs-heading-2);
+    font-weight: var(--weight-semibold);
+    line-height: var(--lh-heading);
+    color: var(--text-display);
+  }
+  .cap-card__desc {
+    font-size: var(--fs-body-sm);
+    line-height: var(--lh-body);
+    color: var(--text-body);
+    text-wrap: pretty;
+  }
+  .cap-card__meta { margin-top: var(--space-1) }
+</style>
