@@ -55,6 +55,21 @@
      it would visibly warm every label on the dark process section. */
   --slate-500: #6B7689;
 
+  /* Process sequence — stage fallback washes.
+     These sit BENEATH the AVIF frames in ProcessScroll and are only visible
+     when a frame is missing, which is not hypothetical: 02-knit is skipped by
+     decision (rendered at 1k, awaiting regeneration), so its wash is on screen
+     today. Lifted verbatim from the design's process-scroll.html rather than
+     derived via color-mix, because approximating them drifts the one section
+     whose look was explicitly signed off. */
+  --process-yarn-hot: #7D1414;
+  --process-yarn-deep: #2A0D10;
+  --process-navy-mid: #16223F;
+  --process-navy-deep: #0D1526;
+  --process-dye-mid: #4A2340;
+  --process-ply-grey: #CFCDC7;
+  --process-pack-grey: #E6E4DE;
+
   /* Green — Green Point Logistics sub-brand ONLY. Never for TSG UI. */
   --gpl-green: #1D8348;
   --gpl-green-light: #27AE60;

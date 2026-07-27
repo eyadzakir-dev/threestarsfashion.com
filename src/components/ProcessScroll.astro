@@ -1,0 +1,404 @@
+---
+/**
+ * ProcessScroll — six production stages, cross-faded by a CSS view-timeline.
+ *
+ * Ported from design/process-scroll.html. The scroll mechanism is preserved
+ * exactly: view-timeline-name on a 700vh section, animation-timeline driving
+ * hold/drift keyframes at their original percentages, and an SVG thread drawn
+ * with stroke-dashoffset.
+ *
+ * HARD CONSTRAINTS — do not "modernise" any of these:
+ *  - No JavaScript. No IntersectionObserver. No scroll library. Ever.
+ *  - Every scroll-driven animation is `linear`. With a scroll timeline the
+ *    scroll position IS the easing curve; layering --ease-spring on top
+ *    double-eases it and the frames visibly pop and stutter.
+ *  - Both fallbacks stay: prefers-reduced-motion AND
+ *    @supports not (animation-timeline: view()). Each degrades to a plain
+ *    vertical stack that hides nothing.
+ *  - f1…f6 are STATIC class names, not template-interpolated, so Astro's
+ *    scoped-style hashing reliably applies to them.
+ *  - Frames render through MediaSlot with posterOnly. Six autoplaying loops in
+ *    one pinned section would be brutal on mobile, and a future loop.mp4 drop
+ *    must not silently switch them on.
+ *
+ * Each .frame keeps its gradient wash as its own background-image, BENEATH the
+ * MediaSlot image. If a frame's AVIF is missing the wash still carries the
+ * stage and the motion is unaffected — which is live today, since 02-knit is
+ * skipped pending regeneration at 2k.
+ */
+import MediaSlot from './MediaSlot.astro';
+
+export interface Stage {
+  index: string;
+  title: string;
+  body: string;
+  spec: string;
+  /** File stem in public/assets/slots/process/ — positional, order matters. */
+  frame: string;
+  alt: string;
+}
+
+interface Props {
+  eyebrow?: string;
+  stages?: Stage[];
+}
+
+/**
+ * Copy lives here, not in markup. Note stage 06: the design file read "Eighty
+ * thousand pieces", which is wrong and the only instance of that figure
+ * anywhere in the project. CLAUDE.md locks the number at 85,000 and the design
+ * system requires numerals with a thousands separator. See PARITY.md conflict 8.
+ */
+const DEFAULT_STAGES: Stage[] = [
+  {
+    index: '01', title: 'Yarn', frame: '01-yarn',
+    body: 'Combed cotton arrives on cone and is loaded to the creel. Every lot is tested for count and strength before it reaches a machine.',
+    spec: 'CONE TO CREEL',
+    alt: 'Industrial thread cones on a metal rack',
+  },
+  {
+    index: '02', title: 'Knit', frame: '02-knit',
+    body: 'Circular knitting builds the loop structure that determines how the finished garment will hang, stretch and recover.',
+    spec: 'GREIGE FABRIC',
+    alt: 'Macro of interlock knit cotton jersey',
+  },
+  {
+    index: '03', title: 'Dye', frame: '03-dye',
+    body: "Wet processing and finishing. Colour is matched to the buyer's standard and held across the full production run.",
+    spec: 'WET PROCESSING',
+    alt: 'Navy to crimson gradient across folded fabric',
+  },
+  {
+    index: '04', title: 'Cut', frame: '04-cut',
+    body: 'Fabric is spread to ply and cut against the marker. Efficiency here decides how much of the roll becomes garment.',
+    spec: 'MARKER, SPREAD, PLY',
+    alt: 'Cross-section of stacked fabric plies with clean cut edges',
+  },
+  {
+    index: '05', title: 'Sew', frame: '05-sew',
+    body: 'Assembly. Panels become a garment, and the seam is where construction quality is either present or absent.',
+    spec: 'ASSEMBLY LINE',
+    alt: 'Macro of a finished flatlock seam on navy knit',
+  },
+  {
+    index: '06', title: 'Pack', frame: '06-pack',
+    body: 'Inspected, folded, cartoned. 85,000 pieces leave this sequence every working day.',
+    spec: 'INSPECT, FOLD, CARTON',
+    alt: 'Precisely folded finished garments stacked in a column',
+  },
+];
+
+const { eyebrow = 'ONE THREAD, SIX STAGES', stages = DEFAULT_STAGES } = Astro.props;
+
+// The keyframe percentages and nth-of-type ranges below are hand-tuned for
+// exactly six stages. Fail loudly rather than silently desyncing the captions
+// from the frames.
+if (stages.length !== 6) {
+  throw new Error(
+    `ProcessScroll is tuned for exactly 6 stages; received ${stages.length}. ` +
+    'Adding or removing a stage means retuning every hold/holdN keyframe and ' +
+    'every .node animation-range in this component.'
+  );
+}
+
+const THREAD_PATH = 'M20 8 C 32 100, 8 180, 20 268 S 34 400, 20 486 S 12 560, 20 592';
+const FRAME_CLASSES = ['f1', 'f2', 'f3', 'f4', 'f5', 'f6'] as const;
+const NODES = [
+  { cx: 20, cy: 8 }, { cx: 23, cy: 125 }, { cx: 17, cy: 243 },
+  { cx: 24, cy: 360 }, { cx: 19, cy: 478 }, { cx: 20, cy: 592 },
+];
+---
+
+<section class="process" aria-label="Production process">
+  <div class="pane">
+
+    <div class="rail" aria-hidden="true">
+      <svg viewBox="0 0 40 600" preserveAspectRatio="none">
+        <path class="thread-track" d={THREAD_PATH} />
+        <path class="thread-live" style="--len:640" d={THREAD_PATH} />
+        {NODES.map((n) => <circle class="node" cx={n.cx} cy={n.cy} r="3.5" />)}
+      </svg>
+    </div>
+
+    <div class="stage">
+      <div class="frame f1"><MediaSlot slotName="process" basename={stages[0].frame} alt={stages[0].alt} posterOnly eager class="frame-media" /></div>
+      <div class="frame f2"><MediaSlot slotName="process" basename={stages[1].frame} alt={stages[1].alt} posterOnly class="frame-media" /></div>
+      <div class="frame f3"><MediaSlot slotName="process" basename={stages[2].frame} alt={stages[2].alt} posterOnly class="frame-media" /></div>
+      <div class="frame f4"><MediaSlot slotName="process" basename={stages[3].frame} alt={stages[3].alt} posterOnly class="frame-media" /></div>
+      <div class="frame f5"><MediaSlot slotName="process" basename={stages[4].frame} alt={stages[4].alt} posterOnly class="frame-media" /></div>
+      <div class="frame f6"><MediaSlot slotName="process" basename={stages[5].frame} alt={stages[5].alt} posterOnly class="frame-media" /></div>
+
+      <div class="scrim"></div>
+
+      <div class="eyebrow">{eyebrow}</div>
+
+      <div class="captions">
+        {stages.map((s) => (
+          <article class="cap">
+            <span class="idx">{s.index}</span>
+            <h3>{s.title}</h3>
+            <p>{s.body}</p>
+            <div class="spec">{s.spec}</div>
+          </article>
+        ))}
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  /* ── Scroll driver ────────────────────────────────────────────────
+     700vh gives ~100vh of scroll per stage once the sticky pane pins.
+     The `contain` range of this view-timeline maps exactly to the
+     period the pane is pinned, so 0–100% of every animation below
+     lines up with the pin. Below ~500vh it starts to feel rushed. */
+  .process {
+    --rail: 148px;
+    position: relative;
+    height: 700vh;
+    view-timeline-name: --process;
+    view-timeline-axis: block;
+    background: var(--black-void);
+    color: var(--cream-050);
+    font-family: var(--font-ui);
+  }
+
+  .pane {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: var(--rail) 1fr;
+  }
+
+  /* ── Left rail: the thread ────────────────────────────────────── */
+  .rail {
+    position: relative;
+    border-right: 1px solid color-mix(in srgb, var(--cream-050) 8%, transparent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .rail svg { height: 62vh; width: 40px; overflow: visible; }
+
+  .thread-track {
+    stroke: color-mix(in srgb, var(--cream-050) 13%, transparent);
+    stroke-width: 1;
+    fill: none;
+  }
+
+  .thread-live {
+    stroke: var(--red-500);
+    stroke-width: 1.6;
+    fill: none;
+    stroke-linecap: round;
+    stroke-dasharray: var(--len);
+    stroke-dashoffset: var(--len);
+    animation: draw linear both;
+    animation-timeline: --process;
+    animation-range: contain 0% contain 100%;
+  }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+
+  .node {
+    fill: var(--black-void);
+    stroke: color-mix(in srgb, var(--cream-050) 22%, transparent);
+    stroke-width: 1;
+    animation: nodeOn steps(1, end) both;
+    animation-timeline: --process;
+    animation-range: contain 0% contain 100%;
+  }
+  @keyframes nodeOn { to { fill: var(--red-500); stroke: var(--red-500); } }
+  .node:nth-of-type(1) { animation-range: contain 0% contain 3%; }
+  .node:nth-of-type(2) { animation-range: contain 0% contain 19%; }
+  .node:nth-of-type(3) { animation-range: contain 0% contain 36%; }
+  .node:nth-of-type(4) { animation-range: contain 0% contain 52%; }
+  .node:nth-of-type(5) { animation-range: contain 0% contain 69%; }
+  .node:nth-of-type(6) { animation-range: contain 0% contain 86%; }
+
+  /* ── Frame stack ──────────────────────────────────────────────── */
+  .stage { position: relative; }
+
+  .frame {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    will-change: opacity, transform;
+    animation: hold linear both, drift linear both;
+    animation-timeline: --process, --process;
+    animation-range: contain 0% contain 100%, contain 0% contain 100%;
+  }
+  @keyframes drift { from { transform: scale(1.07); } to { transform: scale(1); } }
+
+  /* MediaSlot's figure fills the frame instead of using its own aspect-ratio.
+     :global() because the element belongs to the child component. */
+  .frame :global(.media-slot.frame-media) {
+    position: absolute;
+    inset: 0;
+    aspect-ratio: auto;
+    width: 100%;
+    height: 100%;
+    background: none;
+  }
+
+  /* A frame with no image must fall through to its gradient wash, not show
+     MediaSlot's grid-field placeholder on top of it. Live case: 02-knit. */
+  .frame :global(.media-slot.frame-media .media-slot__empty) { display: none; }
+
+  /* Each stage owns ~16.6% of the timeline with a 6% crossfade.
+     The gradient wash sits beneath the frame image — if the AVIF is missing
+     the wash still carries the stage and the motion is unaffected. */
+  .f1 { background-image: radial-gradient(120% 90% at 25% 40%, var(--process-yarn-hot) 0%, var(--process-yarn-deep) 55%, var(--black-void) 100%); }
+  .f2 { background-image: linear-gradient(145deg, var(--navy-700) 0%, var(--process-navy-mid) 45%, var(--process-navy-deep) 100%); }
+  .f3 { background-image: linear-gradient(115deg, var(--navy-700) 0%, var(--process-dye-mid) 48%, var(--red-500) 100%); }
+  .f4 { background-image: repeating-linear-gradient(178deg, var(--cream-050) 0 9px, var(--process-ply-grey) 9px 11px, var(--navy-700) 11px 21px, var(--process-navy-mid) 21px 23px); }
+  .f5 { background-image: linear-gradient(160deg, var(--process-navy-mid) 0%, var(--navy-700) 100%); }
+  .f6 { background-image: repeating-linear-gradient(184deg, var(--navy-700) 0 34px, var(--cream-050) 34px 40px, var(--process-pack-grey) 40px 46px, var(--navy-700) 46px 78px); }
+
+  @keyframes hold {
+    0%, 13% { opacity: 1 }
+    19%, 100% { opacity: 0 }
+  }
+  .f2 { animation-name: hold2, drift }
+  .f3 { animation-name: hold3, drift }
+  .f4 { animation-name: hold4, drift }
+  .f5 { animation-name: hold5, drift }
+  .f6 { animation-name: hold6, drift }
+
+  @keyframes hold2 { 0%, 14% { opacity: 0 } 20%, 30% { opacity: 1 } 36%, 100% { opacity: 0 } }
+  @keyframes hold3 { 0%, 31% { opacity: 0 } 37%, 46% { opacity: 1 } 52%, 100% { opacity: 0 } }
+  @keyframes hold4 { 0%, 47% { opacity: 0 } 53%, 63% { opacity: 1 } 69%, 100% { opacity: 0 } }
+  @keyframes hold5 { 0%, 64% { opacity: 0 } 70%, 80% { opacity: 1 } 86%, 100% { opacity: 0 } }
+  @keyframes hold6 { 0%, 81% { opacity: 0 } 87%, 100% { opacity: 1 } }
+
+  /* Legibility scrim */
+  .scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg,
+      color-mix(in srgb, var(--black-void) 94%, transparent) 0%,
+      color-mix(in srgb, var(--black-void) 72%, transparent) 38%,
+      color-mix(in srgb, var(--black-void) 18%, transparent) 100%);
+    pointer-events: none;
+  }
+
+  /* ── Caption stack ────────────────────────────────────────────── */
+  .captions {
+    position: absolute;
+    left: clamp(24px, 5vw, 72px);
+    top: 50%;
+    transform: translateY(-50%);
+    max-width: 34ch;
+  }
+  .cap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    animation: hold linear both;
+    animation-timeline: --process;
+    animation-range: contain 0% contain 100%;
+  }
+  .cap:nth-of-type(2) { animation-name: hold2 }
+  .cap:nth-of-type(3) { animation-name: hold3 }
+  .cap:nth-of-type(4) { animation-name: hold4 }
+  .cap:nth-of-type(5) { animation-name: hold5 }
+  .cap:nth-of-type(6) { animation-name: hold6 }
+
+  .cap .idx {
+    font-size: 0.68rem;
+    letter-spacing: var(--tracking-label-wide);
+    font-weight: var(--weight-semibold);
+    color: var(--red-500);
+    display: block;
+    margin-bottom: 1.1rem;
+  }
+  .cap h3 {
+    font-family: var(--font-display);
+    font-weight: var(--weight-regular);
+    font-size: clamp(2.6rem, 6.5vw, 4.6rem);
+    line-height: 0.95;
+    margin: 0 0 1rem;
+    letter-spacing: -0.01em;
+    color: var(--cream-050);
+  }
+  .cap p {
+    font-size: 0.9rem;
+    font-weight: var(--weight-light);
+    line-height: var(--lh-body);
+    color: color-mix(in srgb, var(--cream-050) 70%, transparent);
+    margin: 0;
+  }
+  .cap .spec {
+    margin-top: 1.6rem;
+    padding-top: 1.1rem;
+    border-top: 1px solid color-mix(in srgb, var(--cream-050) 12%, transparent);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    font-weight: var(--weight-medium);
+    color: var(--slate-500);
+  }
+
+  /* ── Section heading ──────────────────────────────────────────── */
+  .eyebrow {
+    position: absolute;
+    top: clamp(28px, 5vh, 56px);
+    left: clamp(24px, 5vw, 72px);
+    font-size: 0.66rem;
+    letter-spacing: var(--tracking-label-wide);
+    font-weight: var(--weight-semibold);
+    color: var(--slate-500);
+  }
+
+  /* ── Reduced motion + unsupported browsers ──────────────────────
+     Both collapse the pin into a plain vertical stack. Nothing is hidden,
+     nothing needs JavaScript. */
+  @media (prefers-reduced-motion: reduce) {
+    .process { height: auto }
+    .pane { position: static; height: auto; grid-template-columns: 1fr }
+    .rail { display: none }
+    .stage { display: grid; gap: 1px }
+    .frame { position: relative; inset: auto; height: 56vh; opacity: 1; animation: none; transform: none }
+    .scrim { display: none }
+    .captions { position: static; transform: none; max-width: none; padding: 2.4rem clamp(24px, 5vw, 72px) }
+    .cap { position: static; opacity: 1; animation: none; margin-bottom: 3rem }
+  }
+  @supports not (animation-timeline: view()) {
+    .process { height: auto }
+    .pane { position: static; height: auto; grid-template-columns: 1fr }
+    .rail { display: none }
+    .stage { display: grid; gap: 1px }
+    .frame { position: relative; inset: auto; height: 56vh; opacity: 1; animation: none; transform: none }
+    .scrim { display: none }
+    .captions { position: static; transform: none; max-width: none; padding: 2.4rem clamp(24px, 5vw, 72px) }
+    .cap { position: static; opacity: 1; animation: none; margin-bottom: 3rem }
+  }
+
+  @media (max-width: 760px) {
+    .process { --rail: 56px }
+    .pane { grid-template-columns: 56px 1fr }
+    .rail svg { width: 24px }
+    .scrim {
+      background: linear-gradient(180deg,
+        color-mix(in srgb, var(--black-void) 35%, transparent) 0%,
+        color-mix(in srgb, var(--black-void) 90%, transparent) 62%,
+        color-mix(in srgb, var(--black-void) 97%, transparent) 100%);
+    }
+    .captions { top: auto; bottom: clamp(32px, 8vh, 72px); transform: none }
+
+    /* FIX, not a design change. `.captions` has zero height because every .cap
+       is absolutely positioned at top:0, so pairing it with `bottom:` made the
+       captions grow DOWNWARD from a point just above the fold. Measured on a
+       390x844 viewport: the active caption started 67px above the fold, stood
+       481px tall, and overflowed 413px below it — the body copy and the spec
+       line were completely unreadable on every phone.
+       Anchoring the cap to the bottom of .captions makes it stack upward
+       instead. Desktop is untouched. Present verbatim in the supplied
+       design/process-scroll.html. */
+    .cap { top: auto; bottom: 0 }
+  }
+</style>

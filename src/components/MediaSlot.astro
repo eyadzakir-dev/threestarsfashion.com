@@ -19,6 +19,14 @@ import { join } from 'node:path';
 
 interface Props {
   slotName: string;
+  /**
+   * File stem within the slot directory. Defaults to "poster", which covers
+   * every single-image slot. ProcessScroll needs it because its six frames are
+   * one positional sequence inside a single slot directory
+   * (assets/slots/process/01-yarn.avif … 06-pack.avif) rather than one slot per
+   * frame — the component depends on that exact naming.
+   */
+  basename?: string;
   /** CSS aspect-ratio value, e.g. "16 / 9". Reserves space so nothing shifts. */
   aspectRatio?: string;
   alt: string;
@@ -38,6 +46,7 @@ interface Props {
 
 const {
   slotName,
+  basename: stemProp = 'poster',
   aspectRatio = '16 / 9',
   alt,
   posterOnly = false,
@@ -50,7 +59,7 @@ const PUBLIC_DIR = 'public';
 const slotDir = join('assets', 'slots', slotName);
 
 // Poster: prefer AVIF, fall back through WebP to JPG. Whichever exists wins.
-const posterCandidates = ['poster.avif', 'poster.webp', 'poster.jpg', 'poster.png'];
+const posterCandidates = [`${stemProp}.avif`, `${stemProp}.webp`, `${stemProp}.jpg`, `${stemProp}.png`];
 const posters = posterCandidates
   .map((f) => ({ file: f, rel: `/${slotDir}/${f}`, abs: join(PUBLIC_DIR, slotDir, f) }))
   .filter((p) => existsSync(p.abs));
@@ -64,7 +73,7 @@ const fallback = raster ?? webp ?? avif;
 // so width/height are explicit and CLS stays at zero. CLS is currently 0.000
 // site-wide and has no headroom — it can only get worse (BASELINE.md).
 let dims: { width: number; height: number } | null = null;
-const dimsPath = join(PUBLIC_DIR, slotDir, 'poster.json');
+const dimsPath = join(PUBLIC_DIR, slotDir, `${stemProp}.json`);
 if (existsSync(dimsPath)) {
   try {
     const { width, height } = JSON.parse(
@@ -87,7 +96,7 @@ const sizeOf = (p: string) => (existsSync(p) ? statSync(p).size : 0);
 <figure
   class:list={['media-slot', quiet && 'media-slot--quiet', className]}
   style={`--slot-aspect: ${aspectRatio};`}
-  data-slot={slotName}
+  data-slot={stemProp === 'poster' ? slotName : `${slotName}/${stemProp}`}
   data-state={hasVideo ? 'video' : hasPoster ? 'poster' : 'empty'}
 >
   {hasPoster && (
