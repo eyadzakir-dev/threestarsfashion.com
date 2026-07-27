@@ -209,7 +209,10 @@ const OG_IMAGE = 'https://threestarsfashion.com/assets/og-image.jpg';
         </div>
     </footer>
 
-    <script is:inline src="script.js"></script>
+    <!-- The tail slot carries every post-footer script verbatim, including the
+         script.js tag itself, because their original ORDER differs per page:
+         contact's Tally loader runs before script.js, the gallery scripts on
+         facilities and certifications run after it. -->
     <slot name="tail" />
 </body>
 

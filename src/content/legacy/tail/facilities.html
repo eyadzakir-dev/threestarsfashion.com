@@ -1,0 +1,184 @@
+    <script src="script.js"></script>
+    <script>
+        // ===== Gallery Lightbox (Singleton, Class-Based) =====
+        class GalleryLightbox {
+            constructor(itemSelector, gridSelector) {
+                this.itemSelector = itemSelector;
+                this.gridSelector = gridSelector;
+                this.images = [];
+                this.currentIndex = 0;
+                this.isOpen = false;
+                this.triggerElement = null;   // for focus-restore on close
+                this.overlay = null;
+                this.imgElement = null;
+                this.counter = null;
+                this.focusableEls = [];
+
+                this.init();
+            }
+
+            init() {
+                // 1. Build the singleton DOM once
+                this.createDOM();
+
+                // 2. Delegate clicks on gallery items (works even in modals)
+                document.addEventListener('click', (e) => {
+                    const item = e.target.closest(this.itemSelector);
+                    if (!item) return;
+
+                    // Scope images to the same grid
+                    const grid = item.closest(this.gridSelector);
+                    if (!grid) return;
+
+                    const allItems = grid.querySelectorAll(this.itemSelector);
+                    this.images = Array.from(allItems).map(el => {
+                        const img = el.querySelector('img') || el;
+                        return {
+                            full: img.dataset.fullSrc || img.src,
+                            alt: img.alt || ''
+                        };
+                    });
+
+                    const clickedIndex = Array.from(allItems).indexOf(item);
+                    this.triggerElement = item;
+                    this.open(clickedIndex >= 0 ? clickedIndex : 0);
+                });
+
+                // 3. Global keyboard handler
+                document.addEventListener('keydown', (e) => {
+                    if (!this.isOpen) return;
+                    if (e.key === 'Escape') { e.stopPropagation(); this.close(); }
+                    if (e.key === 'ArrowLeft') this.prev();
+                    if (e.key === 'ArrowRight') this.next();
+                    // Focus trap: Tab cycles within lightbox
+                    if (e.key === 'Tab') this.trapFocus(e);
+                });
+            }
+
+            createDOM() {
+                const div = document.createElement('div');
+                div.classList.add('lightbox-overlay');
+                div.setAttribute('role', 'dialog');
+                div.setAttribute('aria-modal', 'true');
+                div.setAttribute('aria-label', 'Image lightbox');
+                div.innerHTML = `
+                    <button class="lightbox-btn lightbox-close" aria-label="Close lightbox">&times;</button>
+                    <button class="lightbox-btn lightbox-prev" aria-label="Previous image">&#10094;</button>
+                    <div class="lightbox-content">
+                        <img src="" alt="" class="lightbox-image">
+                    </div>
+                    <button class="lightbox-btn lightbox-next" aria-label="Next image">&#10095;</button>
+                    <div class="lightbox-counter"></div>
+                `;
+                document.body.appendChild(div);
+
+                // Cache elements
+                this.overlay = div;
+                this.imgElement = div.querySelector('.lightbox-image');
+                this.counter = div.querySelector('.lightbox-counter');
+                this.focusableEls = Array.from(div.querySelectorAll('button'));
+
+                // Event delegation for buttons + backdrop click
+                div.addEventListener('click', (e) => {
+                    if (e.target === div || e.target.classList.contains('lightbox-close'))
+                        this.close();
+                    if (e.target.classList.contains('lightbox-prev')) this.prev();
+                    if (e.target.classList.contains('lightbox-next')) this.next();
+                });
+            }
+
+            open(index) {
+                this.currentIndex = index;
+                this.isOpen = true;
+                this.overlay.classList.add('active');
+                this.updateView();
+                // Move focus into lightbox (close button)
+                this.focusableEls[0].focus();
+            }
+
+            close() {
+                this.isOpen = false;
+                this.overlay.classList.remove('active');
+                // Restore focus to the thumbnail that opened the lightbox
+                if (this.triggerElement) this.triggerElement.focus();
+            }
+
+            prev() {
+                this.currentIndex = (this.currentIndex - 1 + this.images.length) % this.images.length;
+                this.updateView();
+            }
+
+            next() {
+                this.currentIndex = (this.currentIndex + 1) % this.images.length;
+                this.updateView();
+            }
+
+            updateView() {
+                const current = this.images[this.currentIndex];
+                this.imgElement.src = current.full;
+                this.imgElement.alt = current.alt;
+                this.counter.textContent = `${this.currentIndex + 1} / ${this.images.length}`;
+            }
+
+            // Keep Tab focus cycling within the lightbox buttons
+            trapFocus(e) {
+                const first = this.focusableEls[0];
+                const last = this.focusableEls[this.focusableEls.length - 1];
+                if (e.shiftKey) {
+                    if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+                } else {
+                    if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+                }
+            }
+        }
+
+        // ===== Gallery Modal + Lightbox Initialization =====
+        document.addEventListener('DOMContentLoaded', function () {
+            const clickableBoxes = document.querySelectorAll('.facility-box.clickable');
+            const modals = document.querySelectorAll('.gallery-modal');
+            const closeButtons = document.querySelectorAll('.gallery-close');
+
+            // Open gallery modal
+            clickableBoxes.forEach(box => {
+                box.addEventListener('click', function () {
+                    const galleryId = this.dataset.gallery + '-gallery';
+                    const modal = document.getElementById(galleryId);
+                    if (modal) {
+                        modal.classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                    }
+                });
+            });
+
+            // Close gallery modal
+            closeButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    this.closest('.gallery-modal').classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+            });
+
+            // Close on background click
+            modals.forEach(modal => {
+                modal.addEventListener('click', function (e) {
+                    if (e.target === this) {
+                        this.classList.remove('active');
+                        document.body.style.overflow = '';
+                    }
+                });
+            });
+
+            // Close gallery modal on escape (only when lightbox is NOT open)
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') {
+                    modals.forEach(modal => {
+                        modal.classList.remove('active');
+                    });
+                    document.body.style.overflow = '';
+                }
+            });
+
+            // Initialize the lightbox (singleton, handles all galleries)
+            new GalleryLightbox('.gallery-item', '.gallery-grid');
+        });
+    </script>

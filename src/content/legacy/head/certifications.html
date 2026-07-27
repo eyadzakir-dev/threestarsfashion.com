@@ -1,0 +1,313 @@
+    <style>
+        /* Certifications Page Specific Styles */
+        .cert-images-section {
+            padding: var(--space-16) var(--container-padding);
+            background-color: var(--color-background);
+        }
+
+        .cert-images-section .section-header {
+            max-width: var(--container-max);
+            margin: 0 auto var(--space-10);
+            text-align: center;
+        }
+
+        .cert-images-grid {
+            max-width: var(--container-max);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-6);
+        }
+
+        .cert-image-box {
+            background-color: var(--color-white);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(27, 42, 78, 0.1);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: pointer;
+        }
+
+        .cert-image-box:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 60px rgba(27, 42, 78, 0.2);
+        }
+
+        .cert-image-box img {
+            width: 100%;
+            height: 300px;
+            object-fit: contain;
+            background-color: var(--color-white);
+            padding: var(--space-4);
+            transition: transform 0.4s ease;
+        }
+
+        .cert-image-box:hover img {
+            transform: scale(1.05);
+        }
+
+        .cert-image-box .cert-label {
+            padding: var(--space-4);
+            text-align: center;
+            background-color: var(--color-background-alt);
+        }
+
+        .cert-image-box .cert-label h4 {
+            font-family: var(--font-heading);
+            font-size: var(--text-base);
+            font-weight: var(--font-semibold);
+            color: var(--color-navy);
+            margin: 0;
+        }
+
+        /* View Certifications Button */
+        .view-certs-container {
+            text-align: center;
+            padding: var(--space-10) 0;
+        }
+
+        .view-certs-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-5) var(--space-10);
+            background-color: var(--color-accent);
+            color: var(--color-white);
+            border: none;
+            border-radius: var(--radius-full);
+            font-family: var(--font-body);
+            font-size: var(--text-lg);
+            font-weight: var(--font-semibold);
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(229, 34, 34, 0.35);
+            text-decoration: none;
+        }
+
+        .view-certs-btn:hover {
+            background-color: var(--color-accent-dark);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(229, 34, 34, 0.45);
+        }
+
+        .view-certs-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Certification Modal */
+        .cert-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(27, 42, 78, 0.95);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .cert-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .cert-modal-container {
+            max-width: 1200px;
+            width: 90%;
+            max-height: 90vh;
+            position: relative;
+        }
+
+        .cert-modal-close {
+            position: absolute;
+            top: -50px;
+            right: 0;
+            background: none;
+            border: none;
+            color: var(--color-white);
+            font-size: var(--text-3xl);
+            cursor: pointer;
+            padding: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .cert-modal-close:hover {
+            color: var(--color-accent);
+            transform: scale(1.1);
+        }
+
+        .cert-modal-title {
+            font-family: var(--font-heading);
+            font-size: var(--text-2xl);
+            color: var(--color-white);
+            text-align: center;
+            margin-bottom: var(--space-6);
+        }
+
+        .cert-modal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--space-4);
+            max-height: 70vh;
+            overflow-y: auto;
+            padding: var(--space-4);
+        }
+
+        .cert-modal-item {
+            background-color: var(--color-white);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .cert-modal-item:hover {
+            transform: scale(1.05) translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+
+        .cert-modal-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: contain;
+            padding: var(--space-4);
+            background-color: var(--color-white);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .cert-images-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .cert-images-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== Lightbox Overlay ===== */
+        .lightbox-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+
+        .lightbox-image {
+            max-width: 90vw;
+            max-height: 85vh;
+            object-fit: contain;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            display: block;
+            border-radius: var(--radius-md);
+        }
+
+        .lightbox-btn {
+            position: absolute;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            padding: 16px;
+            transition: color 0.2s ease, transform 0.2s ease;
+            font-family: var(--font-body);
+        }
+
+        .lightbox-btn:hover {
+            color: #fff;
+            transform: scale(1.15);
+        }
+
+        .lightbox-btn:focus-visible {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 4px;
+            border-radius: var(--radius-sm);
+        }
+
+        .lightbox-close {
+            top: 20px;
+            right: 20px;
+            font-size: 2.4rem;
+            line-height: 1;
+        }
+
+        .lightbox-prev,
+        .lightbox-next {
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2.8rem;
+            line-height: 1;
+        }
+
+        .lightbox-prev:hover,
+        .lightbox-next:hover {
+            transform: translateY(-50%) scale(1.15);
+        }
+
+        .lightbox-prev {
+            left: 16px;
+        }
+
+        .lightbox-next {
+            right: 16px;
+        }
+
+        .lightbox-counter {
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.7);
+            font-family: var(--font-body);
+            font-size: var(--text-sm);
+            font-weight: var(--font-medium);
+            letter-spacing: 0.1em;
+        }
+
+        @media (max-width: 600px) {
+            .lightbox-prev {
+                left: 4px;
+                font-size: 2rem;
+            }
+
+            .lightbox-next {
+                right: 4px;
+                font-size: 2rem;
+            }
+
+            .lightbox-close {
+                top: 10px;
+                right: 10px;
+                font-size: 2rem;
+            }
+        }
+    </style>

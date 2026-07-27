@@ -12,8 +12,8 @@
  *   head extras   <script ld+json> and <style> in <head>    Layout <slot name="head">
  *   body          after the fullscreen-menu close, to       page default slot
  *                 just before <footer>
- *   tail          after <script src="script.js">, to        Layout <slot name="tail">
- *                 just before </body>
+ *   tail          after </footer> to just before </body>,      Layout <slot name="tail">
+ *                 INCLUDING the <script src="script.js"> tag
  *
  * Run:  node scripts/extract_legacy.mjs
  */
@@ -42,7 +42,7 @@ const records = [];
 const problems = [];
 
 for (const page of PAGES) {
-  const src = readFileSync(`${page}.html`, 'utf8');
+  const src = readFileSync(`legacy/${page}.html`, 'utf8');
   const lines = src.split('\n');
 
   const headEnd = lines.findIndex((l) => l.includes('</head>'));
@@ -51,7 +51,7 @@ for (const page of PAGES) {
   // ---- region boundaries -------------------------------------------------
   const fsMenuStart = lines.findIndex((l) => l.includes('class="fullscreen-menu"'));
   const footerStart = lines.findIndex((l) => /<footer class="footer"/.test(l));
-  const scriptJs    = lines.findIndex((l) => l.includes('src="script.js"'));
+  const footerEnd   = lines.findIndex((l) => l.includes('</footer>'));
   const bodyClose   = lines.findIndex((l) => l.includes('</body>'));
 
   // The fullscreen menu closes with the first column-4 `</div>` after it opens.
@@ -60,13 +60,24 @@ for (const page of PAGES) {
     if (lines[i] === '    </div>') { fsMenuEnd = i; break; }
   }
 
-  if ([fsMenuStart, footerStart, scriptJs, bodyClose, fsMenuEnd].some((i) => i < 0)) {
+  if ([fsMenuStart, footerStart, footerEnd, bodyClose, fsMenuEnd].some((i) => i < 0)) {
     problems.push(`${page}: could not locate all region boundaries`);
     continue;
   }
 
   const body = lines.slice(fsMenuEnd + 1, footerStart).join('\n').replace(/^\n+|\s+$/g, '');
-  const tail = lines.slice(scriptJs + 1, bodyClose).join('\n').trim();
+
+  // Everything after </footer>, verbatim and in original order. This MUST
+  // include the <script src="script.js"> tag rather than the layout emitting
+  // its own: contact.html has its inline Tally loader BEFORE script.js, while
+  // facilities and certifications have theirs AFTER. Hardcoding script.js in
+  // the layout and appending the rest silently reordered them — and an earlier
+  // version of this script, which sliced from script.js onward, dropped the
+  // Tally loader entirely and shipped a dead contact form.
+  const tail = lines.slice(footerEnd + 1, bodyClose).join('\n').replace(/^\n+|\s+$/g, '');
+  if (!/src="script\.js"/.test(tail)) {
+    problems.push(`${page}: tail region does not contain script.js — boundary logic is wrong`);
+  }
 
   // ---- head extras: JSON-LD + inline <style>, verbatim -------------------
   const extras = [];

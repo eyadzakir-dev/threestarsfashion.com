@@ -2,7 +2,7 @@
 /**
  * Proves the step-2 lift-and-shift changed nothing it shouldn't have.
  *
- * Compares each dist/<page>.html against the legacy <page>.html on:
+ * Compares each dist/<page>.html against legacy/<page>.html on:
  *   - head metadata (title, description, canonical, og:*, twitter:*)
  *   - JSON-LD blocks, compared as parsed objects
  *   - visible text content, whitespace-normalised
@@ -39,6 +39,13 @@ const text = (html) => decode(
     .replace(/<[^>]+>/g, ' ')
 ).replace(/\s+/g, ' ').trim();
 
+// On contact.html and privacy-policy.html the malformed meta left an orphan
+// `content="…">` string that the parser treated as a text node in <body> — the
+// description was literally rendered on the page. Once the tag is well-formed
+// that text correctly disappears, so strip it from the legacy side before
+// comparing text content. Matches nothing on the seven intact pages.
+const stripOrphanMeta = (t) => t.replace(/content="[^"]*">\s*/g, '');
+
 const attr = (html, re) => { const m = html.match(re); return m ? decode(m[1]).trim() : null; };
 
 const meta = (html) => ({
@@ -72,7 +79,7 @@ for (const page of PAGES) {
   const distPath = `dist/${page}.html`;
   if (!existsSync(distPath)) { note(page, `dist/${page}.html does not exist`); continue; }
 
-  const legacy = readFileSync(`${page}.html`, 'utf8');
+  const legacy = readFileSync(`legacy/${page}.html`, 'utf8');
   const built = readFileSync(distPath, 'utf8');
   console.log(`\n${page}`);
 
@@ -97,7 +104,7 @@ for (const page of PAGES) {
 
   // --- visible text ---
   checks++;
-  const [ta, tb] = [text(legacy), text(built)];
+  const [ta, tb] = [stripOrphanMeta(text(legacy)), text(built)];
   if (ta !== tb) {
     let i = 0;
     while (i < ta.length && i < tb.length && ta[i] === tb[i]) i++;

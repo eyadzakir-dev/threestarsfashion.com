@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
 """
-Static server for Lighthouse audits. Clean-URL resolution, nothing injected.
+Static server that mimics GitHub Pages resolution, for Lighthouse audits and
+URL-contract checks. Clean URLs, nothing injected.
 
 Deliberately NOT dev_server.py: that one injects a livereload <script> into
 every HTML response, which adds a request and JS execution and would skew the
-numbers. Baseline and post-migration runs must use this identical server or the
-comparison is meaningless.
+numbers. Baseline and post-migration runs must use this identical server.
 
     python3 scripts/audit_server.py --root .     --port 8080   # legacy site
     python3 scripts/audit_server.py --root dist  --port 8080   # astro build
 
-Resolution order matches GitHub Pages: exact file, then <path>.html, then
-<path>/index.html, then 404.html.
+Resolution order matches Pages: exact file, then <path>.html, then
+<path>/index.html. Anything unmatched serves 404.html with a real 404 status —
+not a 200, which would make a broken link look fine.
 """
 import argparse
-import functools
 import http.server
 import os
 import socketserver
@@ -30,9 +30,24 @@ ROOT = os.path.abspath(args.root)
 if not os.path.isdir(ROOT):
     sys.exit(f"Not a directory: {ROOT}")
 
+EXT_TYPES = {
+    ".html": "text/html; charset=utf-8", ".css": "text/css; charset=utf-8",
+    ".js": "text/javascript; charset=utf-8", ".mjs": "text/javascript; charset=utf-8",
+    ".json": "application/json", ".webmanifest": "application/manifest+json",
+    ".xml": "application/xml", ".txt": "text/plain; charset=utf-8",
+    ".svg": "image/svg+xml", ".jpg": "image/jpeg", ".jpeg": "image/jpeg",
+    ".png": "image/png", ".webp": "image/webp", ".avif": "image/avif",
+    ".ico": "image/x-icon", ".woff2": "font/woff2", ".mp4": "video/mp4",
+    ".webm": "video/webm",
+}
 
-class Handler(http.server.SimpleHTTPRequestHandler):
-    def translate_path(self, path):
+
+class Handler(http.server.BaseHTTPRequestHandler):
+    protocol_version = "HTTP/1.1"
+    server_version = "audit-server/1.0"
+
+    def resolve(self, path):
+        """Return (abs_path, status). Mirrors GitHub Pages."""
         path = path.split("?", 1)[0].split("#", 1)[0]
         # Must percent-decode: several asset directories contain spaces
         # ("4 Pics home page", "Cutting Area") and one filename has parentheses.
@@ -42,30 +57,50 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         rel = path.lstrip("/")
 
         if not rel:
-            return os.path.join(ROOT, "index.html")
+            return os.path.join(ROOT, "index.html"), 200
 
-        exact = os.path.join(ROOT, rel)
-        if os.path.isfile(exact):
-            return exact
+        # Block traversal outside ROOT.
+        candidate = os.path.normpath(os.path.join(ROOT, rel))
+        if not candidate.startswith(ROOT):
+            return None, 403
 
-        with_html = os.path.join(ROOT, rel + ".html")
-        if os.path.isfile(with_html):
-            return with_html
+        for probe in (candidate, candidate + ".html", os.path.join(candidate, "index.html")):
+            if os.path.isfile(probe):
+                return probe, 200
 
-        index = os.path.join(ROOT, rel, "index.html")
-        if os.path.isfile(index):
-            return index
+        fallback = os.path.join(ROOT, "404.html")
+        return (fallback if os.path.isfile(fallback) else None), 404
 
-        custom_404 = os.path.join(ROOT, "404.html")
-        if os.path.isfile(custom_404):
-            return custom_404
+    def _send(self, body_only=False):
+        target, status = self.resolve(self.path)
 
-        return exact
+        if target is None:
+            body = b"404 Not Found" if status == 404 else b"403 Forbidden"
+            ctype = "text/plain; charset=utf-8"
+        else:
+            try:
+                with open(target, "rb") as fh:
+                    body = fh.read()
+            except OSError:
+                body, status, ctype = b"500", 500, "text/plain; charset=utf-8"
+            else:
+                ctype = EXT_TYPES.get(os.path.splitext(target)[1].lower(),
+                                      "application/octet-stream")
 
-    def end_headers(self):
+        self.send_response(status)
+        self.send_header("Content-Type", ctype)
+        self.send_header("Content-Length", str(len(body)))
         # No caching, so repeat runs measure the same cold path.
         self.send_header("Cache-Control", "no-store, max-age=0")
-        super().end_headers()
+        self.end_headers()
+        if not body_only:
+            self.wfile.write(body)
+
+    def do_GET(self):
+        self._send()
+
+    def do_HEAD(self):
+        self._send(body_only=True)
 
     def log_message(self, *a):
         pass
@@ -76,7 +111,6 @@ class Server(socketserver.ThreadingTCPServer):
     daemon_threads = True
 
 
-handler = functools.partial(Handler, directory=ROOT)
-with Server(("127.0.0.1", args.port), handler) as httpd:
+with Server(("127.0.0.1", args.port), Handler) as httpd:
     print(f"serving {ROOT} on http://127.0.0.1:{args.port}", flush=True)
     httpd.serve_forever()
