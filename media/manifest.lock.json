@@ -1,0 +1,99 @@
+{
+  "_readme": "Resolved Higgsfield job_id -> hosted result URL. Written by the agent via the Higgsfield MCP (show_generations), because MCP tools cannot be called from a standalone Node script. scripts/fetch_media.mjs consumes this file — it never talks to the MCP itself. Re-resolve by re-running show_generations if the CDN URLs expire.",
+  "_resolved_at": "2026-07-27",
+  "_cdn_base": "https://d8j0ntlcm91z4.cloudfront.net/user_3H4piMXuwHV1qsphwfF4p5bhJUP/",
+
+  "jobs": {
+    "75bb6453-df7d-4013-8530-f72e4a200c9b": {
+      "label": "hero poster — navy fabric drape",
+      "type": "image",
+      "width": 2752,
+      "height": 1536,
+      "resolution": "2k",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3H4piMXuwHV1qsphwfF4p5bhJUP/hf_20260727_095426_75bb6453-df7d-4013-8530-f72e4a200c9b.png"
+    },
+    "78db272e-afec-42cb-b5ea-0e2e38eece02": {
+      "label": "hero loop — 5s drift, derived from the hero poster",
+      "type": "video",
+      "width": 1280,
+      "height": 720,
+      "duration_sec": 5,
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3H4piMXuwHV1qsphwfF4p5bhJUP/hf_20260727_100108_78db272e-afec-42cb-b5ea-0e2e38eece02.mp4"
+    },
+    "5ba07317-eae2-45e3-a036-afea5ade4cb0": {
+      "label": "process 01 yarn — thread cones",
+      "type": "image",
+      "width": 2752,
+      "height": 1536,
+      "resolution": "2k",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3H4piMXuwHV1qsphwfF4p5bhJUP/hf_20260727_093744_5ba07317-eae2-45e3-a036-afea5ade4cb0.png"
+    },
+    "9b2c6124-f304-4679-98f1-6356189a5cbb": {
+      "label": "process 02 knit — interlock jersey macro",
+      "type": "image",
+      "width": 1376,
+      "height": 768,
+      "resolution": "1k",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3H4piMXuwHV1qsphwfF4p5bhJUP/hf_20260727_093730_9b2c6124-f304-4679-98f1-6356189a5cbb.png",
+      "_note": "CONFIRMED 1k (1376x768). The manifest's regenerate flag is correct — resolution was not passed at generation time. Skipped by fetch_media.mjs."
+    },
+    "ef2969fb-bbcc-483e-aa04-e7707dc0a953": {
+      "label": "navy-to-crimson gradient field",
+      "type": "image",
+      "width": 2752,
+      "height": 1536,
+      "resolution": "2k",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3H4piMXuwHV1qsphwfF4p5bhJUP/hf_20260727_093752_ef2969fb-bbcc-483e-aa04-e7707dc0a953.png",
+      "_note": "Assigned to BOTH process frame 03-dye and the compliance poster. Downloading it twice is intentional so both paths are wired, but the repetition will be visible until a dedicated dye frame is generated."
+    },
+    "10da37ab-948e-4716-bce6-6133a93ba2fd": {
+      "label": "process 04 cut — stacked plies cross-section",
+      "type": "image",
+      "width": 2752,
+      "height": 1536,
+      "resolution": "2k",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3H4piMXuwHV1qsphwfF4p5bhJUP/hf_20260727_095441_10da37ab-948e-4716-bce6-6133a93ba2fd.png"
+    },
+    "83621909-7cd6-4c15-bbe2-59d5f79cba40": {
+      "label": "process 05 sew — flatlock seam macro",
+      "type": "image",
+      "width": 2752,
+      "height": 1536,
+      "resolution": "2k",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3H4piMXuwHV1qsphwfF4p5bhJUP/hf_20260727_101005_83621909-7cd6-4c15-bbe2-59d5f79cba40.png"
+    },
+    "fc6e8c53-b581-40e1-a0bb-93950e7b161e": {
+      "label": "process 06 pack — folded garment stack",
+      "type": "image",
+      "width": 2752,
+      "height": 1536,
+      "resolution": "2k",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3H4piMXuwHV1qsphwfF4p5bhJUP/hf_20260727_101011_fc6e8c53-b581-40e1-a0bb-93950e7b161e.png"
+    },
+    "701a330e-a352-4883-ac3d-4fa647db5915": {
+      "label": "logistics poster — single red thread",
+      "type": "image",
+      "width": 2752,
+      "height": 1536,
+      "resolution": "2k",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3H4piMXuwHV1qsphwfF4p5bhJUP/hf_20260727_095434_701a330e-a352-4883-ac3d-4fa647db5915.png"
+    },
+    "2e110d52-ae06-464b-a64e-2d326c1181f9": {
+      "label": "library — cream twill weave macro",
+      "type": "image",
+      "width": 2752,
+      "height": 1536,
+      "resolution": "2k",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3H4piMXuwHV1qsphwfF4p5bhJUP/hf_20260727_093738_2e110d52-ae06-464b-a64e-2d326c1181f9.png"
+    },
+    "764baeee-da38-4fcc-85da-e1223f910a2e": {
+      "label": "industrial lockstitch needle macro",
+      "type": "image",
+      "width": 2752,
+      "height": 1536,
+      "resolution": "2k",
+      "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3H4piMXuwHV1qsphwfF4p5bhJUP/hf_20260727_100957_764baeee-da38-4fcc-85da-e1223f910a2e.png",
+      "_note": "DO NOT USE WITHOUT HUMAN SIGN-OFF. Generated machinery — image models render textile mechanisms incorrectly in ways technical merchandisers spot immediately. Not downloaded; has no target_path."
+    }
+  }
+}
