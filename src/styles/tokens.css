@@ -1,0 +1,315 @@
+/* ============================================================================
+   Three Stars Group — design tokens
+   ----------------------------------------------------------------------------
+   Flattened from the "Three Stars Group Design System" project on
+   claude.ai/design (projectId df38e195-4899-4806-b4f3-cb08a2654dcf), which
+   splits these across tokens/{colors,typography,spacing,layout,borders,
+   elevation,motion,fonts}.css. Names are unchanged so the design system stays
+   the source of truth.
+
+   THIS IS THE ONLY PLACE HEX VALUES, FONT STACKS, SPACING AND EASING LIVE.
+   No hardcoded colour, font stack, spacing step or easing anywhere else —
+   step 9 greps src/ for hex literals outside this file.
+   ========================================================================= */
+
+:root {
+  /* ==========================================================================
+     COLOUR — base palette, then semantic aliases.
+     Red is an accent: one primary button per view, one 2px keyline per section,
+     numeral units, active nav underline. Never a page background, never a
+     gradient, roughly 4% of any screen's surface.
+     ====================================================================== */
+
+  /* Brand red */
+  --red-500: #E52222;
+  --red-600: #C41E1E;
+  --red-800: #8B1A1A;
+  --red-wash: rgba(229, 34, 34, 0.07);
+  --red-veil: rgba(229, 34, 34, 0.18);
+
+  /* Navy — structure, headings, dark surfaces */
+  --navy-500: #2D4373;
+  --navy-700: #1B2A4E;
+  --navy-900: #0F1A30;
+
+  /* Near-black — video overlays, full-bleed hero */
+  --black-void: #0B0E14;
+  --black-ink: #1A1A1A;
+
+  /* Cream / neutral warm greys */
+  --cream-000: #FFFFFF;
+  --cream-050: #FAF9F6;
+  --cream-100: #F5F3EF;
+  --cream-200: #F0EDE8;
+  --cream-300: #E0DCD5;
+  --grey-400: #A8A39B;
+  --grey-500: #7A7670;
+  --grey-600: #5A5753;
+  --grey-700: #3D3B38;
+  --grey-800: #2A2927;
+
+  /* Cool slate — NOT in the upstream design system. Added here because
+     process-scroll.html uses #6B7689 for its small-caps stage labels and no
+     existing token matches: the nearest by distance, --grey-500 (#7A7670), is
+     a WARM grey (blue-red -10) where this is COOL (blue-red +30). Substituting
+     it would visibly warm every label on the dark process section. */
+  --slate-500: #6B7689;
+
+  /* Green — Green Point Logistics sub-brand ONLY. Never for TSG UI. */
+  --gpl-green: #1D8348;
+  --gpl-green-light: #27AE60;
+  --gpl-green-dark: #145A32;
+
+  /* ---- Semantic: surfaces ---- */
+  --surface-page: var(--cream-050);
+  --surface-raised: var(--cream-000);
+  --surface-sunken: var(--cream-100);
+  --surface-inset: var(--cream-200);
+  --surface-navy: var(--navy-700);
+  --surface-navy-deep: var(--navy-900);
+  --surface-void: var(--black-void);
+  --surface-accent: var(--red-500);
+  --surface-accent-wash: var(--red-wash);
+  --scrim-void: rgba(11, 14, 20, 0.72);
+  --scrim-navy: rgba(27, 42, 78, 0.68);
+
+  /* ---- Semantic: text ---- */
+  --text-display: var(--navy-700);
+  --text-body: var(--navy-500);
+  --text-muted: var(--grey-500);
+  --text-accent: var(--red-500);
+  --text-on-dark: var(--cream-000);
+  --text-on-dark-body: rgba(255, 255, 255, 0.74);
+  --text-on-dark-muted: rgba(255, 255, 255, 0.52);
+  --text-on-dark-label: var(--slate-500);
+  --text-on-accent: var(--cream-000);
+
+  /* ---- Semantic: lines ---- */
+  --rule-hair: rgba(27, 42, 78, 0.14);
+  --rule-mid: rgba(27, 42, 78, 0.28);
+  --rule-strong: var(--navy-700);
+  --rule-accent: var(--red-500);
+  --rule-on-dark: rgba(255, 255, 255, 0.16);
+  --rule-on-dark-mid: rgba(255, 255, 255, 0.32);
+
+  /* ---- Semantic: interaction ---- */
+  --action-fill: var(--red-500);
+  --action-fill-hover: var(--red-600);
+  --action-fill-press: var(--red-800);
+  --action-quiet-hover: rgba(27, 42, 78, 0.06);
+  --action-disabled-fill: var(--cream-300);
+  --action-disabled-text: var(--grey-400);
+  --focus-ring: var(--red-500);
+
+  /* ---- Semantic: status (compliance surfaces) ---- */
+  --status-certified: var(--gpl-green);
+  --status-neutral: var(--grey-500);
+  --status-flag: var(--red-500);
+
+  /* ==========================================================================
+     TYPE — Playfair Display for display headings ONLY. Montserrat for body,
+     UI, labels and numerals. Numerals are a first-class element: tabular
+     figures, tight tracking, heavy weight, very large sizes.
+     Both families are self-hosted (see fonts.css). No CDN.
+     ====================================================================== */
+  --font-display: "Playfair Display", Baskerville, Georgia, serif;
+  --font-ui: "Montserrat", -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  --font-numeral: "Montserrat", -apple-system, BlinkMacSystemFont, sans-serif;
+
+  --weight-light: 300;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --weight-black: 800;
+
+  /* Display — Playfair. Reserved for page/section titles. */
+  --fs-display-1: clamp(3rem, 5.6vw, 5.5rem);
+  --fs-display-2: clamp(2.5rem, 4vw, 4rem);
+  --fs-display-3: clamp(1.875rem, 2.6vw, 2.5rem);
+
+  /* Headings — Montserrat, for anything sub-section and below. */
+  --fs-heading-1: 1.75rem;
+  --fs-heading-2: 1.375rem;
+  --fs-heading-3: 1.0625rem;
+
+  /* Body */
+  --fs-body-lg: 1.125rem;
+  --fs-body: 1rem;
+  --fs-body-sm: 0.9375rem;
+  --fs-caption: 0.8125rem;
+
+  /* Label — uppercase, wide-tracked eyebrows and meta */
+  --fs-label: 0.6875rem;
+  --fs-label-lg: 0.75rem;
+
+  /* Numerals — capacity figures, lead times, unit counts */
+  --fs-numeral-hero: clamp(4rem, 9vw, 9rem);
+  --fs-numeral-xl: clamp(3rem, 5vw, 4.5rem);
+  --fs-numeral-lg: 2.5rem;
+  --fs-numeral-md: 1.75rem;
+  --fs-numeral-sm: 1.125rem;
+
+  --lh-display: 1.04;
+  --lh-heading: 1.18;
+  --lh-body: 1.65;
+  --lh-tight: 1.25;
+  --lh-numeral: 0.92;
+
+  --tracking-display: -0.02em;
+  --tracking-heading: -0.005em;
+  --tracking-body: 0;
+  --tracking-numeral: -0.04em;
+  --tracking-label: 0.18em;
+  --tracking-label-wide: 0.24em;
+  --tracking-button: 0.08em;
+
+  --numeric-tabular: tabular-nums lining-nums;
+
+  /* ==========================================================================
+     SPACE — 4px base unit. Sections breathe at 96-128px.
+     ====================================================================== */
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+  --space-32: 128px;
+  --space-40: 160px;
+
+  --stack-tight: var(--space-2);
+  --stack-snug: var(--space-4);
+  --stack-base: var(--space-6);
+  --stack-loose: var(--space-10);
+  --section-y: clamp(64px, 8vw, 128px);
+  --section-y-tight: clamp(48px, 5vw, 80px);
+
+  --pad-control-y: 14px;
+  --pad-control-x: 24px;
+  --pad-control-y-sm: 9px;
+  --pad-control-x-sm: 16px;
+  --pad-card: var(--space-8);
+  --hit-min: 44px;
+
+  /* ==========================================================================
+     LAYOUT — one 12-column grid, 1400px measure, 24px gutters.
+     ====================================================================== */
+  --container-max: 1400px;
+  --container-text: 880px;
+  --container-narrow: 640px;
+  --gutter: 24px;
+  --gutter-lg: 32px;
+  --grid-columns: 12;
+  --page-pad: clamp(20px, 4vw, 48px);
+
+  --header-h: 76px;
+  --header-h-condensed: 60px;
+
+  --z-base: 1;
+  --z-sticky: 200;
+  --z-overlay: 300;
+  --z-modal: 400;
+  --z-lightbox: 500;
+
+  /* Photography treatment: factory documentary, cool and neutral. */
+  --img-filter: saturate(0.88) contrast(1.04);
+  --img-filter-quiet: saturate(0.2) contrast(1.06) brightness(0.96);
+  --img-aspect-portrait: 3 / 4;
+  --img-aspect-landscape: 16 / 10;
+  --img-aspect-panorama: 21 / 9;
+
+  /* ==========================================================================
+     BORDERS & RADII — square by default. Radius above 2px is reserved for
+     nothing: there are no pills here.
+     ====================================================================== */
+  --radius-none: 0px;
+  --radius-hair: 1px;
+  --radius-sm: 2px;
+  --radius-max: 2px;
+
+  --border-hair: 1px;
+  --border-mid: 2px;
+  --border-heavy: 3px;
+
+  --border-default: var(--border-hair) solid var(--rule-hair);
+  --border-emphasis: var(--border-hair) solid var(--rule-mid);
+  --border-structural: var(--border-mid) solid var(--rule-strong);
+  --border-accent: var(--border-mid) solid var(--rule-accent);
+  --border-on-dark: var(--border-hair) solid var(--rule-on-dark);
+
+  /* The one decorative device: a 2px red keyline above an emphasis block. */
+  --keyline-accent: var(--border-mid) solid var(--rule-accent);
+
+  /* ==========================================================================
+     ELEVATION — flat by default. Shadow means "floating above the document",
+     so it is reserved for overlays; surfaces separate with rules and colour.
+     ====================================================================== */
+  --shadow-none: none;
+  --shadow-hairline: 0 1px 0 rgba(27, 42, 78, 0.08);
+  --shadow-popover: 0 8px 24px rgba(11, 14, 20, 0.12);
+  --shadow-overlay: 0 24px 64px rgba(11, 14, 20, 0.28);
+  --shadow-lightbox: 0 40px 120px rgba(11, 14, 20, 0.55);
+
+  /* Protection gradient for text over photography — never a decorative wash. */
+  --protect-bottom: linear-gradient(to top, rgba(11, 14, 20, 0.86) 0%, rgba(11, 14, 20, 0.45) 45%, rgba(11, 14, 20, 0) 100%);
+  --protect-full: linear-gradient(to top, rgba(11, 14, 20, 0.9) 0%, rgba(11, 14, 20, 0.55) 60%, rgba(11, 14, 20, 0.35) 100%);
+  --protect-navy: linear-gradient(to top, rgba(27, 42, 78, 0.9) 0%, rgba(27, 42, 78, 0) 100%);
+
+  /* ==========================================================================
+     MOTION — transform and opacity only. Nothing animates colour, size,
+     layout or shadow.
+
+     TWO SEPARATE REGIMES, do not mix them:
+
+       --ease-spring  TIME-BASED transitions only: hover, press, menu open,
+                      focus. Never on a rule that also sets animation-timeline.
+
+       linear         SCROLL-DRIVEN animations, always. With a scroll timeline
+                      the scroll position IS the easing curve; layering a
+                      spring on top double-eases it and the frames pop and
+                      stutter. See ProcessScroll.astro.
+     ====================================================================== */
+  --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+
+  --dur-fast: 200ms;
+  --dur-base: 300ms;
+  --dur-slow: 400ms;
+
+  --motion-hover: transform var(--dur-fast) var(--ease-spring), opacity var(--dur-fast) var(--ease-spring);
+  --motion-reveal: transform var(--dur-slow) var(--ease-spring), opacity var(--dur-slow) var(--ease-spring);
+  --motion-overlay: transform var(--dur-base) var(--ease-spring), opacity var(--dur-base) var(--ease-spring);
+
+  /* Canonical offsets, so every reveal/hover moves by the same amount */
+  --lift-hover: -2px;
+  --lift-press: 0px;
+  --nudge-x: 4px;
+  --reveal-y: 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 1ms;
+    --dur-base: 1ms;
+    --dur-slow: 1ms;
+    --lift-hover: 0px;
+    --nudge-x: 0px;
+    --reveal-y: 0px;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}

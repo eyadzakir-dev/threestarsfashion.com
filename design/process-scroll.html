@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Three Stars Fashion — Process</title>
+
+<!-- Demo only: self-host these in production (see notes at bottom of file) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --ink:        #0B0E14;
+  --navy:       #1B2A4E;
+  --red:        #E52222;
+  --cream:      #FAF9F6;
+  --slate:      #6B7689;
+
+  --display: "Playfair Display", Georgia, serif;
+  --body:    "Montserrat", system-ui, sans-serif;
+
+  --rail: 148px;
+  --ease: cubic-bezier(.22,.61,.36,1);
+}
+
+*,*::before,*::after{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{
+  margin:0;
+  background:var(--ink);
+  color:var(--cream);
+  font-family:var(--body);
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── Scroll driver ────────────────────────────────────────────────
+   700vh gives ~100vh of scroll per stage once the sticky pane pins.
+   The `contain` range of this view-timeline maps exactly to the
+   period the pane is pinned, so 0–100% of every animation below
+   lines up with the pin.                                          */
+.process{
+  position:relative;
+  height:700vh;
+  view-timeline-name: --process;
+  view-timeline-axis: block;
+}
+
+.pane{
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow:hidden;
+  display:grid;
+  grid-template-columns: var(--rail) 1fr;
+}
+
+/* ── Left rail: the thread ────────────────────────────────────── */
+.rail{
+  position:relative;
+  border-right:1px solid rgba(250,249,246,.08);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.rail svg{ height:62vh; width:40px; overflow:visible; }
+
+.thread-track{ stroke:rgba(250,249,246,.13); stroke-width:1; fill:none; }
+
+.thread-live{
+  stroke:var(--red);
+  stroke-width:1.6;
+  fill:none;
+  stroke-linecap:round;
+  stroke-dasharray:var(--len);
+  stroke-dashoffset:var(--len);
+  animation:draw linear both;
+  animation-timeline:--process;
+  animation-range: contain 0% contain 100%;
+}
+@keyframes draw{ to{ stroke-dashoffset:0; } }
+
+.node{
+  fill:var(--ink);
+  stroke:rgba(250,249,246,.22);
+  stroke-width:1;
+  animation:nodeOn steps(1,end) both;
+  animation-timeline:--process;
+  animation-range: contain 0% contain 100%;
+}
+@keyframes nodeOn{ to{ fill:var(--red); stroke:var(--red); } }
+.node:nth-of-type(1){ animation-range: contain 0%  contain 3%;  }
+.node:nth-of-type(2){ animation-range: contain 0%  contain 19%; }
+.node:nth-of-type(3){ animation-range: contain 0%  contain 36%; }
+.node:nth-of-type(4){ animation-range: contain 0%  contain 52%; }
+.node:nth-of-type(5){ animation-range: contain 0%  contain 69%; }
+.node:nth-of-type(6){ animation-range: contain 0%  contain 86%; }
+
+/* ── Frame stack ──────────────────────────────────────────────── */
+.stage{ position:relative; }
+
+.frame{
+  position:absolute;
+  inset:0;
+  background-size:cover;
+  background-position:center;
+  opacity:0;
+  will-change:opacity,transform;
+  animation:hold linear both, drift linear both;
+  animation-timeline:--process,--process;
+  animation-range: contain 0% contain 100%, contain 0% contain 100%;
+}
+@keyframes drift{ from{ transform:scale(1.07); } to{ transform:scale(1); } }
+
+/* Each stage owns ~16.6% of the timeline with a 6% crossfade.
+   Image first, gradient second — if the AVIF is missing the
+   gradient still carries the stage and the motion is unaffected. */
+.f1{ background-image:url("assets/slots/process/01-yarn.avif"),
+      radial-gradient(120% 90% at 25% 40%, #7d1414 0%, #2a0d10 55%, #0B0E14 100%); }
+.f2{ background-image:url("assets/slots/process/02-knit.avif"),
+      linear-gradient(145deg, #1B2A4E 0%, #16223f 45%, #0d1526 100%); }
+.f3{ background-image:url("assets/slots/process/03-dye.avif"),
+      linear-gradient(115deg, #1B2A4E 0%, #4a2340 48%, #E52222 100%); }
+.f4{ background-image:url("assets/slots/process/04-cut.avif"),
+      repeating-linear-gradient(178deg, #FAF9F6 0 9px, #cfcdc7 9px 11px, #1B2A4E 11px 21px, #16223f 21px 23px); }
+.f5{ background-image:url("assets/slots/process/05-sew.avif"),
+      linear-gradient(160deg,#16223f 0%,#1B2A4E 100%); }
+.f6{ background-image:url("assets/slots/process/06-pack.avif"),
+      repeating-linear-gradient(184deg, #1B2A4E 0 34px, #FAF9F6 34px 40px, #e6e4de 40px 46px, #1B2A4E 46px 78px); }
+
+@keyframes hold{
+  0%,13%   { opacity:1 }
+  19%,100% { opacity:0 }
+}
+.f2{ animation-name:hold2,drift }
+.f3{ animation-name:hold3,drift }
+.f4{ animation-name:hold4,drift }
+.f5{ animation-name:hold5,drift }
+.f6{ animation-name:hold6,drift }
+
+@keyframes hold2{ 0%,14%{opacity:0} 20%,30%{opacity:1} 36%,100%{opacity:0} }
+@keyframes hold3{ 0%,31%{opacity:0} 37%,46%{opacity:1} 52%,100%{opacity:0} }
+@keyframes hold4{ 0%,47%{opacity:0} 53%,63%{opacity:1} 69%,100%{opacity:0} }
+@keyframes hold5{ 0%,64%{opacity:0} 70%,80%{opacity:1} 86%,100%{opacity:0} }
+@keyframes hold6{ 0%,81%{opacity:0} 87%,100%{opacity:1} }
+
+/* Legibility scrim */
+.scrim{
+  position:absolute; inset:0;
+  background:linear-gradient(90deg, rgba(11,14,20,.94) 0%, rgba(11,14,20,.72) 38%, rgba(11,14,20,.18) 100%);
+  pointer-events:none;
+}
+
+/* ── Caption stack ────────────────────────────────────────────── */
+.captions{
+  position:absolute;
+  left:clamp(24px,5vw,72px);
+  top:50%;
+  transform:translateY(-50%);
+  max-width:34ch;
+}
+.cap{
+  position:absolute;
+  top:0; left:0;
+  opacity:0;
+  animation:hold linear both;
+  animation-timeline:--process;
+  animation-range: contain 0% contain 100%;
+}
+.cap:nth-of-type(2){ animation-name:hold2 }
+.cap:nth-of-type(3){ animation-name:hold3 }
+.cap:nth-of-type(4){ animation-name:hold4 }
+.cap:nth-of-type(5){ animation-name:hold5 }
+.cap:nth-of-type(6){ animation-name:hold6 }
+
+.cap .idx{
+  font-size:.68rem; letter-spacing:.22em; font-weight:600;
+  color:var(--red); display:block; margin-bottom:1.1rem;
+}
+.cap h3{
+  font-family:var(--display);
+  font-weight:400;
+  font-size:clamp(2.6rem,6.5vw,4.6rem);
+  line-height:.95;
+  margin:0 0 1rem;
+  letter-spacing:-.01em;
+}
+.cap p{
+  font-size:.9rem; font-weight:300; line-height:1.65;
+  color:rgba(250,249,246,.7); margin:0;
+}
+.cap .spec{
+  margin-top:1.6rem; padding-top:1.1rem;
+  border-top:1px solid rgba(250,249,246,.12);
+  font-size:.7rem; letter-spacing:.14em; font-weight:500;
+  color:var(--slate);
+}
+
+/* ── Section heading ──────────────────────────────────────────── */
+.eyebrow{
+  position:absolute; top:clamp(28px,5vh,56px);
+  left:clamp(24px,5vw,72px);
+  font-size:.66rem; letter-spacing:.28em; font-weight:600;
+  color:var(--slate);
+}
+
+/* ── Reduced motion + unsupported browsers ────────────────────── */
+@media (prefers-reduced-motion: reduce){
+  .process{ height:auto }
+  .pane{ position:static; height:auto; grid-template-columns:1fr }
+  .rail{ display:none }
+  .stage{ display:grid; gap:1px }
+  .frame{ position:relative; inset:auto; height:56vh; opacity:1; animation:none; transform:none }
+  .scrim{ display:none }
+  .captions{ position:static; transform:none; max-width:none; padding:2.4rem clamp(24px,5vw,72px) }
+  .cap{ position:static; opacity:1; animation:none; margin-bottom:3rem }
+}
+@supports not (animation-timeline: view()){
+  .process{ height:auto }
+  .pane{ position:static; height:auto; grid-template-columns:1fr }
+  .rail{ display:none }
+  .frame{ position:relative; inset:auto; height:56vh; opacity:1; animation:none; transform:none }
+  .scrim{ display:none }
+  .captions{ position:static; transform:none; max-width:none; padding:2.4rem clamp(24px,5vw,72px) }
+  .cap{ position:static; opacity:1; animation:none; margin-bottom:3rem }
+}
+
+@media (max-width:760px){
+  .pane{ grid-template-columns:56px 1fr }
+  :root{ --rail:56px }
+  .rail svg{ width:24px }
+  .scrim{ background:linear-gradient(180deg, rgba(11,14,20,.35) 0%, rgba(11,14,20,.9) 62%, rgba(11,14,20,.97) 100%) }
+  .captions{ top:auto; bottom:clamp(32px,8vh,72px); transform:none }
+}
+
+/* Spacers so you can see the pin engage and release */
+.spacer{ height:60vh; display:grid; place-items:center; color:var(--slate);
+  font-size:.7rem; letter-spacing:.24em; }
+</style>
+</head>
+<body>
+
+<div class="spacer">SCROLL DOWN</div>
+
+<section class="process" aria-label="Production process">
+  <div class="pane">
+
+    <div class="rail" aria-hidden="true">
+      <svg viewBox="0 0 40 600" preserveAspectRatio="none">
+        <path class="thread-track"
+              d="M20 8 C 32 100, 8 180, 20 268 S 34 400, 20 486 S 12 560, 20 592"/>
+        <path class="thread-live" style="--len:640"
+              d="M20 8 C 32 100, 8 180, 20 268 S 34 400, 20 486 S 12 560, 20 592"/>
+        <circle class="node" cx="20" cy="8"   r="3.5"/>
+        <circle class="node" cx="23" cy="125" r="3.5"/>
+        <circle class="node" cx="17" cy="243" r="3.5"/>
+        <circle class="node" cx="24" cy="360" r="3.5"/>
+        <circle class="node" cx="19" cy="478" r="3.5"/>
+        <circle class="node" cx="20" cy="592" r="3.5"/>
+      </svg>
+    </div>
+
+    <div class="stage">
+      <div class="frame f1"></div>
+      <div class="frame f2"></div>
+      <div class="frame f3"></div>
+      <div class="frame f4"></div>
+      <div class="frame f5"></div>
+      <div class="frame f6"></div>
+      <div class="scrim"></div>
+
+      <div class="eyebrow">ONE THREAD, SIX STAGES</div>
+
+      <div class="captions">
+        <article class="cap">
+          <span class="idx">01</span>
+          <h3>Yarn</h3>
+          <p>Combed cotton arrives on cone and is loaded to the creel. Every lot is tested for count and strength before it reaches a machine.</p>
+          <div class="spec">CONE TO CREEL</div>
+        </article>
+        <article class="cap">
+          <span class="idx">02</span>
+          <h3>Knit</h3>
+          <p>Circular knitting builds the loop structure that determines how the finished garment will hang, stretch and recover.</p>
+          <div class="spec">GREIGE FABRIC</div>
+        </article>
+        <article class="cap">
+          <span class="idx">03</span>
+          <h3>Dye</h3>
+          <p>Wet processing and finishing. Colour is matched to the buyer's standard and held across the full production run.</p>
+          <div class="spec">WET PROCESSING</div>
+        </article>
+        <article class="cap">
+          <span class="idx">04</span>
+          <h3>Cut</h3>
+          <p>Fabric is spread to ply and cut against the marker. Efficiency here decides how much of the roll becomes garment.</p>
+          <div class="spec">MARKER, SPREAD, PLY</div>
+        </article>
+        <article class="cap">
+          <span class="idx">05</span>
+          <h3>Sew</h3>
+          <p>Assembly. Panels become a garment, and the seam is where construction quality is either present or absent.</p>
+          <div class="spec">ASSEMBLY LINE</div>
+        </article>
+        <article class="cap">
+          <span class="idx">06</span>
+          <h3>Pack</h3>
+          <p>Inspected, folded, cartoned. Eighty thousand pieces leave this sequence every working day.</p>
+          <div class="spec">INSPECT, FOLD, CARTON</div>
+        </article>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="spacer">END OF SEQUENCE</div>
+
+<!--
+  NOTES FOR PRODUCTION
+  ───────────────────────────────────────────────────────────────
+  1. Self-host Playfair Display and Montserrat. Two Google Fonts
+     families is a render-blocking round trip on every page.
+
+  2. Image paths match assets/manifest.json. Missing files fall
+     back to the gradient beneath — the sequence still reads.
+
+  3. Two assets are not generated yet:
+       assets/slots/process/05-sew.avif
+       assets/slots/process/06-pack.avif
+     Both exist as Higgsfield jobs; add them to the manifest.
+
+  4. Scroll-driven animation is unsupported in older Safari and
+     Firefox. Those browsers get the @supports fallback: a plain
+     vertical stack of all six stages. Nothing breaks, nothing
+     is hidden, no JavaScript required.
+
+  5. Everything animates opacity and transform only. No layout
+     properties, so this costs nothing on INP.
+
+  6. Tune pacing with .process { height }. 700vh ≈ 100vh per
+     stage. Below ~500vh it starts to feel rushed.
+-->
+</body>
+</html>

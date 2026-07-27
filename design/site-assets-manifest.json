@@ -1,0 +1,167 @@
+{
+  "_readme": "Asset manifest for threestarsfashion.com. Every entry maps a Higgsfield generation job to a destination in the repo. Claude Code (with the Higgsfield MCP connected) resolves each job_id to its hosted URL via show_generations, downloads it, and writes it to target_path. Prompts are retained so any asset can be regenerated without starting over.",
+
+  "capacity_per_working_day": 85000,
+
+  "brand": {
+    "red": "#E52222",
+    "navy": "#1B2A4E",
+    "cream": "#FAF9F6",
+    "near_black": "#0B0E14"
+  },
+
+  "generation_defaults": {
+    "image_model": "nano_banana_pro",
+    "video_model": "kling3_0_turbo",
+    "resolution": "2k",
+    "note": "resolution silently defaults to 1k if not passed - always set it explicitly"
+  },
+
+  "slots": {
+    "hero": {
+      "consumed_by": "src/pages/index.astro via MediaSlot slotName='hero'",
+      "poster": {
+        "job_id": "75bb6453-df7d-4013-8530-f72e4a200c9b",
+        "target_path": "assets/slots/hero/poster.avif",
+        "resolution": "2k",
+        "text_overlay": true,
+        "prompt": "Dark cinematic macro of deep navy blue fabric draping in soft heavy folds, single raking light entering from the left edge, most of the frame falling into near-black shadow with a quiet uncluttered darker area in the centre, subtle sheen along the fabric ridges, premium editorial lighting, slow implied movement in the drape, no text, no logos, no people"
+      },
+      "loop": {
+        "job_id": "78db272e-afec-42cb-b5ea-0e2e38eece02",
+        "target_path": "assets/slots/hero/loop.mp4",
+        "duration_sec": 5,
+        "derived_from": "75bb6453-df7d-4013-8530-f72e4a200c9b",
+        "encode": "muted MP4 h264 + WebM, under 2MB each, audio track stripped entirely",
+        "prompt": "Extremely slow, subtle drift of the fabric folds - an almost imperceptible breathing motion as light shifts gently along the ridges. Static camera, no cuts, no people, ambient and seamless."
+      }
+    },
+
+    "process": {
+      "consumed_by": "src/components/ProcessScroll.astro - CSS background-image on .f1 through .f6",
+      "note": "Six frames of one sequence. Filenames are positional - the component depends on this exact naming.",
+      "frames": [
+        {
+          "stage": "01 Yarn",
+          "job_id": "5ba07317-eae2-45e3-a036-afea5ade4cb0",
+          "target_path": "assets/slots/process/01-yarn.avif",
+          "resolution": "2k",
+          "prompt": "Rows of industrial thread cones on a metal rack in bright red, dark navy background, shallow depth of field with the front cones sharp and the rack falling off into bokeh, moody directional lighting, no text, no logos, no people, no brand marks"
+        },
+        {
+          "stage": "02 Knit",
+          "job_id": "9b2c6124-f304-4679-98f1-6356189a5cbb",
+          "target_path": "assets/slots/process/02-knit.avif",
+          "resolution": "1k",
+          "regenerate": true,
+          "regenerate_reason": "rendered at 1k because resolution was not passed - regenerate at 2k before use",
+          "prompt": "Extreme macro photograph of interlock knit cotton jersey fabric in deep navy blue, raking side light revealing the loop structure and yarn twist, shallow depth of field, clean neutral studio lighting, fills the frame, no text, no logos, no people"
+        },
+        {
+          "stage": "03 Dye",
+          "job_id": "ef2969fb-bbcc-483e-aa04-e7707dc0a953",
+          "target_path": "assets/slots/process/03-dye.avif",
+          "resolution": "2k",
+          "conflict": "This same job is also assigned to the compliance slot. Generate a dedicated dye frame before launch or the repetition will be visible.",
+          "replacement_prompt": "Extreme macro of dye liquor saturating woven cotton fabric, crimson red bleeding into undyed cream fabric along a soft irregular wet front, high surface detail, dramatic side lighting, no machinery, no text, no logos, no people",
+          "prompt": "Abstract soft-focus gradient field created by folded matte fabric, deep navy blue transitioning into vivid crimson red, no visible weave or texture detail, smooth cinematic falloff, dark and premium, pure colour field suitable as a background, no text, no logos, no people, no objects"
+        },
+        {
+          "stage": "04 Cut",
+          "job_id": "10da37ab-948e-4716-bce6-6133a93ba2fd",
+          "target_path": "assets/slots/process/04-cut.avif",
+          "resolution": "2k",
+          "prompt": "Cross-section macro of many stacked layers of flat fabric plies in cream and deep navy, razor-clean cut edges forming precise horizontal strata, shallow depth of field, clean studio lighting from one side, abstract and geometric, no machinery, no text, no logos, no people"
+        },
+        {
+          "stage": "05 Sew",
+          "job_id": "83621909-7cd6-4c15-bbe2-59d5f79cba40",
+          "target_path": "assets/slots/process/05-sew.avif",
+          "resolution": "2k",
+          "prompt": "Extreme macro of a finished flatlock seam on deep navy knit fabric, precise parallel rows of stitching in contrasting cream thread, fabric lying flat, raking side light showing the slight relief of the stitch, very shallow depth of field, clean and precise, no machinery, no people, no text, no logos"
+        },
+        {
+          "stage": "06 Pack",
+          "job_id": "fc6e8c53-b581-40e1-a0bb-93950e7b161e",
+          "target_path": "assets/slots/process/06-pack.avif",
+          "resolution": "2k",
+          "prompt": "Precisely folded finished garments stacked in a neat column, plain unbranded navy and cream knit tops, crisp folded edges forming clean horizontal lines, soft directional studio light, dark background, shallow depth of field, calm and orderly, no packaging, no text, no logos, no people"
+        }
+      ]
+    },
+
+    "compliance": {
+      "consumed_by": "src/pages/index.astro section 5 via MediaSlot slotName='compliance'",
+      "poster": {
+        "job_id": "ef2969fb-bbcc-483e-aa04-e7707dc0a953",
+        "target_path": "assets/slots/compliance/poster.avif",
+        "resolution": "2k",
+        "conflict": "shared with process frame 03 - see note there",
+        "prompt": "Abstract soft-focus gradient field created by folded matte fabric, deep navy blue transitioning into vivid crimson red, no visible weave or texture detail, smooth cinematic falloff, dark and premium, pure colour field suitable as a background, no text, no logos, no people, no objects"
+      }
+    },
+
+    "logistics": {
+      "consumed_by": "src/pages/index.astro section 6 via MediaSlot slotName='logistics'",
+      "poster": {
+        "job_id": "701a330e-a352-4883-ac3d-4fa647db5915",
+        "target_path": "assets/slots/logistics/poster.avif",
+        "resolution": "2k",
+        "prompt": "Extreme macro of a single crimson red thread running diagonally across dark navy woven fabric, very shallow depth of field, dramatic low-key lighting, most of the frame in deep shadow, cinematic and precise, the red thread is the only bright element, no text, no logos, no people"
+      }
+    },
+
+    "facilities": {
+      "consumed_by": "src/pages/index.astro section 4 via MediaSlot slotName='facilities'",
+      "poster": null,
+      "status": "AWAITING REAL MEDIA",
+      "note": "Deliberately empty. Do not fill this with generated facility imagery - see asset_rules. Use licensed stock footage or real phone footage. Until then the section runs without a media slot."
+    }
+  },
+
+  "library": [
+    {
+      "job_id": "2e110d52-ae06-464b-a64e-2d326c1181f9",
+      "target_path": "assets/library/twill-cream-macro.avif",
+      "resolution": "2k",
+      "usage_note": "light sections only, max 8 percent opacity behind text",
+      "prompt": "Extreme macro photograph of cotton twill weave fabric in warm cream and off-white, diagonal weave structure clearly visible, soft directional daylight, shallow depth of field, fills the frame, no text, no logos, no people"
+    }
+  ],
+
+  "review_required": [
+    {
+      "job_id": "764baeee-da38-4fcc-85da-e1223f910a2e",
+      "target_path": null,
+      "subject": "industrial lockstitch sewing machine needle macro",
+      "status": "DO NOT USE WITHOUT HUMAN SIGN-OFF",
+      "reason": "Generated machinery. Inspect the thread path and needle entry point closely - image models render textile mechanisms incorrectly in ways technical merchandisers spot immediately. Only use if a technical person confirms it is mechanically correct.",
+      "prompt": "Extreme close-up macro of the needle and presser foot area of an industrial lockstitch sewing machine, navy cotton fabric feeding through, single thread visible under tension, very shallow depth of field, low-key industrial lighting with a warm highlight on the chrome, photorealistic, no people, no text, no brand marks"
+    }
+  ],
+
+  "pending_real_footage": {
+    "note": "These paths are wired and working with generated posters or running empty. When real photography or video arrives, drop the file at the path and MediaSlot picks it up at next build. No code changes required.",
+    "paths": [
+      "assets/slots/facilities/poster.avif",
+      "assets/slots/facilities/loop.mp4",
+      "assets/slots/logistics/loop.mp4",
+      "assets/slots/compliance/loop.mp4"
+    ]
+  },
+
+  "asset_rules": {
+    "allowed": [
+      "abstract material textures that make no factual claim",
+      "upscaling and colour correction of real Three Stars Fashion photography",
+      "unbranded generic garment blanks illustrating product categories",
+      "licensed stock footage of industrial equipment, used illustratively"
+    ],
+    "prohibited": [
+      "generated imagery depicting Three Stars Fashion facilities, production floors, machinery in operation, or workers",
+      "generated imagery implying real customers or user-generated provenance",
+      "any garment carrying a customer brand mark"
+    ],
+    "reason": "Visitors physically audit these facilities under WRAP, BSCI, Sedex and Better Work. Fabricated facility imagery is a compliance and credibility risk, not a design choice."
+  }
+}

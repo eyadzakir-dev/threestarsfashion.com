@@ -32,6 +32,13 @@ const {
 
 const nav = (href: string) => `menu-link${activeNav === href ? ' active' : ''}`;
 const OG_IMAGE = 'https://threestarsfashion.com/assets/og-image.jpg';
+
+// Step 3: design tokens and self-hosted fonts. Imported here (not <link>ed) so
+// Astro bundles and hashes them. The legacy styles.css/pages.css still follow
+// and still win on the pages they style — they are removed per page in steps 7-8.
+import '../styles/fonts.css';
+import '../styles/tokens.css';
+import '../styles/base.css';
 ---
 
 <!DOCTYPE html>
@@ -58,11 +65,12 @@ const OG_IMAGE = 'https://threestarsfashion.com/assets/og-image.jpg';
     <meta name="twitter:title" content={twitterTitle}>
     <meta name="twitter:description" content={twitterDescription}>
     <meta name="twitter:image" content={OG_IMAGE}>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
+    <!-- Fonts are self-hosted (src/styles/fonts.css). The Google Fonts CDN link
+         and its two preconnects are deliberately gone: that stylesheet was
+         render-blocking on 7 of 9 pages and cost ~2200 ms of LCP. Preload the
+         two faces that actually render Latin text so they start immediately. -->
+    <link rel="preload" href="/fonts/montserrat-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/playfair-display-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="styles.css">
     {pagesCss && <link rel="stylesheet" href="pages.css" />}
     <slot name="head" />

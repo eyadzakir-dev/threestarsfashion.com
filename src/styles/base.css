@@ -1,0 +1,119 @@
+/* ============================================================================
+   Element defaults plus the primitive classes carrying the brand's structural
+   motifs. Ported from the design system's tokens/base.css.
+
+   Every value here comes from tokens.css. No literals.
+   ========================================================================= */
+
+*,
+*::before,
+*::after { box-sizing: border-box }
+
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale }
+
+body {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: var(--fs-body);
+  font-weight: var(--weight-regular);
+  line-height: var(--lh-body);
+  color: var(--text-body);
+  background: var(--surface-page);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  color: var(--text-display);
+  font-weight: var(--weight-semibold);
+  line-height: var(--lh-heading);
+}
+p { margin: 0 }
+img, svg, video { display: block; max-width: 100% }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer }
+input, select, textarea { font: inherit; color: inherit }
+hr { height: 0; margin: 0; border: 0; border-top: var(--border-default) }
+
+a { color: var(--text-accent); text-decoration: none; transition: opacity var(--dur-fast) var(--ease-spring) }
+a:hover { color: var(--red-600); text-decoration: underline; text-underline-offset: 3px }
+a:active { color: var(--red-800) }
+
+:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px }
+::selection { background: var(--red-500); color: var(--cream-000) }
+
+/* Eyebrow / meta label */
+.tsg-label {
+  font-family: var(--font-ui);
+  font-size: var(--fs-label);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-accent);
+}
+.tsg-label--quiet { color: var(--text-muted) }
+.tsg-label--on-dark { color: var(--text-on-dark-muted) }
+/* Cool slate labels on dark surfaces — see --slate-500 in tokens.css */
+.tsg-label--on-dark-slate { color: var(--text-on-dark-label) }
+
+/* Numerals: always tabular so columns of figures align */
+.tsg-numeral {
+  font-family: var(--font-numeral);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-numeral);
+  line-height: var(--lh-numeral);
+  font-variant-numeric: var(--numeric-tabular);
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  color: var(--text-display);
+}
+
+/* Structural rules */
+.tsg-rule { border: 0; border-top: var(--border-hair) solid var(--rule-hair) }
+.tsg-rule--strong { border-top: var(--border-mid) solid var(--rule-strong) }
+.tsg-rule--accent { border-top: var(--border-mid) solid var(--rule-accent) }
+
+.tsg-container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--page-pad);
+}
+.tsg-section { padding-block: var(--section-y) }
+
+/* Engineering-drawing grid field. Low opacity, behind dark sections only. */
+.tsg-grid-field {
+  background-image: linear-gradient(to right, var(--rule-on-dark) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--rule-on-dark) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+.tsg-grid-field--light {
+  background-image: linear-gradient(to right, var(--rule-hair) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--rule-hair) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+
+/* Scroll-reveal contract. The design system toggles [data-revealed]; we drive
+   it with CSS scroll-driven animation where supported, so no JS is required.
+   animation-timeline animations are LINEAR — never --ease-spring. */
+.tsg-reveal {
+  opacity: 0;
+  transform: translateY(var(--reveal-y));
+  transition: var(--motion-reveal);
+}
+.tsg-reveal[data-revealed="true"] { opacity: 1; transform: none }
+
+@supports (animation-timeline: view()) {
+  .tsg-reveal {
+    transition: none;
+    animation: tsg-reveal-in linear both;
+    animation-timeline: view();
+    animation-range: entry 10% entry 60%;
+  }
+}
+@keyframes tsg-reveal-in {
+  from { opacity: 0; transform: translateY(var(--reveal-y)) }
+  to { opacity: 1; transform: none }
+}
+
+/* Reduced motion must never hide content. */
+@media (prefers-reduced-motion: reduce) {
+  .tsg-reveal { opacity: 1; transform: none; animation: none }
+}
