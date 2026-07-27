@@ -1,0 +1,70 @@
+name: Deploy to GitHub Pages
+
+# NOTE: this workflow only takes effect once the Pages source is switched from
+# the legacy branch-based build to Actions:
+#
+#   gh api -X PUT repos/eyadzakir-dev/threestarsfashion.com/pages -f build_type=workflow
+#
+# Do NOT run that before this workflow exists on `main`. Flipping it early makes
+# Pages stop serving the repo root and start waiting for an artifact that no
+# workflow has produced yet — production goes down until the first run lands.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never cancel a half-finished deploy.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build
+
+      # CNAME and .nojekyll live in public/ and are copied verbatim into dist/
+      # by Astro. Fail loudly rather than silently deploying without them —
+      # a missing CNAME drops the custom domain.
+      - name: Verify deploy contract
+        run: |
+          test -f dist/CNAME     || { echo "::error::dist/CNAME missing"; exit 1; }
+          test -f dist/.nojekyll || { echo "::error::dist/.nojekyll missing"; exit 1; }
+          for p in index about services facilities certifications logistics faq contact privacy-policy; do
+            test -f "dist/$p.html" || { echo "::error::dist/$p.html missing"; exit 1; }
+          done
+          if compgen -G "dist/*/index.html" > /dev/null; then
+            echo "::error::found dist/*/index.html — build.format is not 'file'"; exit 1
+          fi
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

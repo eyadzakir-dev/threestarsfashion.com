@@ -4,6 +4,11 @@ dist/
 .astro/
 server.pid
 
+# Raw Lighthouse reports — ~1 MB of machine output per run, fully regenerable
+# via scripts/lighthouse_run.sh. The summarised tables in BASELINE.md are the
+# artifact worth keeping.
+.lighthouse/
+
 # AI Assistant files
 .claude/
 .gemini/

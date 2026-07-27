@@ -1,0 +1,19 @@
+{
+  "name": "threestarsfashion.com",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "serve:dist": "python3 scripts/audit_server.py --root dist --port 8080",
+    "serve:legacy": "python3 scripts/audit_server.py --root . --port 8080",
+    "audit": "scripts/lighthouse_run.sh http://127.0.0.1:8080 .lighthouse/astro 5",
+    "audit:baseline": "scripts/lighthouse_run.sh http://127.0.0.1:8080 .lighthouse/baseline 5",
+    "audit:diff": "node scripts/lighthouse_summarize.mjs .lighthouse/astro .lighthouse/baseline"
+  },
+  "devDependencies": {
+    "astro": "^5.14.1"
+  }
+}
