@@ -1,6 +1,7 @@
-# Development files and scripts
-Makefile
-scripts/
+# Build output and dependencies
+node_modules/
+dist/
+.astro/
 server.pid
 
 # AI Assistant files
