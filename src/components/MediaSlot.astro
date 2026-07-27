@@ -84,6 +84,12 @@ const state = hasVideo ? 'video' : hasPoster ? 'poster' : 'empty';
     </picture>
   )}
 
+  {/*
+    No `poster` attribute: the <picture> above already renders the poster
+    underneath this video, so a poster here downloads the same image a SECOND
+    time in a different format. Measured on the homepage: 176 KB of AVIF via
+    <picture> plus 170 KB of WebP via poster, for one visible image.
+  */}
   {hasVideo && (
     <video
       class="media-slot__video"
@@ -92,7 +98,6 @@ const state = hasVideo ? 'video' : hasPoster ? 'poster' : 'empty';
       playsinline
       autoplay
       preload="none"
-      poster={m.fallback ?? undefined}
       aria-hidden="true"
       tabindex="-1"
     >

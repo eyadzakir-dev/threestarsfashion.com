@@ -27,7 +27,19 @@ import sharp from 'sharp';
 const FORCE = process.argv.includes('--force');
 const PUBLIC = 'public';
 const TMP = '.media-tmp';
-const MAX_VIDEO_BYTES = 2 * 1024 * 1024;
+/**
+ * The manifest says "under 2MB each", which this beats deliberately.
+ *
+ * A muted autoplay video starts fetching regardless of preload="none" — the
+ * attributes are contradictory and autoplay wins. So the loop sits on the
+ * critical path of the homepage whether we like it or not. At the 2 MB ceiling
+ * the WebM came out at 1907 KB and pushed homepage LCP to 6.7s.
+ *
+ * The brief for this asset is "an almost imperceptible breathing motion" on a
+ * near-black frame, which needs very little bitrate. 700 KB is generous for that
+ * and keeps it off the critical path on a phone.
+ */
+const MAX_VIDEO_BYTES = 700 * 1024;
 
 const manifest = JSON.parse(readFileSync('media/manifest.json', 'utf8'));
 const lock = JSON.parse(readFileSync('media/manifest.lock.json', 'utf8'));

@@ -1,0 +1,71 @@
+---
+// Native <details> with a shared `name`, which makes the group mutually
+// exclusive with zero JavaScript. The legacy site already did this; keeping it
+// means the FAQ accordion needs no script at all.
+//
+// Safari <17.2 and Firefox <130 ignore `name`, so several can be open at once.
+// That degrades to "all answers readable", which is fine — it hides nothing.
+interface Props {
+  question: string;
+  /** Shared across a group to make it exclusive. */
+  group?: string;
+  open?: boolean;
+}
+const { question, group = 'faq', open = false } = Astro.props;
+---
+<details class="faq" name={group} open={open}>
+  <summary class="faq__q">
+    <span>{question}</span>
+    <span class="faq__glyph" aria-hidden="true"></span>
+  </summary>
+  <div class="faq__a"><slot /></div>
+</details>
+
+<style>
+  .faq { border-bottom: var(--border-hair) solid var(--rule-hair) }
+
+  .faq__q {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-6);
+    padding-block: var(--space-5);
+    cursor: pointer;
+    list-style: none;
+    font-family: var(--font-ui);
+    font-size: var(--fs-heading-3);
+    font-weight: var(--weight-semibold);
+    color: var(--text-display);
+    line-height: var(--lh-heading);
+  }
+  .faq__q::-webkit-details-marker { display: none }
+  .faq__q:hover { color: var(--text-accent) }
+
+  /* A plus that becomes a minus. Two rules, no icon font, no dingbat. */
+  .faq__glyph {
+    position: relative;
+    flex-shrink: 0;
+    width: var(--space-4);
+    height: var(--space-4);
+    margin-top: 0.35em;
+  }
+  .faq__glyph::before,
+  .faq__glyph::after {
+    content: '';
+    position: absolute;
+    background: var(--rule-accent);
+    transition: transform var(--dur-fast) var(--ease-spring);
+  }
+  .faq__glyph::before { inset: 50% 0 50% 0; height: 2px; margin-top: -1px }
+  .faq__glyph::after { inset: 0 50% 0 50%; width: 2px; margin-left: -1px }
+  .faq[open] .faq__glyph::after { transform: scaleY(0) }
+
+  .faq__a {
+    padding-bottom: var(--space-6);
+    max-width: 76ch;
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--text-body);
+    text-wrap: pretty;
+  }
+</style>

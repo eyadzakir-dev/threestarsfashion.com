@@ -7,11 +7,12 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "verify": "node scripts/verify_build.mjs",
     "serve:dist": "python3 scripts/audit_server.py --root dist --port 8080",
-    "serve:legacy": "python3 scripts/audit_server.py --root . --port 8080",
     "audit": "scripts/lighthouse_run.sh http://127.0.0.1:8080 .lighthouse/astro 5",
-    "audit:baseline": "scripts/lighthouse_run.sh http://127.0.0.1:8080 .lighthouse/baseline 5",
-    "audit:diff": "node scripts/lighthouse_summarize.mjs .lighthouse/astro .lighthouse/baseline"
+    "audit:diff": "node scripts/lighthouse_summarize.mjs .lighthouse/astro .lighthouse/baseline",
+    "media:fetch": "node scripts/fetch_media.mjs",
+    "fonts:fetch": "node scripts/fetch_fonts.mjs"
   },
   "devDependencies": {
     "astro": "^5.14.1",

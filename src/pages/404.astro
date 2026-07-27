@@ -1,18 +1,26 @@
 ---
-// HAND-WRITTEN — not produced by scripts/generate_pages.mjs. Do not delete this
-// with `rm src/pages/*.astro` when regenerating; that only rewrites the nine
-// legacy pages and will silently drop this file.
+// HAND-WRITTEN — not produced by any generator.
 //
 // GitHub Pages serves this automatically for any unmatched path. Previously a
-// mistyped URL showed the stock GitHub 404, which is off-brand and confusing
-// for a buyer following a stale link from an email.
-//
-// Uses the legacy visual language deliberately — step 2 is structural only.
-import Layout from '../layouts/Layout.astro';
-import tail from '../content/legacy/tail/about.html?raw';
+// mistyped URL showed the stock GitHub 404, which is off-brand and confusing for
+// a buyer following a stale link from an email.
+import SiteLayout from '../layouts/SiteLayout.astro';
+import Band from '../components/ds/Band.astro';
+import PageHead from '../components/ds/PageHead.astro';
+import Button from '../components/ds/Button.astro';
+
+const ROUTES = [
+  { href: '/about', label: 'About Three Stars Fashion', note: 'Group structure, leadership and history' },
+  { href: '/services', label: 'Capability', note: 'Cutting, sewing, printing, embroidery and development' },
+  { href: '/facilities', label: 'Our Facilities', note: 'Buildings, departments and factory audits' },
+  { href: '/certifications', label: 'Certifications', note: 'Compliance and buyer approvals' },
+  { href: '/logistics', label: 'Logistics', note: 'Green Point Logistics and duty-free export' },
+  { href: '/faq', label: 'FAQ', note: 'Lead times, sourcing and trade agreements' },
+  { href: '/contact', label: 'Contact', note: 'Submit an inquiry or request documentation' },
+];
 ---
 
-<Layout
+<SiteLayout
   title="Page Not Found | Three Stars Fashion"
   description="The page you requested could not be found. Browse our manufacturing capabilities, facilities and certifications, or contact Three Stars Fashion directly."
   canonical="https://threestarsfashion.com/404"
@@ -21,37 +29,55 @@ import tail from '../content/legacy/tail/about.html?raw';
   ogUrl="https://threestarsfashion.com/404"
   twitterTitle="Page Not Found | Three Stars Fashion"
   twitterDescription="The page you requested could not be found."
-  pagesCss={true}
+  activeNav={null}
 >
-    <section class="page-hero">
-        <div class="page-hero-bg">
-            <div class="page-hero-gradient"></div>
-        </div>
-        <div class="page-hero-content">
-            <span class="page-label reveal-up">ERROR 404</span>
-            <h1 class="page-title reveal-up">Page Not Found</h1>
-            <p class="page-subtitle reveal-up">The page you requested doesn't exist or has moved.</p>
-        </div>
-    </section>
+  <Fragment slot="head">
+    <meta name="robots" content="noindex" />
+  </Fragment>
 
-    <section class="content-section">
-        <div class="content-container">
-            <div class="content-text">
-                <h2 class="section-title">Where would you like to go?</h2>
-                <p>If you followed a link to get here, it may be out of date. These are the
-                    pages sourcing, merchandising and compliance teams use most:</p>
-                <ul>
-                    <li><a href="/about">About Three Stars Fashion</a> — group structure, leadership and history</li>
-                    <li><a href="/services">Services</a> — cutting, sewing, printing, embroidery and development</li>
-                    <li><a href="/facilities">Our Facilities</a> — buildings, departments and factory audits</li>
-                    <li><a href="/certifications">Certifications</a> — compliance and buyer approvals</li>
-                    <li><a href="/logistics">Logistics</a> — Green Point Logistics and duty-free export</li>
-                    <li><a href="/faq">FAQ</a> — lead times, sourcing and trade agreements</li>
-                    <li><a href="/contact">Contact</a> — submit an inquiry or request documentation</li>
-                </ul>
-            </div>
-        </div>
-    </section>
+  <PageHead
+    eyebrow="Error 404"
+    title="Page not found"
+    standfirst="The page you requested doesn't exist or has moved. If you followed a link to get here, it may be out of date."
+  />
 
-  <Fragment slot="tail" set:html={tail} />
-</Layout>
+  <Band surface="page">
+    <ul class="routes">
+      {ROUTES.map((r) => (
+        <li class="route">
+          <a href={r.href} class="route__link">{r.label}</a>
+          <p class="route__note">{r.note}</p>
+        </li>
+      ))}
+    </ul>
+    <div class="more">
+      <Button href="/" arrow>Back to the overview</Button>
+    </div>
+  </Band>
+</SiteLayout>
+
+<style>
+  .routes {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-width: var(--container-text);
+    border-top: var(--border-mid) solid var(--rule-strong);
+  }
+  .route {
+    display: grid;
+    gap: var(--space-1);
+    padding-block: var(--space-5);
+    border-bottom: var(--border-hair) solid var(--rule-hair);
+  }
+  .route__link {
+    font-family: var(--font-display);
+    font-size: var(--fs-heading-2);
+    font-weight: var(--weight-semibold);
+    color: var(--text-display);
+    text-decoration: none;
+  }
+  .route__link:hover { color: var(--text-accent); text-decoration: underline; text-underline-offset: 3px }
+  .route__note { font-size: var(--fs-body-sm); color: var(--text-muted) }
+  .more { margin-top: var(--space-12) }
+</style>

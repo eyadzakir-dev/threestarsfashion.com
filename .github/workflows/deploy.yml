@@ -42,6 +42,9 @@ jobs:
       # CNAME and .nojekyll live in public/ and are copied verbatim into dist/
       # by Astro. Fail loudly rather than silently deploying without them —
       # a missing CNAME drops the custom domain.
+      - name: Verify claims, URLs, tokens and media rules
+        run: npm run verify
+
       - name: Verify deploy contract
         run: |
           test -f dist/CNAME     || { echo "::error::dist/CNAME missing"; exit 1; }

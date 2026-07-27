@@ -24,6 +24,45 @@ Raw JSON in `.lighthouse/baseline/`. Production reference (1 run, real network) 
 
 ---
 
+## Step 9 observation — post-rebuild
+
+Recorded as an observation, not a gate. 1 run per page; treat ±5 as noise.
+
+| Page | Perf | A11y | Best Prac. | SEO | LCP | CLS |
+|---|---|---|---|---|---|---|
+| `/` | 85 (+4) | 94 | 100 | 100 | 4353 ms | 0.001 |
+| `/about` | **100** (+14) | 96 (+2) | 100 | 100 | 1876 ms | 0.000 |
+| `/services` | **100** (+14) | 94 | 100 | 100 | 1801 ms | 0.000 |
+| `/facilities` | 99 (+18) | 94 | 100 | 100 | 2102 ms | 0.000 |
+| `/certifications` | 99 (+17) | 95 (+2) | 100 | 100 | 1951 ms | 0.000 |
+| `/logistics` | 99 (+13) | 96 (+4) | 100 | 100 | 1951 ms | 0.000 |
+| `/faq` | **100** (+14) | 95 (+1) | 100 | 100 | 1801 ms | 0.000 |
+| `/contact` | **100** | 96 (+4) | 100 | **100** (+8) | 1651 ms | **0.000** |
+| `/privacy-policy` | **100** | 95 (+3) | 100 | **100** (+8) | 1801 ms | **0.000** |
+
+The eight reference pages land at 99–100, up from 81–86, mostly from removing the
+render-blocking Google Fonts round-trip. SEO is 100 across the board: the two
+malformed-`<head>` pages went 92 → 100 and their CLS 0.038 → 0.000, which is the
+predicted trade in the section below, landing as predicted.
+
+**The homepage sits at 85 and is the one page worth watching.** It is
+media-heavy by design — a full-bleed hero video plus a six-frame process
+sequence. Three real problems were found and fixed during step 9:
+
+| Problem | Before | After |
+|---|---|---|
+| `loop.webm` on the critical path. `autoplay` overrides `preload="none"` — the attributes are contradictory and autoplay wins | 1907 KB | 640 KB |
+| Hero poster downloaded twice: AVIF via `<picture>` plus WebP via the video's `poster` attribute, for one visible image | 346 KB | 176 KB |
+| `tsflogo.png` was 1776×2168, rendered at 32px, in the header and footer of every page | 198 KB | 8 KB |
+
+Homepage LCP moved 6681 → 4353 ms across those fixes. Remaining weight is the
+hero loop and the process frames, both load-bearing to the design.
+
+**The real performance check is still one pass on the preview deploy, from a
+phone.** These are simulated lab numbers on a desktop.
+
+---
+
 ## How to use this
 
 **Step 9's Lighthouse check is an observation, not a gate.** Record whether the migrated site is roughly comparable and move on. Do not chase a delta.

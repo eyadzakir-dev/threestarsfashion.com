@@ -1,0 +1,61 @@
+---
+// Sub-page opener. Navy, compact, no photography and no video: these are
+// reference pages people link to directly in an email, not experiences.
+import Eyebrow from './Eyebrow.astro';
+
+interface Props {
+  eyebrow: string;
+  lead?: string;
+  title: string;
+  standfirst?: string;
+}
+const { eyebrow, lead, title, standfirst } = Astro.props;
+---
+<section class="phead">
+  <span aria-hidden="true" class="phead__grid tsg-grid-field"></span>
+  <div class="phead__inner">
+    <Eyebrow tone="slate">{eyebrow}</Eyebrow>
+    <h1 class="phead__title">
+      {lead && <span class="phead__lead">{lead}</span>}
+      {lead && ' '}<span class="phead__subject">{title}</span>
+    </h1>
+    {standfirst && <p class="phead__standfirst">{standfirst}</p>}
+  </div>
+</section>
+
+<style>
+  .phead {
+    position: relative;
+    background: var(--surface-navy);
+    border-bottom: var(--keyline-accent);
+    padding-block: calc(var(--header-h) + var(--space-16)) var(--space-20);
+    overflow: hidden;
+  }
+  .phead__grid { position: absolute; inset: 0; opacity: 0.35; pointer-events: none }
+  .phead__inner {
+    position: relative;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--page-pad);
+    display: grid;
+    gap: var(--space-5);
+  }
+  .phead__title {
+    font-family: var(--font-display);
+    font-size: var(--fs-display-2);
+    line-height: var(--lh-display);
+    letter-spacing: var(--tracking-display);
+    color: var(--text-on-dark);
+    max-width: 26ch;
+    text-wrap: pretty;
+  }
+  .phead__lead { font-weight: var(--weight-light) }
+  .phead__subject { font-weight: var(--weight-semibold) }
+  .phead__standfirst {
+    font-size: var(--fs-body-lg);
+    line-height: var(--lh-body);
+    color: var(--text-on-dark-body);
+    max-width: 62ch;
+    text-wrap: pretty;
+  }
+</style>

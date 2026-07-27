@@ -1,0 +1,181 @@
+---
+// Image gallery with a keyboard-navigable lightbox.
+//
+// The legacy site defined the SAME GalleryLightbox class twice — once inline in
+// facilities.html and again, verbatim minus comments, in certifications.html.
+// This is the single deduplicated implementation.
+//
+// Images render through MediaSlot, so nothing here is a bare <img>. The lightbox
+// shows the same file at full size: the legacy JS read `img.dataset.fullSrc`,
+// which never existed anywhere in the markup, so no hi-res path was ever wired
+// up (PARITY.md §9). Kept as-is rather than inventing one.
+import MediaSlot from '../MediaSlot.astro';
+
+export interface GalleryImage {
+  dir: string;
+  basename: string;
+  alt: string;
+}
+
+interface Props {
+  images: readonly GalleryImage[];
+  columns?: number;
+  class?: string;
+}
+const { images, columns = 4, class: className = '' } = Astro.props;
+---
+<ul class:list={['gal', className]} style={`--gal-cols: ${columns};`} data-gallery>
+  {images.map((img, i) => (
+    <li class="gal__item">
+      <button type="button" class="gal__btn" data-index={i} aria-label={`Open image: ${img.alt}`}>
+        <MediaSlot
+          dir={img.dir}
+          basename={img.basename}
+          alt={img.alt}
+          aspectRatio="3 / 2"
+          posterOnly
+          class="gal__media"
+        />
+      </button>
+    </li>
+  ))}
+</ul>
+
+<div class="lb" data-lightbox hidden role="dialog" aria-modal="true" aria-label="Image viewer">
+  <button type="button" class="lb__close" data-lb-close aria-label="Close viewer">&#215;</button>
+  <button type="button" class="lb__nav lb__nav--prev" data-lb-prev aria-label="Previous image">&#8249;</button>
+  <figure class="lb__figure">
+    <img class="lb__img" data-lb-img alt="" />
+    <figcaption class="lb__cap" data-lb-cap></figcaption>
+  </figure>
+  <button type="button" class="lb__nav lb__nav--next" data-lb-next aria-label="Next image">&#8250;</button>
+</div>
+
+<style>
+  .gal {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(var(--gal-cols), 1fr);
+    gap: var(--gutter);
+  }
+  .gal__btn {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: var(--border-hair) solid var(--rule-hair);
+    background: none;
+    cursor: pointer;
+    transition: transform var(--dur-fast) var(--ease-spring);
+  }
+  .gal__btn:hover { transform: translateY(var(--lift-hover)) }
+
+  .lb {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-lightbox);
+    background: var(--scrim-void);
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: var(--space-4);
+    padding: var(--space-8);
+  }
+  .lb[hidden] { display: none }
+
+  .lb__figure { margin: 0; display: grid; gap: var(--space-4); justify-items: center }
+  .lb__img {
+    max-width: 100%;
+    max-height: 78vh;
+    box-shadow: var(--shadow-lightbox);
+  }
+  .lb__cap {
+    font-family: var(--font-ui);
+    font-size: var(--fs-caption);
+    color: var(--text-on-dark-body);
+    text-align: center;
+  }
+
+  .lb__close {
+    position: absolute;
+    top: var(--space-6);
+    right: var(--space-8);
+    font-size: 2rem;
+    line-height: 1;
+    color: var(--text-on-dark);
+    min-width: var(--hit-min);
+    min-height: var(--hit-min);
+  }
+  .lb__nav {
+    font-size: 2.5rem;
+    line-height: 1;
+    color: var(--text-on-dark);
+    min-width: var(--hit-min);
+    min-height: var(--hit-min);
+  }
+  .lb__nav:hover { color: var(--text-accent) }
+
+  @media (max-width: 992px) { .gal { grid-template-columns: repeat(2, 1fr) } }
+  @media (max-width: 560px) {
+    .gal { grid-template-columns: 1fr }
+    .lb { grid-template-columns: 1fr; padding: var(--space-4) }
+    .lb__nav { position: absolute; bottom: var(--space-6) }
+    .lb__nav--prev { left: var(--space-6) }
+    .lb__nav--next { right: var(--space-6) }
+  }
+</style>
+
+<script>
+  // One implementation for every gallery on the site.
+  document.querySelectorAll<HTMLElement>('[data-gallery]').forEach((grid) => {
+    const lb = grid.parentElement?.querySelector<HTMLElement>('[data-lightbox]')
+      ?? document.querySelector<HTMLElement>('[data-lightbox]');
+    if (!lb) return;
+
+    const img = lb.querySelector<HTMLImageElement>('[data-lb-img]')!;
+    const cap = lb.querySelector<HTMLElement>('[data-lb-cap]')!;
+    const buttons = Array.from(grid.querySelectorAll<HTMLButtonElement>('.gal__btn'));
+    const sources = buttons.map((b) => {
+      const el = b.querySelector('img');
+      return { src: el?.currentSrc || el?.src || '', alt: el?.alt || '' };
+    });
+
+    let index = 0;
+    let opener: HTMLElement | null = null;
+
+    const show = (i: number) => {
+      index = (i + sources.length) % sources.length;
+      img.src = sources[index].src;
+      img.alt = sources[index].alt;
+      cap.textContent = `${sources[index].alt} — ${index + 1} of ${sources.length}`;
+    };
+
+    const open = (i: number, from: HTMLElement) => {
+      opener = from;
+      show(i);
+      lb.hidden = false;
+      document.documentElement.style.overflow = 'hidden';
+      lb.querySelector<HTMLElement>('[data-lb-close]')?.focus();
+    };
+
+    const close = () => {
+      lb.hidden = true;
+      document.documentElement.style.overflow = '';
+      opener?.focus();
+    };
+
+    buttons.forEach((b, i) => b.addEventListener('click', () => open(i, b)));
+    lb.querySelector('[data-lb-close]')?.addEventListener('click', close);
+    lb.querySelector('[data-lb-prev]')?.addEventListener('click', () => show(index - 1));
+    lb.querySelector('[data-lb-next]')?.addEventListener('click', () => show(index + 1));
+    lb.addEventListener('click', (e) => { if (e.target === lb) close(); });
+
+    document.addEventListener('keydown', (e) => {
+      if (lb.hidden) return;
+      if (e.key === 'Escape') close();
+      else if (e.key === 'ArrowLeft') show(index - 1);
+      else if (e.key === 'ArrowRight') show(index + 1);
+    });
+  });
+</script>

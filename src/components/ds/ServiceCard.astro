@@ -1,0 +1,88 @@
+---
+// Numbered service card with a feature list. Playfair for the title.
+interface Props {
+  number: string;
+  title: string;
+  description: string;
+  features?: readonly string[];
+}
+const { number, title, description, features = [] } = Astro.props;
+---
+<article class="svc">
+  <p class="svc__num">{number}</p>
+  <div class="svc__body">
+    <h3 class="svc__title">{title}</h3>
+    <p class="svc__desc">{description}</p>
+    {features.length > 0 && (
+      <ul class="svc__features">
+        {features.map((f) => <li>{f}</li>)}
+      </ul>
+    )}
+  </div>
+</article>
+
+<style>
+  .svc {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-8);
+    padding-top: var(--space-6);
+    border-top: var(--border-mid) solid var(--rule-strong);
+    transition: border-color var(--dur-fast) step-end;
+  }
+  .svc:hover { border-top-color: var(--rule-accent) }
+
+  .svc__num {
+    font-family: var(--font-numeral);
+    font-size: var(--fs-numeral-md);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-numeral);
+    line-height: 1;
+    font-variant-numeric: var(--numeric-tabular);
+    color: var(--text-accent);
+    min-width: 2.5ch;
+  }
+  .svc__body { display: grid; gap: var(--space-3) }
+  .svc__title {
+    font-family: var(--font-display);
+    font-size: var(--fs-heading-1);
+    font-weight: var(--weight-semibold);
+    line-height: var(--lh-heading);
+    color: var(--text-display);
+  }
+  .svc__desc {
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    color: var(--text-body);
+    max-width: 62ch;
+    text-wrap: pretty;
+  }
+  .svc__features {
+    list-style: none;
+    margin: var(--space-2) 0 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-2);
+  }
+  .svc__features li {
+    position: relative;
+    padding-left: var(--space-5);
+    font-size: var(--fs-body-sm);
+    line-height: var(--lh-body);
+    color: var(--text-muted);
+  }
+  /* A hairline dash rather than a bullet — no dingbats. */
+  .svc__features li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.7em;
+    width: var(--space-3);
+    height: 1px;
+    background: var(--rule-accent);
+  }
+
+  @media (max-width: 560px) {
+    .svc { grid-template-columns: 1fr; gap: var(--space-3) }
+  }
+</style>

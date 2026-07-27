@@ -121,7 +121,9 @@ const NODES = [
     </div>
 
     <div class="stage">
-      <div class="frame f1"><MediaSlot slotName="process" basename={stages[0].frame} alt={stages[0].alt} posterOnly eager class="frame-media" /></div>
+      {/* No `eager` on f1: this section always sits well below the fold on the
+          homepage, so eager-loading it competed with the hero for bandwidth. */}
+      <div class="frame f1"><MediaSlot slotName="process" basename={stages[0].frame} alt={stages[0].alt} posterOnly class="frame-media" /></div>
       <div class="frame f2"><MediaSlot slotName="process" basename={stages[1].frame} alt={stages[1].alt} posterOnly class="frame-media" /></div>
       <div class="frame f3"><MediaSlot slotName="process" basename={stages[2].frame} alt={stages[2].alt} posterOnly class="frame-media" /></div>
       <div class="frame f4"><MediaSlot slotName="process" basename={stages[3].frame} alt={stages[3].alt} posterOnly class="frame-media" /></div>
