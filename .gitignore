@@ -12,6 +12,7 @@ server.pid
 # AI Assistant files
 .claude/
 .gemini/
+.omc/
 
 # Environment files
 .env
