@@ -183,10 +183,8 @@
           <p class="sec__note mono">Route diagram · not to scale</p>
         </header>
         <div class="routes__grid">
-          <figure class="routes__map">
-            <svg viewBox="0 0 720 360" role="img" aria-labelledby="routes-svg-title routes-svg-desc">
-              <title id="routes-svg-title">Export routes from Alexandria</title>
-              <desc id="routes-svg-desc">From Alexandria, Egypt: duty-free to the European Union under Euro 1, about one week by freight; duty-free to the United States under QIZ, about three weeks to major ports.</desc>
+          <figure class="routes__map globe" data-globe>
+            <svg class="globe__diagram" viewBox="0 0 720 360" aria-hidden="true" focusable="false">
               <path class="route route--eu" pathLength="1" d="M120 250 H300 Q320 250 320 230 V110 Q320 90 340 90 H600"/>
               <path class="route route--us" pathLength="1" d="M120 250 H600"/>
               <circle class="node node--origin" cx="120" cy="250" r="14"/>
@@ -201,6 +199,14 @@
               <text x="470" y="104" text-anchor="middle" class="r-time">≈1 WK</text>
               <text x="470" y="264" text-anchor="middle" class="r-time">≈3 WK</text>
             </svg>
+            <div class="globe__stage" aria-hidden="true">
+              <canvas class="globe__canvas"></canvas>
+              <span class="globe__rim"></span>
+              <span class="globe__pin globe__pin--up" data-pin="eu"><i></i><span class="globe__tag mono"><b>European Union</b><span class="globe__sub">Euro 1 · duty-free · ≈1 wk</span><b class="globe__abbr">EU · ≈1 wk</b></span></span>
+              <span class="globe__pin globe__pin--up" data-pin="us"><i></i><span class="globe__tag mono"><b>United States</b><span class="globe__sub">QIZ · duty-free · ≈3 wk</span><b class="globe__abbr">US · ≈3 wk</b></span></span>
+              <span class="globe__pin globe__pin--down" data-pin="alex"><i></i><span class="globe__tag mono"><b>Alexandria</b><span class="globe__sub">Free zone · port</span><b class="globe__abbr">Alexandria</b></span></span>
+            </div>
+            <figcaption class="sr-only">Export routes from Alexandria, Egypt: duty-free to the European Union under Euro 1, about one week by freight; duty-free to the United States under QIZ, about three weeks to major ports.</figcaption>
           </figure>
           <div class="routes__side">
             <p>Egypt has duty-free access to the United States under the Qualifying Industrial Zones (QIZ) agreement and to the European Union under the Euro-Mediterranean Partnership (Euro 1).</p>
@@ -255,9 +261,9 @@
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
     <defs>
       <symbol id="three-stars" viewBox="0 0 120 100">
-        <path fill="currentColor" d="M74 22l6.9 17.3 18.6 1.2-14.3 11.9 4.6 18.1L74 60.5 58.2 70.5l4.6-18.1-14.3-11.9 18.6-1.2z"/>
-        <path fill="currentColor" d="M36 46l4.4 11 11.8.8-9.1 7.6 2.9 11.5L36 70.6l-10 6.3 2.9-11.5-9.1-7.6 11.8-.8z"/>
-        <path fill="currentColor" d="M22 12l2.7 6.8 7.3.5-5.6 4.7 1.8 7.1L22 27.2l-6.2 3.9 1.8-7.1-5.6-4.7 7.3-.5z"/>
+        <path pathLength="1" style="--k:2;fill:currentColor;fill-opacity:clamp(0,(var(--sd,1) - 0.72) * 3.6,1);stroke:currentColor;stroke-width:var(--star-stroke,0);stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:calc(1 - clamp(0,var(--sd,1) * 1.8 - var(--k) * 0.4,1))" d="M74 22l6.9 17.3 18.6 1.2-14.3 11.9 4.6 18.1L74 60.5 58.2 70.5l4.6-18.1-14.3-11.9 18.6-1.2z"/>
+        <path pathLength="1" style="--k:1;fill:currentColor;fill-opacity:clamp(0,(var(--sd,1) - 0.72) * 3.6,1);stroke:currentColor;stroke-width:var(--star-stroke,0);stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:calc(1 - clamp(0,var(--sd,1) * 1.8 - var(--k) * 0.4,1))" d="M36 46l4.4 11 11.8.8-9.1 7.6 2.9 11.5L36 70.6l-10 6.3 2.9-11.5-9.1-7.6 11.8-.8z"/>
+        <path pathLength="1" style="--k:0;fill:currentColor;fill-opacity:clamp(0,(var(--sd,1) - 0.72) * 3.6,1);stroke:currentColor;stroke-width:var(--star-stroke,0);stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:calc(1 - clamp(0,var(--sd,1) * 1.8 - var(--k) * 0.4,1))" d="M22 12l2.7 6.8 7.3.5-5.6 4.7 1.8 7.1L22 27.2l-6.2 3.9 1.8-7.1-5.6-4.7 7.3-.5z"/>
       </symbol>
     </defs>
   </svg>

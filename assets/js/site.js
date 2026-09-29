@@ -4,6 +4,7 @@ const REDUCED_MOTION = matchMedia("(prefers-reduced-motion: reduce)");
 const DESKTOP_NAV = matchMedia("(min-width: 1181px)");
 const CLOCK_TICK_MS = 15000;
 const REVEAL_THRESHOLD = 0.3;
+const GLOBE_PRELOAD_MARGIN = "150% 0px";
 
 const cairoTime = new Intl.DateTimeFormat("en-GB", {
   timeZone: "Africa/Cairo",
@@ -50,6 +51,23 @@ function initReveal(selector) {
     el.classList.add("is-armed");
     observer.observe(el);
   });
+}
+
+/* ---------- Route globe: loaded as the route diagram approaches the viewport ---------- */
+
+function initGlobes() {
+  const figures = document.querySelectorAll("[data-globe]");
+  if (!figures.length) return;
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      observer.unobserve(entry.target);
+      import("./globe/globe.js")
+        .then(({ initGlobe }) => initGlobe(entry.target))
+        .catch((error) => console.warn("Route globe unavailable; keeping the flat diagram.", error));
+    });
+  }, { rootMargin: GLOBE_PRELOAD_MARGIN });
+  figures.forEach((figure) => observer.observe(figure));
 }
 
 /* ---------- Lightbox: any [data-gallery] whose links point at full-size images ---------- */
@@ -126,5 +144,6 @@ function initLightbox() {
 
 initHeaderClock();
 initMenu();
-initReveal(".stamps, .routes");
+initReveal(".stamps, .routes, .cta__stars");
 initLightbox();
+initGlobes();

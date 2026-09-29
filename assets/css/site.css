@@ -475,6 +475,72 @@ main { display: block; }
   .r-time { display: none; }
 }
 
+/* ---------- Route globe (progressive enhancement of the route diagram) ---------- */
+.globe {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 10;
+  background-image: radial-gradient(rgba(17, 17, 17, 0.12) 1px, transparent 1.2px);
+  background-size: 20px 20px;
+  overflow: hidden;
+}
+.globe__stage { display: none; }
+.globe.is-live .globe__diagram { display: none; }
+.globe.is-live .globe__stage { display: block; position: absolute; inset: 0; }
+.globe__canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.globe__rim { position: absolute; left: 0; top: 0; border: 1px solid var(--ink); border-radius: 50%; pointer-events: none; }
+.globe__pin { position: absolute; left: 0; top: 0; width: 0; height: 0; transition: opacity 0.35s; }
+.globe__pin.is-hidden { opacity: 0; }
+.globe__pin i {
+  position: absolute;
+  left: -6px; top: -6px;
+  width: 12px; height: 12px;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  background: var(--paper-hi);
+}
+.globe__pin[data-pin="alex"] i { background: var(--red); }
+.globe__pin[data-pin="alex"] i::after {
+  content: "";
+  position: absolute;
+  inset: -9px;
+  border: 2px solid var(--red);
+  border-radius: 50%;
+  opacity: 0;
+}
+.globe__tag {
+  position: absolute;
+  padding: 5px 8px 6px;
+  border: 1px solid var(--ink);
+  background: var(--paper-hi);
+  color: var(--ink-2);
+  font-size: 10.5px;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+.globe__tag b { display: block; color: var(--ink); font-size: 12px; font-weight: 500; }
+.globe__tag .globe__abbr { display: none; }
+.globe__pin[data-side="right"] .globe__tag { left: 16px; }
+.globe__pin[data-side="left"] .globe__tag { right: 16px; }
+.globe__pin--up .globe__tag { bottom: 6px; }
+.globe__pin--down .globe__tag { top: 6px; }
+@media (prefers-reduced-motion: no-preference) {
+  .globe__pin[data-pin="alex"] i::after { animation: pin-pulse 2.4s var(--ease-out) infinite; }
+}
+@keyframes pin-pulse {
+  from { opacity: 0.9; transform: scale(0.4); }
+  to { opacity: 0; transform: scale(1.6); }
+}
+@media (max-width: 899px) {
+  .globe { aspect-ratio: 1; }
+  .globe__tag { padding: 4px 6px 5px; }
+  .globe__tag b, .globe__sub { display: none; }
+  .globe__tag .globe__abbr { display: block; font-size: 10.5px; }
+  .globe__pin[data-side="right"] .globe__tag { left: 11px; }
+  .globe__pin[data-side="left"] .globe__tag { right: 11px; }
+}
+
 .mini { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--ink); }
 .mini > div { padding: 14px 0 16px; border-bottom: 1px solid var(--rule); }
 .mini > div:nth-child(odd) { padding-right: 12px; border-right: 1px solid var(--rule); }
@@ -505,6 +571,10 @@ main { display: block; }
 }
 .fig figcaption { display: flex; justify-content: space-between; gap: 12px; margin-top: 8px; color: var(--ink-2); font-size: 11px; }
 
+/* ---------- Three-star mark: outlines draw on, then fill (see the #three-stars symbol) ---------- */
+@property --sd { syntax: "<number>"; inherits: true; initial-value: 1; }
+@keyframes star-draw { from { --sd: 0; } to { --sd: 1; } }
+
 /* ---------- CTA ---------- */
 .cta { background: var(--red); color: #fff; overflow: clip; }
 .cta__in {
@@ -530,7 +600,9 @@ main { display: block; }
 .cta .btn:focus-visible { outline-color: #fff; }
 .cta .btn--line { border-color: #fff; color: #fff; }
 .cta .btn--line:hover { background: #fff; color: var(--ink); }
-.cta__stars { position: absolute; right: var(--pad); bottom: 60px; width: min(30vw, 380px); color: #fff; opacity: 0.95; pointer-events: none; }
+.cta__stars { position: absolute; right: var(--pad); bottom: 60px; width: min(30vw, 380px); color: #fff; opacity: 0.95; pointer-events: none; --star-stroke: 1.4; }
+.cta__stars.is-armed { --sd: 0; }
+.cta__stars.is-in { animation: star-draw 2.2s var(--ease-out) 0.1s both; }
 @media (max-width: 899px) {
   .cta__in { padding-block: 72px 200px; }
   .cta__title, .cta__lead, .cta__actions { grid-column: 1 / -1; }
