@@ -1,919 +1,224 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="assets/favicon/favicon-96x96.png" sizes="96x96">
-    <link rel="icon" type="image/svg+xml" href="assets/favicon/favicon.svg">
-    <link rel="shortcut icon" href="assets/favicon/favicon.ico">
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
-    <link rel="manifest" href="assets/favicon/site.webmanifest">
-    <link rel="canonical" href="https://threestarsfashion.com/certifications">
-    <title>Certifications | Three Stars Fashion - ISO, WRAP Gold, OEKO-TEX, GRS Certified</title>
-    <meta name="description"
-        content="Three Stars Fashion holds ISO 9001, WRAP Gold, OEKO-TEX Standard 100, GRS, OCS, BSCI, SEDEX, Higg Index, and FAMA (Disney) certifications. Inditex Approved Facility. Approved by Walmart, Under Armour, PVH, Primark, and more.">
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="Three Stars Fashion Group">
-    <meta property="og:title" content="Certifications | Three Stars Fashion Group">
-    <meta property="og:description" content="ISO 9001, WRAP Gold, OEKO-TEX, GRS, BSCI &amp; SEDEX certified. Disney FAMA &amp; Inditex Approved. Trusted by Walmart, Under Armour, PVH &amp; Primark.">
-    <meta property="og:url" content="https://threestarsfashion.com/certifications">
-    <meta property="og:image" content="https://threestarsfashion.com/assets/og-image.jpg">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Certifications | Three Stars Fashion Group">
-    <meta name="twitter:description" content="ISO 9001, WRAP Gold, OEKO-TEX, GRS, BSCI &amp; SEDEX certified. Disney FAMA &amp; Inditex Approved. Trusted by Walmart, Under Armour, PVH &amp; Primark.">
-    <meta name="twitter:image" content="https://threestarsfashion.com/assets/og-image.jpg">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="pages.css">
-    <style>
-        /* Certifications Page Specific Styles */
-        .cert-images-section {
-            padding: var(--space-16) var(--container-padding);
-            background-color: var(--color-background);
-        }
-
-        .cert-images-section .section-header {
-            max-width: var(--container-max);
-            margin: 0 auto var(--space-10);
-            text-align: center;
-        }
-
-        .cert-images-grid {
-            max-width: var(--container-max);
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: var(--space-6);
-        }
-
-        .cert-image-box {
-            background-color: var(--color-white);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            box-shadow: 0 8px 30px rgba(27, 42, 78, 0.1);
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            cursor: pointer;
-        }
-
-        .cert-image-box:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 25px 60px rgba(27, 42, 78, 0.2);
-        }
-
-        .cert-image-box img {
-            width: 100%;
-            height: 300px;
-            object-fit: contain;
-            background-color: var(--color-white);
-            padding: var(--space-4);
-            transition: transform 0.4s ease;
-        }
-
-        .cert-image-box:hover img {
-            transform: scale(1.05);
-        }
-
-        .cert-image-box .cert-label {
-            padding: var(--space-4);
-            text-align: center;
-            background-color: var(--color-background-alt);
-        }
-
-        .cert-image-box .cert-label h4 {
-            font-family: var(--font-heading);
-            font-size: var(--text-base);
-            font-weight: var(--font-semibold);
-            color: var(--color-navy);
-            margin: 0;
-        }
-
-        /* View Certifications Button */
-        .view-certs-container {
-            text-align: center;
-            padding: var(--space-10) 0;
-        }
-
-        .view-certs-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: var(--space-3);
-            padding: var(--space-5) var(--space-10);
-            background-color: var(--color-accent);
-            color: var(--color-white);
-            border: none;
-            border-radius: var(--radius-full);
-            font-family: var(--font-body);
-            font-size: var(--text-lg);
-            font-weight: var(--font-semibold);
-            letter-spacing: 0.05em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 6px 20px rgba(229, 34, 34, 0.35);
-            text-decoration: none;
-        }
-
-        .view-certs-btn:hover {
-            background-color: var(--color-accent-dark);
-            transform: translateY(-4px);
-            box-shadow: 0 12px 30px rgba(229, 34, 34, 0.45);
-        }
-
-        .view-certs-btn svg {
-            width: 24px;
-            height: 24px;
-        }
-
-        /* Certification Modal */
-        .cert-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(27, 42, 78, 0.95);
-            z-index: 1000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .cert-modal.active {
-            display: flex;
-            opacity: 1;
-        }
-
-        .cert-modal-container {
-            max-width: 1200px;
-            width: 90%;
-            max-height: 90vh;
-            position: relative;
-        }
-
-        .cert-modal-close {
-            position: absolute;
-            top: -50px;
-            right: 0;
-            background: none;
-            border: none;
-            color: var(--color-white);
-            font-size: var(--text-3xl);
-            cursor: pointer;
-            padding: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .cert-modal-close:hover {
-            color: var(--color-accent);
-            transform: scale(1.1);
-        }
-
-        .cert-modal-title {
-            font-family: var(--font-heading);
-            font-size: var(--text-2xl);
-            color: var(--color-white);
-            text-align: center;
-            margin-bottom: var(--space-6);
-        }
-
-        .cert-modal-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: var(--space-4);
-            max-height: 70vh;
-            overflow-y: auto;
-            padding: var(--space-4);
-        }
-
-        .cert-modal-item {
-            background-color: var(--color-white);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .cert-modal-item:hover {
-            transform: scale(1.05) translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            z-index: 10;
-        }
-
-        .cert-modal-item img {
-            width: 100%;
-            height: 250px;
-            object-fit: contain;
-            padding: var(--space-4);
-            background-color: var(--color-white);
-        }
-
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .cert-images-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .cert-images-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* ===== Lightbox Overlay ===== */
-        .lightbox-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.92);
-            z-index: 2000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-
-        .lightbox-overlay.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .lightbox-content {
-            max-width: 90%;
-            max-height: 90%;
-            position: relative;
-        }
-
-        .lightbox-image {
-            max-width: 90vw;
-            max-height: 85vh;
-            object-fit: contain;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
-            display: block;
-            border-radius: var(--radius-md);
-        }
-
-        .lightbox-btn {
-            position: absolute;
-            background: none;
-            border: none;
-            color: rgba(255, 255, 255, 0.8);
-            cursor: pointer;
-            padding: 16px;
-            transition: color 0.2s ease, transform 0.2s ease;
-            font-family: var(--font-body);
-        }
-
-        .lightbox-btn:hover {
-            color: #fff;
-            transform: scale(1.15);
-        }
-
-        .lightbox-btn:focus-visible {
-            outline: 2px solid var(--color-accent);
-            outline-offset: 4px;
-            border-radius: var(--radius-sm);
-        }
-
-        .lightbox-close {
-            top: 20px;
-            right: 20px;
-            font-size: 2.4rem;
-            line-height: 1;
-        }
-
-        .lightbox-prev,
-        .lightbox-next {
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 2.8rem;
-            line-height: 1;
-        }
-
-        .lightbox-prev:hover,
-        .lightbox-next:hover {
-            transform: translateY(-50%) scale(1.15);
-        }
-
-        .lightbox-prev {
-            left: 16px;
-        }
-
-        .lightbox-next {
-            right: 16px;
-        }
-
-        .lightbox-counter {
-            position: absolute;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(255, 255, 255, 0.7);
-            font-family: var(--font-body);
-            font-size: var(--text-sm);
-            font-weight: var(--font-medium);
-            letter-spacing: 0.1em;
-        }
-
-        @media (max-width: 600px) {
-            .lightbox-prev {
-                left: 4px;
-                font-size: 2rem;
-            }
-
-            .lightbox-next {
-                right: 4px;
-                font-size: 2rem;
-            }
-
-            .lightbox-close {
-                top: 10px;
-                right: 10px;
-                font-size: 2rem;
-            }
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F3F1EC">
+  <title>Certifications | Three Stars Fashion - ISO, WRAP Gold, OEKO-TEX, GRS Certified</title>
+  <meta name="description" content="Three Stars Fashion holds ISO 9001, WRAP Gold, OEKO-TEX Standard 100, GRS, OCS, BSCI, SEDEX, Higg Index, and FAMA (Disney) certifications. Inditex Approved Facility. Approved by Walmart, Under Armour, PVH, Primark, and more.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Three Stars Fashion Group">
+  <meta property="og:title" content="Certifications | Three Stars Fashion Group">
+  <meta property="og:description" content="ISO 9001, WRAP Gold, OEKO-TEX, GRS, BSCI &amp; SEDEX certified. Disney FAMA &amp; Inditex Approved. Trusted by Walmart, Under Armour, PVH &amp; Primark.">
+  <meta property="og:url" content="https://threestarsfashion.com/certifications">
+  <meta property="og:image" content="https://threestarsfashion.com/assets/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Certifications | Three Stars Fashion Group">
+  <meta name="twitter:description" content="ISO 9001, WRAP Gold, OEKO-TEX, GRS, BSCI &amp; SEDEX certified. Disney FAMA &amp; Inditex Approved. Trusted by Walmart, Under Armour, PVH &amp; Primark.">
+  <meta name="twitter:image" content="https://threestarsfashion.com/assets/og-image.jpg">
+  <link rel="canonical" href="https://threestarsfashion.com/certifications">
+  <link rel="icon" type="image/png" href="assets/favicon/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon/favicon.svg">
+  <link rel="shortcut icon" href="assets/favicon/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
+  <link rel="manifest" href="assets/favicon/site.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="assets/css/site.css">
+  <link rel="stylesheet" href="assets/css/pages.css">
+  <script type="module" src="assets/js/site.js"></script>
 </head>
-
 <body>
-    <!-- Navigation -->
-    <header class="header" id="header">
-        <nav class="nav">
-            <a href="/" class="logo">
-                <img src="assets/Brands/tsflogo.png" alt="Three Stars Fashion" class="logo-img" width="40" height="40">
-                <span class="logo-company-name">Three Stars Fashion</span>
-            </a>
-            <div class="nav-right">
-                <a href="/contact" class="header-cta">Submit an Inquiry</a>
-                <a href="https://www.linkedin.com/company/three-stars-fashion-group/posts/?feedView=all" target="_blank"
-                    class="social-link" aria-label="LinkedIn">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                        <path
-                            d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
-                    </svg>
-                </a>
-                <button class="menu-open-btn" id="menuOpenBtn" aria-label="Open menu">
-                    <span class="menu-text">MENU</span>
-                    <span class="hamburger">
-                        <span class="line"></span>
-                        <span class="line"></span>
-                        <span class="line"></span>
-                    </span>
-                </button>
-            </div>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="hdr">
+    <div class="hdr__in wrap">
+      <a class="hdr__brand" href="/" aria-label="Three Stars Fashion, home">
+        <img src="assets/Brands/tsf-mark.png" width="34" height="32" alt="">
+        <span class="hdr__word">Three Stars<br>Fashion</span>
+      </a>
+      <nav class="hdr__nav" aria-label="Primary">
+        <a href="/about">About</a>
+        <a href="/services">Services</a>
+        <a href="/facilities">Facilities</a>
+        <a href="/certifications" aria-current="page">Certifications</a>
+        <a href="/logistics">Logistics</a>
+        <a href="/faq">FAQ</a>
+        <a href="/contact">Contact</a>
+      </nav>
+      <p class="hdr__clock mono"><span aria-hidden="true">ALX</span><span class="sr-only">Alexandria local time</span> <time data-cairo-clock>UTC+2</time></p>
+      <a class="btn btn--red hdr__cta" href="/contact">Submit an Inquiry</a>
+      <details class="menu">
+        <summary class="menu__btn mono"><span class="menu__open">Menu</span><span class="menu__close">Close</span></summary>
+        <nav class="menu__panel" aria-label="Mobile">
+          <a href="/about"><span class="mono">01</span>About</a>
+          <a href="/services"><span class="mono">02</span>Services</a>
+          <a href="/facilities"><span class="mono">03</span>Facilities</a>
+          <a href="/certifications" aria-current="page"><span class="mono">04</span>Certifications</a>
+          <a href="/logistics"><span class="mono">05</span>Logistics</a>
+          <a href="/faq"><span class="mono">06</span>FAQ</a>
+          <a href="/contact"><span class="mono">07</span>Contact</a>
+          <a class="btn btn--red" href="/contact">Submit an Inquiry <span aria-hidden="true">→</span></a>
         </nav>
-    </header>
-
-    <!-- Full Screen Menu -->
-    <div class="fullscreen-menu" id="fullscreenMenu">
-        <button class="menu-close-btn" id="menuCloseBtn" aria-label="Close menu">
-            <span class="menu-text">CLOSE</span>
-            <span class="close-icon">×</span>
-        </button>
-        <div class="menu-content">
-            <div class="menu-visual">
-                <div class="menu-visual-bg"></div>
-            </div>
-            <div class="menu-links">
-                <nav class="menu-nav">
-                    <a href="/" class="menu-link">
-                        <span class="link-number">01</span>
-                        <span class="link-text">Home</span>
-                    </a>
-                    <a href="/about" class="menu-link">
-                        <span class="link-number">02</span>
-                        <span class="link-text">About Us</span>
-                    </a>
-                    <a href="/services" class="menu-link">
-                        <span class="link-number">03</span>
-                        <span class="link-text">Services</span>
-                    </a>
-                    <a href="/facilities" class="menu-link">
-                        <span class="link-number">04</span>
-                        <span class="link-text">Our Facilities</span>
-                    </a>
-                    <a href="/certifications" class="menu-link active">
-                        <span class="link-number">05</span>
-                        <span class="link-text">Certifications</span>
-                    </a>
-                    <a href="/logistics" class="menu-link">
-                        <span class="link-number">06</span>
-                        <span class="link-text">Logistics</span>
-                    </a>
-                    <a href="/faq" class="menu-link">
-                        <span class="link-number">07</span>
-                        <span class="link-text">FAQ</span>
-                    </a>
-                    <a href="/contact" class="menu-link">
-                        <span class="link-number">08</span>
-                        <span class="link-text">Contact</span>
-                    </a>
-                </nav>
-                <div class="menu-footer">
-                    <div class="menu-contact">
-                        <p>info@tsf.com.eg</p>
-                        <p>+2 03 4500550</p>
-                    </div>
-                    <div class="menu-location">
-                        <p>Alexandria Free Zone</p>
-                        <p>Egypt</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+      </details>
     </div>
+  </header>
 
-    <!-- Page Hero -->
-    <section class="page-hero">
-        <div class="page-hero-bg">
-            <div class="page-hero-gradient"></div>
-        </div>
-        <div class="page-hero-content">
-            <span class="page-label reveal-up">CERTIFICATIONS</span>
-            <h1 class="page-title reveal-up">
-                <span class="light">Certified for Quality,</span><br>
-                <span class="bold">Compliance, and Sustainability</span>
-            </h1>
-        </div>
+  <main id="main">
+    <section class="phero" aria-labelledby="page-title">
+      <div class="wrap phero__in">
+        <ul class="phero__meta mono">
+          <li><span class="k">PG.</span> 04 · Certifications</li>
+          <li><span class="k">STD.</span> 9 international standards</li>
+          <li><span class="k">AUD.</span> Independently audited</li>
+          <li><span class="k">QMS.</span> ISO 9001:2015</li>
+        </ul>
+        <h1 class="phero__title" id="page-title">Certified for quality, compliance and sustainability<span class="dot">.</span></h1>
+        <p class="phero__lead">TSF maintains a portfolio of international certifications and buyer approvals covering quality management, ethical labor practices, environmental sustainability, and product safety. They are independently audited and represent verified operational standards, not marketing claims.</p>
+      </div>
     </section>
 
-    <!-- Gradient Divider -->
-    <div class="gradient-divider"></div>
-
-    <!-- Certifications Intro -->
-    <section class="content-section">
-        <div class="section-header centered" style="max-width: var(--container-max); margin: 0 auto;">
-            <span class="section-label reveal-up">INDUSTRY STANDARDS</span>
-            <h2 class="section-title reveal-up">
-                <span class="bold">Industry-Recognized Standards</span>
-            </h2>
-            <p class="section-subtitle reveal-up">
-                TSF maintains a comprehensive portfolio of international certifications and buyer approvals covering quality management, ethical labor practices, environmental sustainability, and product safety. These certifications are independently audited and represent verified operational standards — not marketing claims.
-            </p>
-        </div>
+    <section class="sec" aria-labelledby="reg-title">
+      <div class="wrap">
+        <header class="sec__head">
+          <p class="sec__idx mono">01</p>
+          <h2 class="sec__title" id="reg-title">Our standards.</h2>
+          <p class="sec__note mono">Compliance register</p>
+        </header>
+        <ul class="reg">
+          <li class="reg__item">
+            <p class="reg__no mono">No. 01</p>
+            <p class="stamp-c__ink" style="--r:-3deg"><b>ISO 9001</b><small>Quality management</small></p>
+            <p class="reg__desc">Quality management system certification ensuring consistent product quality, customer satisfaction, and continuous improvement across all processes.</p>
+          </li>
+          <li class="reg__item">
+            <p class="reg__no mono">No. 02</p>
+            <p class="stamp-c__ink" style="--r:2deg"><b>WRAP</b><em>Gold</em><small>Responsible production</small></p>
+            <p class="reg__desc">Gold-level Worldwide Responsible Accredited Production certification confirming lawful, humane, and ethical manufacturing throughout our facilities.</p>
+          </li>
+          <li class="reg__item">
+            <p class="reg__no mono">No. 03</p>
+            <p class="stamp-c__ink" style="--r:-1deg"><b>OEKO-TEX</b><em>Standard 100</em><small>Harmful-substance tested</small></p>
+            <p class="reg__desc">Standard 100 certification guaranteeing that our products are tested for harmful substances and are safe for human and environmental health.</p>
+          </li>
+          <li class="reg__item">
+            <p class="reg__no mono">No. 04</p>
+            <p class="stamp-c__ink" style="--r:3deg"><b>GRS</b><small>Global Recycled Standard</small></p>
+            <p class="reg__desc">Global Recycled Standard certification validating recycled content claims and responsible social and environmental practices in production.</p>
+          </li>
+          <li class="reg__item">
+            <p class="reg__no mono">No. 05</p>
+            <p class="stamp-c__ink" style="--r:-2deg"><b>OCS</b><small>Organic Content Standard</small></p>
+            <p class="reg__desc">Organic Content Standard certification for products containing 5% or more organic material, ensuring organic fiber integrity throughout the supply chain.</p>
+          </li>
+          <li class="reg__item">
+            <p class="reg__no mono">No. 06</p>
+            <p class="stamp-c__ink" style="--r:1deg"><b>BSCI</b><small>Social compliance</small></p>
+            <p class="reg__desc">Business Social Compliance Initiative certification ensuring fair working conditions, ethical labor practices, and respect for human rights.</p>
+          </li>
+          <li class="reg__item">
+            <p class="reg__no mono">No. 07</p>
+            <p class="stamp-c__ink" style="--r:-4deg"><b>SEDEX</b><small>Ethical data exchange</small></p>
+            <p class="reg__desc">Supplier Ethical Data Exchange membership demonstrating ethical supply chain management and transparency in our labor, health, and environmental practices.</p>
+          </li>
+          <li class="reg__item">
+            <p class="reg__no mono">No. 08</p>
+            <p class="stamp-c__ink" style="--r:2deg"><b>Better Work</b><small>ILO · IFC programme</small></p>
+            <p class="reg__desc">ILO–IFC partnership programme ensuring improved working conditions and labor compliance with international standards.</p>
+          </li>
+          <li class="reg__item">
+            <p class="reg__no mono">No. 09</p>
+            <p class="stamp-c__ink" style="--r:-2deg"><b>Higg Index</b><small>Sustainability measurement</small></p>
+            <p class="reg__desc">Sustainable Apparel Coalition Higg Facility Environmental Module, used to measure and improve our facility’s sustainability performance.</p>
+          </li>
+        </ul>
+        <table class="spec__table">
+          <caption class="sr-only">Buyer approvals</caption>
+          <tbody>
+            <tr><th scope="row" class="mono">Buyer approvals</th><td>Disney (FAMA) and Inditex approved facility; approved by global brands and retailers including Walmart, Under Armour, Fruit of the Loom, PVH, and Primark.</td></tr>
+          </tbody>
+        </table>
+      </div>
     </section>
 
-    <!-- View Certifications Button -->
-    <section class="cert-images-section">
-        <div class="view-certs-container">
-            <button class="view-certs-btn" id="viewCertsBtn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M9 12l2 2 4-4" />
-                    <circle cx="12" cy="12" r="10" />
-                </svg>
-                <span>VIEW ALL CERTIFICATIONS</span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    style="width: 20px; height: 20px;">
-                    <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-            </button>
-        </div>
-
-        <!-- Preview Grid - First 3 Certifications -->
-        <div class="section-header"
-            style="max-width: var(--container-max); margin: 0 auto var(--space-8); text-align: center;">
-            <span class="section-label reveal-up">OUR AWARDS & RECOGNITIONS</span>
-        </div>
-        <div class="cert-images-grid">
-            <div class="cert-image-box reveal-up" style="--delay: 0.1s">
-                <img src="assets/Awards and Recognitions/1.jpg" alt="Certification 1" loading="lazy">
-                <div class="cert-label">
-                    <h4>Industry Recognition</h4>
-                </div>
-            </div>
-            <div class="cert-image-box reveal-up" style="--delay: 0.2s">
-                <img src="assets/Awards and Recognitions/2.jpg" alt="Certification 2" loading="lazy">
-                <div class="cert-label">
-                    <h4>Quality Excellence</h4>
-                </div>
-            </div>
-            <div class="cert-image-box reveal-up" style="--delay: 0.3s">
-                <img src="assets/Awards and Recognitions/3.jpg" alt="Certification 3" loading="lazy">
-                <div class="cert-label">
-                    <h4>Compliance Standards</h4>
-                </div>
-            </div>
-        </div>
+    <section class="sec" aria-labelledby="docs-title">
+      <div class="wrap">
+        <header class="sec__head">
+          <p class="sec__idx mono">02</p>
+          <h2 class="sec__title" id="docs-title">Certificates on file.</h2>
+          <p class="sec__note mono">Select to enlarge</p>
+        </header>
+        <ul class="docs" data-gallery>
+          <li><figure><a href="assets/Awards%20and%20Recognitions/3.jpg" data-caption="ISO 9001:2015 quality management system certificate"><img src="assets/Awards%20and%20Recognitions/3.jpg" width="793" height="1123" loading="lazy" decoding="async" alt="ISO 9001:2015 certificate issued to Three Stars Fashion by Systems and Services Certification"></a><figcaption class="mono"><b>ISO 9001:2015</b><span>SSC</span></figcaption></figure></li>
+          <li><figure><a href="assets/Awards%20and%20Recognitions/6.jpg" data-caption="WRAP Gold Certificate of Compliance"><img src="assets/Awards%20and%20Recognitions/6.jpg" width="1056" height="816" loading="lazy" decoding="async" alt="WRAP Gold Certificate of Compliance for Three Stars Fashion (B)"></a><figcaption class="mono"><b>WRAP Gold</b><span>Compliance</span></figcaption></figure></li>
+          <li><figure><a href="assets/Awards%20and%20Recognitions/1.jpg" data-caption="Better Work Egypt certificate of registration and participation"><img src="assets/Awards%20and%20Recognitions/1.jpg" width="1123" height="794" loading="lazy" decoding="async" alt="Better Work Egypt certificate of registration and participation for Three Stars Fashion"></a><figcaption class="mono"><b>Better Work</b><span>ILO · IFC</span></figcaption></figure></li>
+          <li><figure><a href="assets/Awards%20and%20Recognitions/5.jpg" data-caption="Higg Index Facility Environmental Module self-assessment"><img src="assets/Awards%20and%20Recognitions/5.jpg" width="1147" height="818" loading="lazy" decoding="async" alt="Sustainable Apparel Coalition Higg Index self-assessment completion certificate for Three Stars Fashion"></a><figcaption class="mono"><b>Higg Index</b><span>FEM</span></figcaption></figure></li>
+          <li><figure><a href="assets/Awards%20and%20Recognitions/2.jpg" data-caption="Disney Facility and Merchandise Authorization (FAMA)"><img src="assets/Awards%20and%20Recognitions/2.jpg" width="793" height="1123" loading="lazy" decoding="async" alt="Disney Facility and Merchandise Authorization naming Three Stars Fashion as the facility"></a><figcaption class="mono"><b>Disney FAMA</b><span>Authorization</span></figcaption></figure></li>
+          <li><figure><a href="assets/Awards%20and%20Recognitions/4.jpg" data-caption="Disney Facility and Merchandise Authorization (FAMA)"><img src="assets/Awards%20and%20Recognitions/4.jpg" width="794" height="1123" loading="lazy" decoding="async" alt="Disney Facility and Merchandise Authorization for Three Stars Fashion, Alexandria Free Zone"></a><figcaption class="mono"><b>Disney FAMA</b><span>Authorization</span></figcaption></figure></li>
+        </ul>
+      </div>
     </section>
 
-    <!-- Certifications Grid -->
-    <section class="certifications-section">
-        <div class="section-header centered" style="max-width: var(--container-max); margin: 0 auto var(--space-10);">
-            <span class="section-label reveal-up">COMPLIANCE CERTIFICATIONS</span>
-            <h2 class="section-title reveal-up">
-                <span class="light">Our</span> <span class="bold">Standards</span>
-            </h2>
+    <section class="sec sec--ink" aria-labelledby="commit-title">
+      <div class="wrap">
+        <header class="sec__head">
+          <p class="sec__idx mono">03</p>
+          <h2 class="sec__title sr-only" id="commit-title">Our commitment</h2>
+          <p class="sec__note mono">Our commitment</p>
+        </header>
+        <p class="statement">Beyond compliance: <em>operational accountability.</em></p>
+        <div class="band__cols">
+          <p>At TSF, certifications reflect our operational commitment to auditable, responsible manufacturing, maintained through continuous monitoring and dedicated compliance teams. We treat these standards as minimum requirements that we strive to exceed.</p>
+          <p>Our compliance team continuously monitors and improves our processes, so that we maintain our certifications and lead the industry in ethical and sustainable manufacturing practices.</p>
         </div>
-        <div class="certifications-grid">
-            <div class="cert-card reveal-up" style="--delay: 0.1s">
-                <div class="cert-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M9 12l2 2 4-4" />
-                        <circle cx="12" cy="12" r="10" />
-                    </svg>
-                </div>
-                <h3 class="cert-title">ISO 9001</h3>
-                <p class="cert-desc">
-                    Quality Management System certification ensuring consistent product quality,
-                    customer satisfaction, and continuous improvement across all processes.
-                </p>
-            </div>
-            <div class="cert-card reveal-up" style="--delay: 0.15s">
-                <div class="cert-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <circle cx="12" cy="12" r="10" />
-                        <path d="M12 8v4l3 3" />
-                    </svg>
-                </div>
-                <h3 class="cert-title">Better Work</h3>
-                <p class="cert-desc">
-                    ILO-IFC partnership certification ensuring improved working conditions
-                    and labor compliance with international standards.
-                </p>
-            </div>
-            <div class="cert-card reveal-up" style="--delay: 0.2s">
-                <div class="cert-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                        <circle cx="9" cy="7" r="4" />
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                    </svg>
-                </div>
-                <h3 class="cert-title">BSCI</h3>
-                <p class="cert-desc">
-                    Business Social Compliance Initiative certification ensuring fair working
-                    conditions, ethical labor practices, and respect for human rights.
-                </p>
-            </div>
-            <div class="cert-card reveal-up" style="--delay: 0.25s">
-                <div class="cert-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                    </svg>
-                </div>
-                <h3 class="cert-title">WRAP (Gold)</h3>
-                <p class="cert-desc">
-                    Gold-level Worldwide Responsible Accredited Production certification confirming
-                    lawful, humane, and ethical manufacturing throughout our facilities.
-                </p>
-            </div>
-            <div class="cert-card reveal-up" style="--delay: 0.3s">
-                <div class="cert-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                        <path d="M2 17l10 5 10-5" />
-                        <path d="M2 12l10 5 10-5" />
-                    </svg>
-                </div>
-                <h3 class="cert-title">OEKO-TEX</h3>
-                <p class="cert-desc">
-                    Standard 100 certification guaranteeing that our products are tested for
-                    harmful substances and are safe for human and environmental health.
-                </p>
-            </div>
-            <div class="cert-card reveal-up" style="--delay: 0.35s">
-                <div class="cert-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path
-                            d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-                        <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-                        <line x1="12" y1="22.08" x2="12" y2="12" />
-                    </svg>
-                </div>
-                <h3 class="cert-title">OCS</h3>
-                <p class="cert-desc">
-                    Organic Content Standard certification for products containing 5% or more
-                    organic material, ensuring organic fiber integrity throughout the supply chain.
-                </p>
-            </div>
-            <div class="cert-card reveal-up" style="--delay: 0.4s">
-                <div class="cert-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                        <polyline points="22 4 12 14.01 9 11.01" />
-                    </svg>
-                </div>
-                <h3 class="cert-title">SEDEX</h3>
-                <p class="cert-desc">
-                    Supplier Ethical Data Exchange membership demonstrating ethical supply chain
-                    management and transparency in our labor, health, and environmental practices.
-                </p>
-            </div>
-            <div class="cert-card reveal-up" style="--delay: 0.45s">
-                <div class="cert-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                        <path d="M3 9h18" />
-                        <path d="M9 21V9" />
-                    </svg>
-                </div>
-                <h3 class="cert-title">GRS</h3>
-                <p class="cert-desc">
-                    Global Recycled Standard certification validating recycled content
-                    claims and responsible social and environmental practices in production.
-                </p>
-            </div>
-        </div>
+      </div>
     </section>
 
-    <!-- Commitment Section -->
-    <section class="vision-section">
-        <div class="vision-content">
-            <span class="section-label reveal-up">OUR COMMITMENT</span>
-            <h2 class="vision-title reveal-up">
-                <span class="italic">Beyond Compliance:</span>
-                <span class="bold">Operational Accountability</span>
-            </h2>
-            <p class="vision-desc reveal-up">
-                At TSF, certifications reflect our operational commitment to auditable, responsible manufacturing — maintained through continuous monitoring and dedicated compliance teams. We view these
-                standards as minimum requirements that we strive to exceed in every aspect of
-                our operations.
-            </p>
-            <p class="vision-desc reveal-up">
-                Our dedicated compliance team continuously monitors and improves our processes,
-                ensuring that we not only maintain our certifications but also lead the industry
-                in ethical and sustainable manufacturing practices.
-            </p>
-        </div>
-        <div class="vision-bg">
-            <div class="vision-gradient"></div>
-            <div class="vision-pattern"></div>
-        </div>
+    <section class="cta" aria-labelledby="cta-title">
+      <div class="wrap cta__in">
+        <p class="sec__idx mono">04</p>
+        <h2 class="cta__title" id="cta-title">Need compliance documentation?</h2>
+        <p class="cta__lead">We’re happy to provide detailed certification documentation and compliance reports to our partners and prospective clients.</p>
+        <div class="cta__actions"><a class="btn btn--ink btn--xl" href="/contact">Request documentation <span aria-hidden="true">→</span></a></div>
+        <svg class="cta__stars" viewBox="0 0 120 100" aria-hidden="true"><use href="#three-stars"/></svg>
+      </div>
     </section>
+  </main>
 
-    <!-- CTA Section -->
-    <section class="cta-section">
-        <div class="cta-bg">
-            <div class="cta-gradient"></div>
-        </div>
-        <div class="cta-content">
-            <h2 class="cta-title reveal-up">
-                Need <span class="italic">compliance documentation</span>?
-            </h2>
-            <p class="cta-text reveal-up">
-                We're happy to provide detailed certification documentation and
-                compliance reports to our partners and prospective clients.
-            </p>
-            <a href="/contact" class="btn-cta reveal-up">
-                <span>REQUEST DOCUMENTATION</span>
-                <span class="btn-arrow">→</span>
-            </a>
-        </div>
-    </section>
-
-    <!-- Certification Modal -->
-    <div class="cert-modal" id="certModal">
-        <div class="cert-modal-container">
-            <button class="cert-modal-close" id="certModalClose">×</button>
-            <h2 class="cert-modal-title">Our Awards & Certifications</h2>
-            <div class="cert-modal-grid">
-                <div class="cert-modal-item">
-                    <img src="assets/Awards and Recognitions/1.jpg" alt="Certification 1" loading="lazy">
-                </div>
-                <div class="cert-modal-item">
-                    <img src="assets/Awards and Recognitions/2.jpg" alt="Certification 2" loading="lazy">
-                </div>
-                <div class="cert-modal-item">
-                    <img src="assets/Awards and Recognitions/3.jpg" alt="Certification 3" loading="lazy">
-                </div>
-                <div class="cert-modal-item">
-                    <img src="assets/Awards and Recognitions/4.jpg" alt="Certification 4" loading="lazy">
-                </div>
-                <div class="cert-modal-item">
-                    <img src="assets/Awards and Recognitions/5.jpg" alt="Certification 5" loading="lazy">
-                </div>
-                <div class="cert-modal-item">
-                    <img src="assets/Awards and Recognitions/6.jpg" alt="Certification 6" loading="lazy">
-                </div>
-            </div>
-        </div>
+  <footer class="ftr">
+    <div class="wrap ftr__grid">
+      <div class="ftr__brand">
+        <span class="ftr__chip"><img src="assets/Brands/tsf-mark.png" width="68" height="64" loading="lazy" alt="Three Stars Fashion logo"></span>
+        <p>Three Stars Fashion Group<br>Est. 2008</p>
+      </div>
+      <address class="ftr__addr">
+        <p class="mono">Factory / Head office</p>
+        <p>Street No. 7, Public Free Zone Amreya<br>Alexandria, Egypt 23512</p>
+      </address>
+      <div class="ftr__contact">
+        <p class="mono">Contact</p>
+        <p><a href="mailto:info@tsf.com.eg">info@tsf.com.eg</a><br>
+          <a href="tel:+2034500550">+2&nbsp;03&nbsp;4500550</a><br>
+          <a href="tel:+201141333589">+2&nbsp;011&nbsp;41333589</a></p>
+        <p><a href="https://www.linkedin.com/company/three-stars-fashion-group/" target="_blank" rel="noopener noreferrer">LinkedIn <span aria-hidden="true">↗</span></a></p>
+      </div>
+      <nav class="ftr__nav" aria-label="Footer">
+        <p class="mono">Site</p>
+        <a href="/">Home</a><a href="/about">About</a><a href="/services">Services</a><a href="/facilities">Facilities</a><a href="/certifications">Certifications</a><a href="/logistics">Logistics</a><a href="/faq">FAQ</a><a href="/contact">Contact</a>
+      </nav>
+      <p class="ftr__legal mono">© 2026 Three Stars Fashion. All rights reserved. <a href="/privacy-policy">Privacy policy</a></p>
     </div>
+  </footer>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="gradient-divider"></div>
-        <div class="footer-content">
-            <div class="footer-main">
-                <div class="footer-brand">
-                    <a href="/" class="footer-logo">
-                        <img src="assets/Brands/tsflogo.png" alt="Three Stars Fashion" class="footer-logo-img">
-                        <span class="footer-company-name">Three Stars Fashion</span>
-                    </a>
-                </div>
-                <div class="footer-nav">
-                    <div class="footer-nav-group">
-                        <a href="/">Home</a>
-                        <a href="/about">About Us</a>
-                        <a href="/services">Services</a>
-                        <a href="/facilities">Our Facilities</a>
-                    </div>
-                    <div class="footer-nav-group">
-                        <a href="/certifications">Certifications</a>
-                        <a href="/logistics">Logistics</a>
-                        <a href="/faq">FAQ</a>
-                        <a href="/contact">Contact Us</a>
-                    </div>
-                </div>
-                <div class="footer-social">
-                    <a href="https://www.linkedin.com/company/three-stars-fashion-group/posts/?feedView=all"
-                        target="_blank" aria-label="LinkedIn">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
-                        </svg>
-                    </a>
-                </div>
-            </div>
-            <div class="footer-info">
-                <div class="footer-contact">
-                    <p><strong>Factory / Head Office:</strong></p>
-                    <p>Street No. 7 - Public Free Zone Amreya</p>
-                    <p>Alexandria, Egypt | Postal Code: 23512</p>
-                    <p>Tel: +2 03 4500550 | +2 011 41333589</p>
-                    <p>Email: <a href="mailto:info@tsf.com.eg">info@tsf.com.eg</a></p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 Three Stars Fashion. All rights reserved.</p>
-                <a href="/privacy-policy">Privacy Policy</a>
-            </div>
-        </div>
-    </footer>
-
-    <script src="script.js"></script>
-    <script>
-        // ===== Gallery Lightbox (Singleton, Class-Based) =====
-        class GalleryLightbox {
-            constructor(itemSelector, gridSelector) {
-                this.itemSelector = itemSelector;
-                this.gridSelector = gridSelector;
-                this.images = [];
-                this.currentIndex = 0;
-                this.isOpen = false;
-                this.triggerElement = null;
-                this.overlay = null;
-                this.imgElement = null;
-                this.counter = null;
-                this.focusableEls = [];
-
-                this.init();
-            }
-
-            init() {
-                this.createDOM();
-
-                document.addEventListener('click', (e) => {
-                    const item = e.target.closest(this.itemSelector);
-                    if (!item) return;
-
-                    const grid = item.closest(this.gridSelector);
-                    if (!grid) return;
-
-                    const allItems = grid.querySelectorAll(this.itemSelector);
-                    this.images = Array.from(allItems).map(el => {
-                        const img = el.querySelector('img') || el;
-                        return {
-                            full: img.dataset.fullSrc || img.src,
-                            alt: img.alt || ''
-                        };
-                    });
-
-                    const clickedIndex = Array.from(allItems).indexOf(item);
-                    this.triggerElement = item;
-                    this.open(clickedIndex >= 0 ? clickedIndex : 0);
-                });
-
-                document.addEventListener('keydown', (e) => {
-                    if (!this.isOpen) return;
-                    if (e.key === 'Escape') { e.stopPropagation(); this.close(); }
-                    if (e.key === 'ArrowLeft') this.prev();
-                    if (e.key === 'ArrowRight') this.next();
-                    if (e.key === 'Tab') this.trapFocus(e);
-                });
-            }
-
-            createDOM() {
-                const div = document.createElement('div');
-                div.classList.add('lightbox-overlay');
-                div.setAttribute('role', 'dialog');
-                div.setAttribute('aria-modal', 'true');
-                div.setAttribute('aria-label', 'Image lightbox');
-                div.innerHTML = `
-                    <button class="lightbox-btn lightbox-close" aria-label="Close lightbox">&times;</button>
-                    <button class="lightbox-btn lightbox-prev" aria-label="Previous image">&#10094;</button>
-                    <div class="lightbox-content">
-                        <img src="" alt="" class="lightbox-image">
-                    </div>
-                    <button class="lightbox-btn lightbox-next" aria-label="Next image">&#10095;</button>
-                    <div class="lightbox-counter"></div>
-                `;
-                document.body.appendChild(div);
-
-                this.overlay = div;
-                this.imgElement = div.querySelector('.lightbox-image');
-                this.counter = div.querySelector('.lightbox-counter');
-                this.focusableEls = Array.from(div.querySelectorAll('button'));
-
-                div.addEventListener('click', (e) => {
-                    if (e.target === div || e.target.classList.contains('lightbox-close'))
-                        this.close();
-                    if (e.target.classList.contains('lightbox-prev')) this.prev();
-                    if (e.target.classList.contains('lightbox-next')) this.next();
-                });
-            }
-
-            open(index) {
-                this.currentIndex = index;
-                this.isOpen = true;
-                this.overlay.classList.add('active');
-                this.updateView();
-                this.focusableEls[0].focus();
-            }
-
-            close() {
-                this.isOpen = false;
-                this.overlay.classList.remove('active');
-                if (this.triggerElement) this.triggerElement.focus();
-            }
-
-            prev() {
-                this.currentIndex = (this.currentIndex - 1 + this.images.length) % this.images.length;
-                this.updateView();
-            }
-
-            next() {
-                this.currentIndex = (this.currentIndex + 1) % this.images.length;
-                this.updateView();
-            }
-
-            updateView() {
-                const current = this.images[this.currentIndex];
-                this.imgElement.src = current.full;
-                this.imgElement.alt = current.alt;
-                this.counter.textContent = `${this.currentIndex + 1} / ${this.images.length}`;
-            }
-
-            trapFocus(e) {
-                const first = this.focusableEls[0];
-                const last = this.focusableEls[this.focusableEls.length - 1];
-                if (e.shiftKey) {
-                    if (document.activeElement === first) { e.preventDefault(); last.focus(); }
-                } else {
-                    if (document.activeElement === last) { e.preventDefault(); first.focus(); }
-                }
-            }
-        }
-
-        // ===== Certification Modal + Lightbox Initialization =====
-        document.addEventListener('DOMContentLoaded', function () {
-            const viewCertsBtn = document.getElementById('viewCertsBtn');
-            const certModal = document.getElementById('certModal');
-            const certModalClose = document.getElementById('certModalClose');
-
-            // Open modal
-            viewCertsBtn.addEventListener('click', function () {
-                certModal.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            });
-
-            // Close modal
-            certModalClose.addEventListener('click', function () {
-                certModal.classList.remove('active');
-                document.body.style.overflow = '';
-            });
-
-            // Close on background click
-            certModal.addEventListener('click', function (e) {
-                if (e.target === this) {
-                    this.classList.remove('active');
-                    document.body.style.overflow = '';
-                }
-            });
-
-            // Close on escape key (only when lightbox is NOT open)
-            document.addEventListener('keydown', function (e) {
-                if (e.key === 'Escape') {
-                    certModal.classList.remove('active');
-                    document.body.style.overflow = '';
-                }
-            });
-
-            // Initialize lightbox for cert-modal-items and cert-image-boxes
-            new GalleryLightbox('.cert-modal-item', '.cert-modal-grid');
-            new GalleryLightbox('.cert-image-box', '.cert-images-grid');
-        });
-    </script>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="three-stars" viewBox="0 0 120 100">
+        <path fill="currentColor" d="M74 22l6.9 17.3 18.6 1.2-14.3 11.9 4.6 18.1L74 60.5 58.2 70.5l4.6-18.1-14.3-11.9 18.6-1.2z"/>
+        <path fill="currentColor" d="M36 46l4.4 11 11.8.8-9.1 7.6 2.9 11.5L36 70.6l-10 6.3 2.9-11.5-9.1-7.6 11.8-.8z"/>
+        <path fill="currentColor" d="M22 12l2.7 6.8 7.3.5-5.6 4.7 1.8 7.1L22 27.2l-6.2 3.9 1.8-7.1-5.6-4.7 7.3-.5z"/>
+      </symbol>
+    </defs>
+  </svg>
 </body>
-
 </html>
