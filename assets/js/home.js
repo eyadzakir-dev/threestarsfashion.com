@@ -30,9 +30,14 @@ const unitFormat = new Intl.NumberFormat("en-US");
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 const hasMotion = () => root.classList.contains("motion");
 
+let journey = null;
+
 function syncMotionClass() {
   root.classList.toggle("motion", !REDUCED_MOTION.matches);
-  if (REDUCED_MOTION.matches) root.classList.remove("has-3d");
+  if (!REDUCED_MOTION.matches) return;
+  root.classList.remove("has-3d");
+  journey?.stop();
+  journey = null;
 }
 
 function getCairoTime(now = new Date()) {
@@ -322,7 +327,15 @@ function initFactoryModel() {
   observer.observe(section);
 }
 
+function initStarJourney() {
+  if (!hasMotion()) return;
+  import("./journey.js")
+    .then(({ initJourney }) => { journey = initJourney(); })
+    .catch((error) => console.warn("Star journey unavailable; showing the static marks.", error));
+}
+
 initMeter();
 initLineProgress();
 initRail();
 initFactoryModel();
+initStarJourney();

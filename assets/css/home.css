@@ -29,6 +29,7 @@
 }
 .hero__meta {
   grid-column: 1 / -1;
+  grid-row: 1;
   display: grid;
   grid-template-columns: subgrid;
   padding-block: 14px;
@@ -40,6 +41,7 @@
 
 .hero__title {
   grid-column: 1 / -1;
+  grid-row: 2;
   position: relative;
   margin-top: clamp(28px, 5.5vh, 64px);
 }
@@ -74,6 +76,7 @@
 
 .hero__foot {
   grid-column: 1 / -1;
+  grid-row: 3;
   display: grid;
   grid-template-columns: subgrid;
   align-items: end;
@@ -82,16 +85,31 @@
   border-top: 1px solid var(--ink);
 }
 .hero__lead { grid-column: 1 / 6; font-size: 18px; line-height: 1.45; max-width: 36em; }
-.hero__ctas { grid-column: 6 / 11; display: flex; gap: 12px; flex-wrap: wrap; padding-left: var(--gut); }
-.hero__spec { grid-column: 11 / 13; display: flex; align-items: end; justify-content: flex-end; gap: 12px; color: var(--ink-2); text-align: right; }
-.hero__spec .stars { width: 64px; color: var(--red); --star-stroke: 2.4; }
+.hero__ctas { grid-column: 6 / 13; display: flex; gap: 12px; flex-wrap: wrap; padding-left: var(--gut); }
+
+/* The three-star mark: the starting point of the homepage star journey. */
+.hero__mark {
+  position: relative;
+  grid-column: 8 / 13;
+  grid-row: 2;
+  align-self: end;
+  justify-self: end;
+  width: min(100%, clamp(260px, 30vw, 440px));
+  margin-bottom: 8px;
+  pointer-events: none;
+}
+/* The TSF logo: #tsf-three plus #three-stars, traced from assets/Brands/tsflogo.png. */
+.hero__stars { display: block; width: 100%; height: auto; overflow: visible; color: var(--red); }
+/* Where the "3" is drawn, the large star keeps the logo's open outline. */
+.hero__stars, .line .print, .line .carton, .line .stencil { --heal: 0; }
+.hero__mark figcaption { margin-top: 12px; color: var(--ink-2); text-align: right; }
 
 @media (prefers-reduced-motion: no-preference) {
   .ch {
     animation: ch-in 1s var(--ease-out) both;
     animation-delay: calc(var(--i) * 42ms + 120ms);
   }
-  .hero__spec .stars { animation: star-draw 1.8s var(--ease-out) 1s both; }
+  .motion .hero__stars { --star-stroke: 1.6; animation: star-draw 1.8s var(--ease-out) 0.6s both; }
   @supports (animation-timeline: scroll()) {
     .hero {
       animation: hero-progress linear both;
@@ -106,7 +124,6 @@
 @media (max-width: 1180px) {
   .hero__lead { grid-column: 1 / 7; }
   .hero__ctas { grid-column: 7 / 13; }
-  .hero__spec { display: none; }
 }
 @media (max-width: 899px) {
   .hero__in { min-height: auto; padding-bottom: 48px; }
@@ -116,6 +133,19 @@
   .hero__title { margin-top: 36px; }
   .hero__kicker { font-size: 26px; }
   .hero__big { font-size: 20.5vw; margin-top: 24px; }
+  .hero__mark {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: flex-end;
+    justify-content: space-between;
+    width: 100%;
+    margin: 28px 0 0;
+  }
+  .hero__stars { width: clamp(150px, 42vw, 280px); }
+  .hero__mark figcaption { margin: 0; text-align: left; }
+  .hero__foot { grid-row: 4; }
   .hero__lead, .hero__ctas { grid-column: 1 / -1; }
   .hero__ctas { padding-left: 0; margin-top: 24px; }
   .hero__ctas .btn { width: 100%; }
@@ -204,6 +234,12 @@
   .meter__lead { font-size: 22px; }
   .meter__board { justify-content: flex-start; font-size: 17.5vw; }
   .meter__calc { flex-direction: column; }
+}
+
+.cap .nums__cell { position: relative; }
+.star-dock { position: absolute; top: 12px; right: 14px; width: 30px; height: 30px; pointer-events: none; }
+@media (max-width: 899px) {
+  .star-dock { right: 0; width: 24px; height: 24px; }
 }
 
 /* ---------- 03 Production line ---------- */
@@ -411,7 +447,8 @@
 .tape { opacity: clamp(0, (var(--fc) - 0.86) * 8, 1); }
 
 /* 08 container */
-.prod { transform-origin: 200px 315px; transform: scale(calc(1 - var(--in) * 0.3)); }
+/* The container sits behind the product; the carton fades into its dark hold before the doors close. */
+.prod { transform-origin: 200px 315px; transform: scale(calc(1 - var(--in) * 0.3)); opacity: clamp(0, (1 - var(--in)) / 0.6, 1); }
 .door--l { transform-origin: 164px 0; transform: scaleX(calc(0.05 + var(--dc) * 0.95)); }
 .door--r { transform-origin: 476px 0; transform: scaleX(calc(0.05 + var(--dc) * 0.95)); }
 .seal { opacity: var(--sl); }
@@ -735,3 +772,42 @@
   .has-3d .panel__copy { margin-top: 8px; font-size: 14px; }
   .has-3d .panel__fig, .has-3d .panel__note { display: none; }
 }
+
+/* ---------- Star journey overlay (assets/js/journey.js) ---------- */
+.journey { position: fixed; inset: 0; z-index: 40; overflow: hidden; pointer-events: none; }
+.journey__star {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 400px;
+  max-width: none;
+  height: 400px;
+  overflow: visible;
+  opacity: 0;
+  color: var(--red);
+  transform-origin: 50% 50%;
+}
+.journey__star.is-glowing { filter: drop-shadow(0 0 5px rgba(255, 86, 64, 0.95)) drop-shadow(0 0 14px rgba(255, 60, 40, 0.55)); }
+.journey__star path {
+  fill: currentColor;
+  fill-rule: evenodd;
+  stroke: currentColor;
+  stroke-opacity: 0;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+}
+/* The fill-in strokes overlap at their joins; evenodd would punch holes there. */
+.journey__star .journey__heal { fill-rule: nonzero; }
+.journey.is-igniting .journey__star path {
+  animation: star-ignite 1.3s var(--ease-out) both;
+  animation-delay: calc(0.45s + var(--n) * 0.26s);
+}
+.journey__star .journey__heal { stroke: none; }
+@keyframes star-ignite {
+  0% { stroke-dashoffset: 1; stroke-opacity: 1; fill-opacity: 0; }
+  55% { stroke-dashoffset: 0; stroke-opacity: 1; fill-opacity: 0; }
+  100% { stroke-dashoffset: 0; stroke-opacity: 0; fill-opacity: 1; }
+}
+.journey-on .hero__logo-stars,
+.journey-on .line .stencil--stars,
+.journey-on .cta__logo-stars { visibility: hidden; }

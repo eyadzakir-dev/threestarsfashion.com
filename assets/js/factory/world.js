@@ -497,27 +497,108 @@ export function createWarehouseStock() {
 
 // ---------- Dock ----------
 
-function addContainer(b, x, z, color, length = 12.2) {
-  const W = 2.44;
-  const H = 2.6;
-  const baseY = 1.2;
-  b.box(length, 0.35, W - 0.2, x + length / 2, 0.85, z, PALETTE.ink);
+const DOCK_FLOOR_Y = 1.2;
+const FACE_CLEAR = 0.006;
+const JAMB_DEPTH = 0.7;
+const JAMB_WIDTH = 0.3;
+const JAMB_HEADER_H = 0.3;
+const TRAILER_WIDTH = 2.44;
+const TRAILER_HEIGHT = 2.6;
+const TRAILER_LENGTH = 12.2;
+const TRAILER_WALL = 0.08;
+const TRAILER_LINER = 0.03;
+const TRAILER_RIB = 0.36;
+const CHASSIS_Y = 0.85;
+const CHASSIS_H = DOCK_FLOOR_Y - CHASSIS_Y;
+const CHASSIS_INSET = 0.2;
+const ROLLER_RADIUS = 0.05;
+const ROLLER_PROUD = 0.09;
+const CONVEYOR_RUN = 18;
+const CONVEYOR_FRAME_H = DOCK_FLOOR_Y - ROLLER_PROUD;
+const SIDE_TOP_LIFT = FACE_CLEAR * 2;
+const ROOF_TOP_LIFT = FACE_CLEAR;
+const FRONT_TOP_LIFT = FACE_CLEAR * 3;
+
+function addUndercarriage(b, { x, z, length, isOpenRear }) {
+  // Open-deck chassis stops short of the floor panel so the two tops do not share a plane.
+  const height = isOpenRear ? CHASSIS_H - FACE_CLEAR : CHASSIS_H;
+  const half = TRAILER_WIDTH / 2;
+  b.box(length, height, TRAILER_WIDTH - CHASSIS_INSET, x + length / 2, CHASSIS_Y, z, PALETTE.ink);
   [0.12, 0.3, 0.82, 0.9].forEach((f) => {
-    b.cylinder(0.46, 0.3, x + length * f, 0.46, z - W / 2 + 0.2, PALETTE.ink, 12, 'z');
-    b.cylinder(0.46, 0.3, x + length * f, 0.46, z + W / 2 - 0.2, PALETTE.ink, 12, 'z');
+    b.cylinder(0.46, 0.3, x + length * f, 0.46, z - half + 0.2, PALETTE.ink, 12, 'z');
+    b.cylinder(0.46, 0.3, x + length * f, 0.46, z + half - 0.2, PALETTE.ink, 12, 'z');
   });
-  b.box(length, H, W, x + length / 2, baseY, z, color);
-  const RIB = 0.36;
-  for (let rx = x + 0.3; rx < x + length - 0.2; rx += RIB) {
-    b.box(0.12, H - 0.2, 0.05, rx, baseY + 0.1, z - W / 2 - 0.02, color);
-    b.box(0.12, H - 0.2, 0.05, rx, baseY + 0.1, z + W / 2 + 0.02, color);
+}
+
+function addTrailerRibs(b, { x, z, color, length }) {
+  const y = DOCK_FLOOR_Y + 0.1;
+  const h = TRAILER_HEIGHT - 0.2;
+  const half = TRAILER_WIDTH / 2;
+  for (let rx = x + 0.3; rx < x + length - 0.2; rx += TRAILER_RIB) {
+    b.box(0.12, h, 0.05, rx, y, z - half - 0.02, color);
+    b.box(0.12, h, 0.05, rx, y, z + half + 0.02, color);
   }
-  b.box(length + 0.05, 0.12, W + 0.1, x + length / 2, baseY + H, z, color);
-  // Tractor unit.
-  b.box(2.6, 2.3, W, x + length + 1.7, 0.7, z, PALETTE.frame);
-  b.box(0.08, 0.9, W - 0.4, x + length + 3.0, 2.0, z, PALETTE.steel);
-  b.cylinder(0.5, 0.34, x + length + 2.2, 0.5, z - W / 2 + 0.1, PALETTE.ink, 12, 'z');
-  b.cylinder(0.5, 0.34, x + length + 2.2, 0.5, z + W / 2 - 0.1, PALETTE.ink, 12, 'z');
+}
+
+function addTractor(b, { x, z, length }) {
+  const nose = x + length;
+  const half = TRAILER_WIDTH / 2;
+  b.box(2.6, 2.3, TRAILER_WIDTH, nose + 1.7, 0.7, z, PALETTE.frame);
+  b.box(0.08, 0.9, TRAILER_WIDTH - 0.4, nose + 3.0, 2.0, z, PALETTE.steel);
+  b.cylinder(0.5, 0.34, nose + 2.2, 0.5, z - half + 0.1, PALETTE.ink, 12, 'z');
+  b.cylinder(0.5, 0.34, nose + 2.2, 0.5, z + half - 0.1, PALETTE.ink, 12, 'z');
+}
+
+function addTrailerLiner(b, { x, z, length }) {
+  const gap = FACE_CLEAR;
+  const t = TRAILER_LINER;
+  const inner = TRAILER_WIDTH / 2 - TRAILER_WALL - gap;
+  const y0 = DOCK_FLOOR_Y + gap;
+  const y1 = DOCK_FLOOR_Y + TRAILER_HEIGHT + ROOF_TOP_LIFT - TRAILER_WALL - gap;
+  const x0 = x + gap;
+  const x1 = x + length - TRAILER_WALL - gap;
+  const span = x1 - x0 - t - gap;
+  const across = (inner - t - gap) * 2;
+  b.box(x1 - x0, y1 - y0, t, (x0 + x1) / 2, y0, z - inner + t / 2, PALETTE.ink);
+  b.box(x1 - x0, y1 - y0, t, (x0 + x1) / 2, y0, z + inner - t / 2, PALETTE.ink);
+  b.box(span, t, across, x0 + span / 2, y1 - t - gap, z, PALETTE.ink);
+  b.box(t, y1 - y0 - t - gap * 2, across, x1 - t - gap, y0, z, PALETTE.ink);
+}
+
+// Hollow shell. The rear (min x) is open toward the dock; panel tops nest into the roof cap
+// at distinct heights so none of them share its plane.
+function addOpenTrailerBody(b, trailer) {
+  const { x, z, color, length } = trailer;
+  const wall = TRAILER_WALL;
+  const gap = FACE_CLEAR;
+  const half = TRAILER_WIDTH / 2;
+  const y0 = DOCK_FLOOR_Y;
+  const y1 = y0 + TRAILER_HEIGHT;
+  const innerW = TRAILER_WIDTH - wall * 2;
+  const deck = length - wall - gap;
+  const roofL = length - wall;
+  b.box(deck, wall, innerW, x + gap + deck / 2, y0 - wall, z, color);
+  b.box(length, TRAILER_HEIGHT + SIDE_TOP_LIFT, wall, x + length / 2, y0, z - half + wall / 2, color);
+  b.box(length, TRAILER_HEIGHT + SIDE_TOP_LIFT, wall, x + length / 2, y0, z + half - wall / 2, color);
+  b.box(roofL, wall, innerW, x + roofL / 2, y1 + ROOF_TOP_LIFT - wall, z, color);
+  b.box(wall, TRAILER_HEIGHT + FRONT_TOP_LIFT, innerW, x + length - wall / 2, y0, z, color);
+  addTrailerLiner(b, trailer);
+}
+
+function addContainer(b, x, z, options = {}) {
+  const trailer = {
+    x,
+    z,
+    color: options.color ?? PALETTE.frame,
+    length: options.length ?? TRAILER_LENGTH,
+    isOpenRear: Boolean(options.isOpenRear),
+  };
+  addUndercarriage(b, trailer);
+  if (trailer.isOpenRear) addOpenTrailerBody(b, trailer);
+  else b.box(trailer.length, TRAILER_HEIGHT, TRAILER_WIDTH, x + trailer.length / 2, DOCK_FLOOR_Y, z, trailer.color);
+  addTrailerRibs(b, trailer);
+  b.box(trailer.length + 0.05, 0.12, TRAILER_WIDTH + 0.1, x + trailer.length / 2, DOCK_FLOOR_Y + TRAILER_HEIGHT, z, trailer.color);
+  addTractor(b, trailer);
 }
 
 export function buildDock() {
@@ -525,19 +606,21 @@ export function buildDock() {
   const b = new GeometryBuilder();
   // Yard apron outside the dock wall.
   b.box(70, 0.06, 110, wallX + 35, -0.05, 0, '#ddd4c4');
-  doors.forEach((z) => {
-    b.box(1.4, 1.2, doorW + 0.8, wallX + 0.7, 0, z, PALETTE.stone);
-    b.box(0.3, doorH, 0.3, wallX, 0, z - doorW / 2 - 0.15, PALETTE.frame);
-    b.box(0.3, doorH, 0.3, wallX, 0, z + doorW / 2 + 0.15, PALETTE.frame);
-    b.box(0.3, 0.3, doorW + 0.6, wallX, doorH, z, PALETTE.frame);
+  doors.forEach((doorZ) => {
+    b.box(1.4, DOCK_FLOOR_Y, doorW + 0.8, wallX + 0.7, 0, doorZ, PALETTE.stone);
+    b.box(JAMB_DEPTH, doorH, JAMB_WIDTH, wallX, 0, doorZ - doorW / 2, PALETTE.frame);
+    b.box(JAMB_DEPTH, doorH, JAMB_WIDTH, wallX, 0, doorZ + doorW / 2, PALETTE.frame);
+    b.box(JAMB_DEPTH, JAMB_HEADER_H, doorW + JAMB_WIDTH, wallX, doorH, doorZ, PALETTE.frame);
   });
-  addContainer(b, wallX + 1.4, doors[1], PALETTE.red);
-  addContainer(b, wallX + 1.4, doors[0], PALETTE.frameSoft);
-  addContainer(b, wallX + 9, doors[2] + 7, PALETTE.stone);
-  // Conveyor feeding the red container.
+  addContainer(b, wallX + 1.4, doors[1], { color: PALETTE.red, isOpenRear: true });
+  addContainer(b, wallX + 1.4, doors[0], { color: PALETTE.frameSoft });
+  addContainer(b, wallX + 9, doors[2] + 7, { color: PALETTE.stone });
+  // Conveyor bed meets the leveler; its end face sits inside the stone, not on it.
   const cz = doors[1];
-  b.box(18, 0.72, 0.9, wallX - 9, 0, cz, PALETTE.steel);
-  for (let x = wallX - 18; x < wallX; x += 0.6) b.cylinder(0.05, 0.84, x, 0.76, cz, PALETTE.frame, 6, 'z');
+  const frameLen = CONVEYOR_RUN + FACE_CLEAR;
+  b.box(frameLen, CONVEYOR_FRAME_H, 0.9, wallX - CONVEYOR_RUN + frameLen / 2, 0, cz, PALETTE.steel);
+  const rollerY = DOCK_FLOOR_Y - ROLLER_RADIUS;
+  for (let x = wallX - CONVEYOR_RUN; x < wallX; x += 0.6) b.cylinder(ROLLER_RADIUS, 0.84, x, rollerY, cz, PALETTE.frame, 6, 'z');
   // Staged pallets inside the dock.
   for (let i = 0; i < 6; i++) {
     const px = wallX - 5 - (i % 3) * 1.6;
@@ -548,7 +631,13 @@ export function buildDock() {
   return b.build();
 }
 
-export const CONVEYOR = { count: 22, from: LAYOUT.dock.wallX - 18, to: LAYOUT.dock.wallX + 10, y: 0.84, z: LAYOUT.dock.doors[1] };
+export const CONVEYOR = {
+  count: 22,
+  from: LAYOUT.dock.wallX - CONVEYOR_RUN,
+  to: LAYOUT.dock.wallX + 10,
+  y: DOCK_FLOOR_Y,
+  z: LAYOUT.dock.doors[1],
+};
 
 export function createConveyorCartons() {
   const mesh = new THREE.InstancedMesh(UNIT_BOX, createClayMaterial({ vertexColors: false, color: PALETTE.kraft }), CONVEYOR.count);

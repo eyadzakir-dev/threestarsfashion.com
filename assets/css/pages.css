@@ -215,10 +215,9 @@
   width: 100%;
   aspect-ratio: 3 / 2;
   object-fit: cover;
-  filter: grayscale(1) contrast(1.05);
-  transition: filter 0.3s, transform 0.5s var(--ease-out);
+  transition: transform 0.5s var(--ease-out);
 }
-.thumbs a:hover img, .thumbs a:focus-visible img { filter: none; transform: scale(1.04); }
+.thumbs a:hover img, .thumbs a:focus-visible img { transform: scale(1.04); }
 .thumbs a:focus-visible { outline-offset: 2px; }
 @media (max-width: 899px) {
   .area__head, .thumbs { grid-column: 1 / -1; }

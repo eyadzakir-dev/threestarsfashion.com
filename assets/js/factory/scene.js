@@ -36,10 +36,11 @@ const COLORS = {
 
 const HUD_LABELS = {
   entry: '00 · TSF Building (B)',
-  sewing: '01 · Sewing hall',
-  printing: '02 · Printing',
-  dispatch: '03 · Dispatch dock',
-  site: '04 · The group, 24/7',
+  cutting: '01 · Cutting room',
+  sewing: '02 · Sewing hall',
+  printing: '03 · Printing',
+  dispatch: '04 · Dispatch dock',
+  site: '05 · The group, 24/7',
 };
 
 const v3 = (x, y, z) => new THREE.Vector3(x, y, z);
@@ -53,6 +54,9 @@ function buildKeyframes(focus) {
   return [
     { name: 'entry', chapter: 'entry', at: 0, frame: 'wide', pos: v3(400, 78, 190), target: v3(128, 0, -4) },
     { name: 'entryHold', chapter: 'entry', at: 0.35, frame: 'wide', pos: v3(320, 62, 152), target: v3(118, 0, -2) },
+    { name: 'cutA', chapter: 'cutting', at: 0, pos: v3(8, 18, 22), target: v3(17, 0.9, -4) },
+    // Looks along the tables toward the sewing hall, so the dive into the sewing close-up barely turns.
+    { name: 'cutB', chapter: 'cutting', at: 0.5, pos: v3(-1, 7, 17), target: v3(22, 0.9, -5) },
     { name: 'sewA', chapter: 'sewing', at: 0, pos: f(-2.3, 1.55, 1.9), target: f(0.05, 0.92, 0.35) },
     { name: 'sewHold', chapter: 'sewing', at: 0.12, pos: f(-2.7, 1.8, 2.3), target: f(0.1, 0.9, 0.3) },
     { name: 'sewMid', chapter: 'sewing', at: 0.46, pos: f(-13, 10, 18), target: f(12, 0, -4) },
@@ -302,7 +306,8 @@ export async function initScene({ canvas, stage, tour, chapters, counters, hudLa
   }
 
   function updateBeats() {
-    const lift = smootherstep(clamp01((state.u - index.entryHold) / (index.sewA - index.entryHold)));
+    // Roof is clear by cutA. Extending the lift to sewing drops the path through the shell.
+    const lift = smootherstep(clamp01((state.u - index.entryHold) / (index.cutA - index.entryHold)));
     world.shell.position.y = lift * SHELL_LIFT;
     world.shellMaterial.opacity = 1 - lift;
     world.shell.visible = lift < 0.995;
