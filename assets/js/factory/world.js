@@ -20,17 +20,21 @@ export const PALETTE = {
   bed: '#cfccc5',
 };
 
+// Flow runs west to east: knitting, dyeing, cutting, sewing, embellishment, warehouse, dock.
 export const LAYOUT = {
-  building: { x0: -6, x1: 244, z0: -50, z1: 50, wallH: 3.2, shellH: 9 },
-  cutting: { x0: 2, tableLen: 24, tables: [-14, -6, 6] },
+  building: { x0: -86, x1: 244, z0: -50, z1: 50, wallH: 3.2, shellH: 9, roofBays: 18 },
+  partitions: { xs: [-46, -6, 38, 145, 190], h: 1.4, gap: [-6, 6] },
+  knitting: { xs: [-80, -74, -68, -62, -56], zs: [-40, -34, -28, -22, -16, -10, 10, 16, 22, 28, 34, 40] },
+  dyeing: { xs: [-37, -26, -15], zs: [-30, -20, -11, 11, 20, 30], stenter: { x0: -42, x1: -12, z: -43 } },
+  cutting: { x0: 2, tableLen: 24, tables: [-26, -18, -10, 10, 18, 26] },
   sewing: { x0: 50, cols: 62, rows: 50, pitchX: 1.25, pairPitch: 3.6, aisleEvery: 31, aisleW: 4 },
   printing: { xs: [156, 167, 178], zs: [-7, 7], radius: 3.4, arms: 8 },
+  embroidery: { x: 167, zs: [-20, -27, -34, -41], length: 16, heads: 20 },
   warehouse: { x0: 196, x1: 236, z0: -44, z1: 44, rowPitch: 6.4, bay: 2.7, levels: 4, levelH: 1.35 },
   dock: { wallX: 244, doors: [-12, 0, 12], doorW: 4.4, doorH: 4.2 },
 };
 
 export const SEWING_TOTAL = LAYOUT.sewing.cols * LAYOUT.sewing.rows;
-export const FACTORY_TOTAL = 10;
 
 const AO_MIN = 0.58;
 const AO_HEIGHT = 1.1;
@@ -185,7 +189,8 @@ export function buildArchitecture() {
   addWallRun(b, x0, z0, x0, z1, wallH);
   addWallRun(b, x1, z0, x1, z1, wallH, doorGaps());
   // Zone partitions with flow openings.
-  [38, 145, 190].forEach((px) => addWallRun(b, px, z0, px, z1, 1.4, [[-6, 6]]));
+  const { xs, h, gap } = LAYOUT.partitions;
+  xs.forEach((px) => addWallRun(b, px, z0, px, z1, h, [gap]));
   addFloorMarkings(b);
   return b.build();
 }
@@ -193,9 +198,12 @@ export function buildArchitecture() {
 function addFloorMarkings(b) {
   const Y = 0.001;
   const LINE = 0.1;
-  const { z0, z1 } = LAYOUT.building;
+  const WALL_CLEAR = 2;
+  const { x0, x1, z0, z1 } = LAYOUT.building;
   // Main transfer aisle along the flow.
-  [-2.6, 2.6].forEach((z) => b.box(200, 0.01, LINE, 140, Y, z, PALETTE.mark));
+  const aisleX0 = x0 + WALL_CLEAR;
+  const aisleX1 = LAYOUT.warehouse.x1 + WALL_CLEAR * 2;
+  [-2.6, 2.6].forEach((z) => b.box(aisleX1 - aisleX0, 0.01, LINE, (aisleX0 + aisleX1) / 2, Y, z, PALETTE.mark));
   // Sewing cross aisles.
   const s = LAYOUT.sewing;
   const midX = s.x0 + s.aisleEvery * s.pitchX + s.aisleW / 2 - s.pitchX / 2;
@@ -204,7 +212,7 @@ function addFloorMarkings(b) {
 
 // Building upper walls and roof: lifted off as the camera enters.
 export function buildShell() {
-  const { x0, x1, z0, z1, wallH, shellH } = LAYOUT.building;
+  const { x0, x1, z0, z1, wallH, shellH, roofBays } = LAYOUT.building;
   const b = new GeometryBuilder({ ao: false });
   const h = shellH - wallH;
   const T = 0.52;
@@ -215,7 +223,7 @@ export function buildShell() {
   b.box(x1 - x0 + 0.6, 0.35, z1 - z0 + 0.6, (x0 + x1) / 2, shellH, 0, PALETTE.roof);
   b.box(x1 - x0 + 0.9, 0.5, 0.3, (x0 + x1) / 2, shellH, z1 + 0.3, PALETTE.paper);
   b.box(x1 - x0 + 0.9, 0.5, 0.3, (x0 + x1) / 2, shellH, z0 - 0.3, PALETTE.paper);
-  addSawtoothRoof(b, x0, x1, z0, z1, shellH + 0.35, 14);
+  addSawtoothRoof(b, x0, x1, z0, z1, shellH + 0.35, roofBays);
   addWindowBand(b, x0, x1, z1 + 0.3, shellH * 0.62, PALETTE.frameSoft);
   return b.build();
 }
@@ -604,8 +612,9 @@ function addContainer(b, x, z, options = {}) {
 export function buildDock() {
   const { wallX, doors, doorW, doorH } = LAYOUT.dock;
   const b = new GeometryBuilder();
-  // Yard apron outside the dock wall.
-  b.box(70, 0.06, 110, wallX + 35, -0.05, 0, '#ddd4c4');
+  // Yard apron outside the dock wall, running up to the site road.
+  const yardDepth = SITE_ROADS.xs[1] - wallX;
+  b.box(yardDepth, 0.06, 110, wallX + yardDepth / 2, -0.05, 0, '#ddd4c4');
   doors.forEach((doorZ) => {
     b.box(1.4, DOCK_FLOOR_Y, doorW + 0.8, wallX + 0.7, 0, doorZ, PALETTE.stone);
     b.box(JAMB_DEPTH, doorH, JAMB_WIDTH, wallX, 0, doorZ - doorW / 2, PALETTE.frame);
@@ -647,19 +656,33 @@ export function createConveyorCartons() {
   return mesh;
 }
 
-// ---------- Site: the other nine factories ----------
+// ---------- Site: the group's other nine production units ----------
 
+// Plot, road grid and blocks keep every unit clear of the roads and the main building.
+const SITE_PLOT = { x0: -260, x1: 420, z0: -200, z1: 205 };
+const SITE_ROADS = { zs: [-95, 95], xs: [-130, 290], width: 14 };
+
+// Listed in unit order 2–10 (rise order), matching the names in the page's [data-units] list.
 export const SITE_BUILDINGS = [
-  { x: 40, z: -140, w: 150, d: 70, h: 10 },
-  { x: 205, z: -135, w: 110, d: 60, h: 8 },
-  { x: 330, z: -120, w: 90, d: 80, h: 9 },
-  { x: 350, z: 10, w: 70, d: 110, h: 8 },
-  { x: 320, z: 140, w: 110, d: 70, h: 11 },
-  { x: 175, z: 140, w: 130, d: 64, h: 9 },
-  { x: 30, z: 145, w: 120, d: 74, h: 8 },
-  { x: -110, z: 120, w: 80, d: 90, h: 10 },
-  { x: -110, z: -80, w: 90, d: 100, h: 9 },
+  { x: 80, z: -145, w: 130, d: 70, h: 9 },
+  { x: 215, z: -145, w: 110, d: 70, h: 8 },
+  { x: 350, z: -45, w: 90, d: 76, h: 10 },
+  { x: 350, z: 45, w: 90, d: 76, h: 9 },
+  { x: 215, z: 145, w: 110, d: 70, h: 11 },
+  { x: 80, z: 145, w: 130, d: 74, h: 9 },
+  { x: -60, z: 145, w: 110, d: 70, h: 8 },
+  { x: -190, z: 0, w: 90, d: 120, h: 10 },
+  { x: -60, z: -145, w: 110, d: 70, h: 8 },
 ];
+
+export const UNIT_TOTAL = SITE_BUILDINGS.length + 1;
+
+// Roof-top label anchors, main walk-through building first.
+export function unitAnchors() {
+  const { x0, x1, wallH } = LAYOUT.building;
+  const main = new THREE.Vector3((x0 + x1) / 2, wallH, 0);
+  return [main, ...SITE_BUILDINGS.map((s) => new THREE.Vector3(s.x, s.h, s.z))];
+}
 
 function buildUnitFactoryGeometry() {
   const b = new GeometryBuilder({ ao: false });
@@ -706,13 +729,14 @@ export function createSiteBuildings(uniforms) {
 export function buildSiteGround() {
   const b = new GeometryBuilder({ ao: false });
   const ROAD = '#d9d0bf';
-  b.box(3000, 0.05, 3000, 120, -0.3, 0, PALETTE.ground);
-  b.box(620, 0.04, 14, 120, -0.26, -95, ROAD);
-  b.box(620, 0.04, 14, 120, -0.26, 95, ROAD);
-  b.box(14, 0.04, 400, -40, -0.26, 0, ROAD);
-  b.box(14, 0.04, 400, 280, -0.26, 0, ROAD);
+  const P = SITE_PLOT;
+  const cx = (P.x0 + P.x1) / 2;
+  const cz = (P.z0 + P.z1) / 2;
+  const { zs, xs, width } = SITE_ROADS;
+  b.box(3000, 0.05, 3000, cx, -0.3, 0, PALETTE.ground);
+  zs.forEach((z) => b.box(P.x1 - P.x0, 0.04, width, cx, -0.26, z, ROAD));
+  xs.forEach((x) => b.box(width, 0.04, P.z1 - P.z0, x, -0.26, cz, ROAD));
   // Plot boundary.
-  const P = { x0: -180, x1: 420, z0: -200, z1: 205 };
   const T = 0.8;
   b.box(P.x1 - P.x0, 0.05, T, (P.x0 + P.x1) / 2, -0.24, P.z0, PALETTE.frameSoft);
   b.box(P.x1 - P.x0, 0.05, T, (P.x0 + P.x1) / 2, -0.24, P.z1, PALETTE.frameSoft);

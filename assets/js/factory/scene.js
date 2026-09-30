@@ -1,6 +1,8 @@
 // Scroll-driven factory model: one renderer, one camera on a CatmullRom path through the chapters.
 import * as THREE from '../vendor/three.module.min.js';
 import * as W from './world.js';
+import * as M from './machines.js';
+import { createUnitTags } from './unit-tags.js';
 
 const QUALITY_LEVELS = [
   { dpr: 0.75, mapSize: 0 },
@@ -26,7 +28,15 @@ const PRINT_DAILY = 65000;
 const DISPATCH_DAILY = 85000;
 const SHELL_LIFT = 46;
 const PORTRAIT_REACH = 1.25;
-const PORTRAIT_REACH_WIDE = 2.6;
+const PORTRAIT_REACH_WIDE = 4.2;
+const PORTRAIT_REACH_SITE = 2.5;
+const CAROUSEL_INDEX_S = 1.7;
+const KNIT_RATE = 0.6;
+const REEL_RATE = 1.8;
+const EMB_TRAVEL = 0.14;
+const NEEDLE_RATE = 14;
+const NEEDLE_STROKE = 0.05;
+const Z_AXIS = new THREE.Vector3(0, 0, 1);
 const LIGHT_OFFSET = new THREE.Vector3(-0.55, 1, -0.3).normalize().multiplyScalar(160);
 
 const COLORS = {
@@ -35,12 +45,14 @@ const COLORS = {
 };
 
 const HUD_LABELS = {
-  entry: '00 · TSF Building (B)',
-  cutting: '01 · Cutting room',
-  sewing: '02 · Sewing hall',
-  printing: '03 · Printing',
-  dispatch: '04 · Dispatch dock',
-  site: '05 · The group, 24/7',
+  entry: '00 · Model Factory',
+  knitting: '01 · Knitting',
+  dyeing: '02 · Dyeing',
+  cutting: '03 · Cutting room',
+  sewing: '04 · Sewing hall',
+  embellishment: '05 · Embellishment',
+  dispatch: '06 · Dispatch dock',
+  site: '07 · The group, 24/7',
 };
 
 const v3 = (x, y, z) => new THREE.Vector3(x, y, z);
@@ -52,21 +64,27 @@ const damp = (current, target, lambda, dt) => current + (target - current) * (1 
 function buildKeyframes(focus) {
   const f = (dx, dy, dz) => v3(focus.x + dx, dy, focus.z + dz);
   return [
-    { name: 'entry', chapter: 'entry', at: 0, frame: 'wide', pos: v3(400, 78, 190), target: v3(128, 0, -4) },
-    { name: 'entryHold', chapter: 'entry', at: 0.35, frame: 'wide', pos: v3(320, 62, 152), target: v3(118, 0, -2) },
-    { name: 'cutA', chapter: 'cutting', at: 0, pos: v3(8, 18, 22), target: v3(17, 0.9, -4) },
+    { name: 'entry', chapter: 'entry', at: 0, frame: 'wide', pos: v3(-200, 84, 214), target: v3(70, 0, -4) },
+    { name: 'entryHold', chapter: 'entry', at: 0.35, frame: 'wide', pos: v3(-150, 64, 168), target: v3(56, 0, -2) },
+    // Interior views look east-south-east with the flow, so each zone-to-zone move barely turns.
+    { name: 'knitA', chapter: 'knitting', at: 0, pos: v3(-86, 17, 30), target: v3(-66, 0.8, -6) },
+    { name: 'knitB', chapter: 'knitting', at: 0.6, pos: v3(-79, 4.6, 5), target: v3(-66, 1.4, -12) },
+    { name: 'dyeA', chapter: 'dyeing', at: 0.1, pos: v3(-44, 12, 22), target: v3(-26, 1.2, -8) },
+    { name: 'dyeB', chapter: 'dyeing', at: 0.6, pos: v3(-40, 5.2, 4.5), target: v3(-25, 1.8, -12) },
+    { name: 'cutA', chapter: 'cutting', at: 0, pos: v3(6, 44, 50), target: v3(20, 0, 2) },
     // Looks along the tables toward the sewing hall, so the dive into the sewing close-up barely turns.
-    { name: 'cutB', chapter: 'cutting', at: 0.5, pos: v3(-1, 7, 17), target: v3(22, 0.9, -5) },
+    { name: 'cutB', chapter: 'cutting', at: 0.5, pos: v3(-4, 13, 34), target: v3(22, 0.9, -8) },
     { name: 'sewA', chapter: 'sewing', at: 0, pos: f(-2.3, 1.55, 1.9), target: f(0.05, 0.92, 0.35) },
     { name: 'sewHold', chapter: 'sewing', at: 0.12, pos: f(-2.7, 1.8, 2.3), target: f(0.1, 0.9, 0.3) },
     { name: 'sewMid', chapter: 'sewing', at: 0.46, pos: f(-13, 10, 18), target: f(12, 0, -4) },
     { name: 'sewEnd', chapter: 'sewing', at: 0.9, pos: v3(42, 118, 96), target: v3(92, 0, -4) },
-    { name: 'printA', chapter: 'printing', at: 0.1, pos: v3(149, 9, 21), target: v3(166, 1.2, 0) },
-    { name: 'printB', chapter: 'printing', at: 0.78, pos: v3(158, 5.2, 17), target: v3(172, 1.3, 1) },
+    // Carousels in front, embroidery rows behind; then down to the carousels on the way to the dock.
+    { name: 'embA', chapter: 'embellishment', at: 0.1, pos: v3(152, 15, 22), target: v3(170, 0.8, -20) },
+    { name: 'embB', chapter: 'embellishment', at: 0.78, pos: v3(158, 5.2, 17), target: v3(172, 1.3, 1) },
     { name: 'dispA', chapter: 'dispatch', at: 0.1, pos: v3(226, 14, 30), target: v3(252, 1.4, -1) },
     { name: 'dispB', chapter: 'dispatch', at: 0.78, pos: v3(233, 8.5, 25), target: v3(254, 1.6, -1) },
-    { name: 'siteA', chapter: 'site', at: 0.34, pos: v3(40, 600, 430), target: v3(120, 0, 4) },
-    { name: 'siteB', chapter: 'site', at: 1, pos: v3(0, 540, 400), target: v3(120, 0, 8) },
+    { name: 'siteA', chapter: 'site', at: 0.34, reach: PORTRAIT_REACH_SITE, pos: v3(60, 760, 560), target: v3(84, 0, 4) },
+    { name: 'siteB', chapter: 'site', at: 1, reach: PORTRAIT_REACH_SITE, pos: v3(24, 700, 515), target: v3(84, 0, 8) },
   ];
 }
 
@@ -116,8 +134,11 @@ function buildWorld(scene) {
   const clay = W.createClayMaterial();
   addStatic(scene, W.buildSiteGround(), clay, { cast: false });
   addStatic(scene, W.buildArchitecture(), clay);
+  addStatic(scene, M.buildKnittingStock(), clay);
+  addStatic(scene, M.buildDyehouseStatic(), clay);
   addStatic(scene, W.buildCuttingStatic(), clay);
   addStatic(scene, W.buildCarouselBase(), clay);
+  addStatic(scene, M.buildEmbroideryStatic(), clay);
   addStatic(scene, W.buildRacks(), clay);
   addStatic(scene, W.buildDock(), clay);
   W.createWarehouseStock().forEach((mesh) => scene.add(mesh));
@@ -143,8 +164,13 @@ function buildWorld(scene) {
   const conveyor = W.createConveyorCartons();
   scene.add(conveyor);
 
+  const knitting = M.createKnittingFloor(clay);
+  const jetReels = M.createJetReels(clay);
+  const embroidery = M.createEmbroideryMovers(clay);
+  scene.add(knitting.bodies, knitting.rotors, jetReels, embroidery.frames, embroidery.needles);
+
   return {
-    shell, shellMaterial, sewing, sewUniforms, site, siteUniforms, rotors, conveyor,
+    shell, shellMaterial, sewing, sewUniforms, site, siteUniforms, rotors, conveyor, knitting, jetReels, embroidery,
     cutters: createCutters(scene, clay),
   };
 }
@@ -178,7 +204,7 @@ function scrollToU(anchors, y) {
 
 // ---------- Scene factory ----------
 
-export async function initScene({ canvas, stage, tour, chapters, counters, hudLabel, hudFill }) {
+export async function initScene({ canvas, stage, tour, chapters, counters, hudLabel, hudFill, unitList }) {
   const isMobile = window.matchMedia('(max-width: 640px), (pointer: coarse)').matches;
   const dprCap = isMobile ? DPR_CAP_MOBILE : DPR_CAP_DESKTOP;
   const renderer = createRenderer(canvas, isMobile);
@@ -188,6 +214,11 @@ export async function initScene({ canvas, stage, tour, chapters, counters, hudLa
   const camera = new THREE.PerspectiveCamera(FOV, 1, 0.1, 5000);
   const lights = createLights(scene);
   const world = buildWorld(scene);
+  const unitTags = createUnitTags({ stage, list: unitList, anchors: W.unitAnchors(), before: hudLabel.closest('dl') });
+  const carouselCenters = W.carouselCenters();
+  const knitterCenters = M.knitterCenters();
+  const jetReelPoints = M.jetReelPoints();
+  const embroideryOrigins = M.embroideryOrigins();
   const keyframes = buildKeyframes(world.sewing.focus);
   const index = Object.fromEntries(keyframes.map((k, i) => [k.name, i]));
   const posCurve = new THREE.CatmullRomCurve3(keyframes.map((k) => k.pos), false, 'centripetal');
@@ -228,6 +259,7 @@ export async function initScene({ canvas, stage, tour, chapters, counters, hudLa
     camera.aspect = state.aspect;
     applyQuality();
     measure();
+    unitTags.measure();
   }
 
   function readScroll() {
@@ -249,11 +281,12 @@ export async function initScene({ canvas, stage, tour, chapters, counters, hudLa
     return blendFrames(u, shiftOf);
   }
 
-  // Portrait screens pull the camera back; wide establishing shots need more room.
+  // Portrait screens pull the camera back; wide establishing shots and the site plan need more room.
   function portraitPullback(u) {
-    const reach = blendFrames(u, (k) => (k.frame === 'wide' ? PORTRAIT_REACH_WIDE : PORTRAIT_REACH));
+    const reach = blendFrames(u, (k) => k.reach ?? (k.frame === 'wide' ? PORTRAIT_REACH_WIDE : PORTRAIT_REACH));
     return 1 + (1 - state.aspect) * reach;
   }
+
 
   function updateCamera() {
     const n = keyframes.length - 1;
@@ -306,8 +339,8 @@ export async function initScene({ canvas, stage, tour, chapters, counters, hudLa
   }
 
   function updateBeats() {
-    // Roof is clear by cutA. Extending the lift to sewing drops the path through the shell.
-    const lift = smootherstep(clamp01((state.u - index.entryHold) / (index.cutA - index.entryHold)));
+    // Roof is clear by knitA, the first interior view; a later finish drops the path through the shell.
+    const lift = smootherstep(clamp01((state.u - index.entryHold) / (index.knitA - index.entryHold)));
     world.shell.position.y = lift * SHELL_LIFT;
     world.shellMaterial.opacity = 1 - lift;
     world.shell.visible = lift < 0.995;
@@ -319,11 +352,11 @@ export async function initScene({ canvas, stage, tour, chapters, counters, hudLa
     world.sewUniforms.uReveal.value = reveal + grow * sew;
     setCounter('sewing', Math.min(W.SEWING_TOTAL, Math.floor(reveal)));
 
-    setCounter('printing', Math.round((easeInOut(beat('printA', 'printB')) * PRINT_DAILY) / 100) * 100);
+    setCounter('printing', Math.round((easeInOut(beat('embA', 'embB')) * PRINT_DAILY) / 100) * 100);
     setCounter('dispatch', Math.round((easeInOut(beat('dispA', 'dispB')) * DISPATCH_DAILY) / 100) * 100);
 
     const rise = clamp01((state.u - index.dispB - 0.3) / (index.siteA - index.dispB - 0.3));
-    const others = W.FACTORY_TOTAL - 1;
+    const others = W.UNIT_TOTAL - 1;
     world.siteUniforms.uReveal.value = rise * others;
     setCounter('site', 1 + Math.floor(rise * others + 0.001));
 
@@ -345,7 +378,16 @@ export async function initScene({ canvas, stage, tour, chapters, counters, hudLa
     hudFill.style.setProperty('--progress', (state.u / (keyframes.length - 1)).toFixed(4));
   }
 
-  function animateMachines(t) {
+  function spinInstances(mesh, centers, axis, angleOf) {
+    centers.forEach((c, i) => {
+      tmp.q.setFromAxisAngle(axis, angleOf(i));
+      tmp.m.compose(c, tmp.q, tmp.s);
+      mesh.setMatrixAt(i, tmp.m);
+    });
+    mesh.instanceMatrix.needsUpdate = true;
+  }
+
+  function animateCutters(t) {
     const { gantries, heads } = world.cutters;
     const { x0, tableLen, tables } = W.LAYOUT.cutting;
     tables.forEach((z, i) => {
@@ -358,17 +400,29 @@ export async function initScene({ canvas, stage, tour, chapters, counters, hudLa
     });
     gantries.instanceMatrix.needsUpdate = true;
     heads.instanceMatrix.needsUpdate = true;
+  }
 
-    const INDEX_PERIOD = 1.7;
-    W.carouselCenters().forEach((c, i) => {
-      const step = t / INDEX_PERIOD + i * 0.37;
-      const angle = (Math.floor(step) + easeInOut(clamp01((step % 1) * 1.8))) * ((Math.PI * 2) / W.LAYOUT.printing.arms);
-      tmp.q.setFromAxisAngle(THREE.Object3D.DEFAULT_UP, angle);
-      tmp.m.compose(c, tmp.q, tmp.s);
-      world.rotors.setMatrixAt(i, tmp.m);
+  function animateCarousels(t) {
+    const step = (i) => t / CAROUSEL_INDEX_S + i * 0.37;
+    const pitch = (Math.PI * 2) / W.LAYOUT.printing.arms;
+    spinInstances(world.rotors, carouselCenters, THREE.Object3D.DEFAULT_UP,
+      (i) => (Math.floor(step(i)) + easeInOut(clamp01((step(i) % 1) * 1.8))) * pitch);
+  }
+
+  function animateEmbroidery(t) {
+    const { frames, needles } = world.embroidery;
+    embroideryOrigins.forEach((o, i) => {
+      const phase = i * 1.3;
+      tmp.m.makeTranslation(o.x + Math.sin(t * 0.9 + phase) * EMB_TRAVEL, 0, o.z + Math.sin(t * 1.4 + phase * 2) * EMB_TRAVEL * 0.6);
+      frames.setMatrixAt(i, tmp.m);
+      tmp.m.makeTranslation(o.x, -Math.abs(Math.sin(t * NEEDLE_RATE + phase)) * NEEDLE_STROKE, o.z);
+      needles.setMatrixAt(i, tmp.m);
     });
-    world.rotors.instanceMatrix.needsUpdate = true;
+    frames.instanceMatrix.needsUpdate = true;
+    needles.instanceMatrix.needsUpdate = true;
+  }
 
+  function animateConveyor(t) {
     const C = W.CONVEYOR;
     const len = C.to - C.from;
     const size = v3(0.62, 0.42, 0.52);
@@ -378,6 +432,25 @@ export async function initScene({ canvas, stage, tour, chapters, counters, hudLa
       world.conveyor.setMatrixAt(i, tmp.m);
     }
     world.conveyor.instanceMatrix.needsUpdate = true;
+  }
+
+  function animateMachines(t) {
+    animateCutters(t);
+    animateCarousels(t);
+    spinInstances(world.knitting.rotors, knitterCenters, THREE.Object3D.DEFAULT_UP, (i) => t * KNIT_RATE + i * 0.7);
+    spinInstances(world.jetReels, jetReelPoints, Z_AXIS, (i) => -t * REEL_RATE - i);
+    animateEmbroidery(t);
+    animateConveyor(t);
+  }
+
+  // The main building's tag leads the rise; each other tag fades in as its building grows.
+  function unitTagAlpha(i) {
+    const reveal = world.siteUniforms.uReveal.value;
+    return i === 0 ? clamp01(reveal * 2) : clamp01(reveal - (i - 1));
+  }
+
+  function updateUnitTags() {
+    unitTags.update(camera, { w: state.viewW, h: state.viewH }, unitTagAlpha);
   }
 
   function adaptQuality(frameMs) {
@@ -409,6 +482,7 @@ export async function initScene({ canvas, stage, tour, chapters, counters, hudLa
     updateCamera();
     animateMachines(state.time);
     updateHud();
+    updateUnitTags();
     renderer.render(scene, camera);
     if (!state.ready) {
       state.ready = true;
@@ -450,7 +524,10 @@ export async function initScene({ canvas, stage, tour, chapters, counters, hudLa
   const pageObserver = new ResizeObserver(measure);
   stageObserver.observe(stage);
   pageObserver.observe(document.body);
-  document.fonts?.ready.then(measure);
+  document.fonts?.ready.then(() => {
+    measure();
+    unitTags.measure();
+  });
 
   function destroy() {
     state.destroyed = true;

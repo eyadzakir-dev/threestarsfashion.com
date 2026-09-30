@@ -18,6 +18,8 @@ const MAX_BOW_PX = 150;
 const STAGE_MARGIN = 18;
 const HEAL_FADE_RADII = 1.5;
 const IGNITE = { delay: 0.45, gap: 0.26, length: 1.1 };
+const LINE_STATIONS = 10;
+const PRINT = { station: 4, start: 0.04, span: 0.74, sweepStart: 0.14, sweepSpan: 0.32, squeegeeTravel: 128, inkLeft: 28, inkWidth: 70 };
 const RED = [229, 34, 34];
 const WHITE = [255, 255, 255];
 
@@ -165,10 +167,11 @@ function lineProgress(line) {
   return parseFloat(getComputedStyle(line).getPropertyValue('--p')) || 0;
 }
 
+// Mirrors the embellishment timing in home.css (--a4, --sw, --pr).
 function printProgress(p) {
-  const a2 = clamp01((p * 8 - 2.12) / 0.62);
-  const sweep = clamp01((a2 - 0.25) / 0.52);
-  return clamp01((sweep * 128 - 28) / 70);
+  const station = clamp01((p * LINE_STATIONS - PRINT.station - PRINT.start) / PRINT.span);
+  const sweep = clamp01((station - PRINT.sweepStart) / PRINT.sweepSpan);
+  return clamp01((sweep * PRINT.squeegeeTravel - PRINT.inkLeft) / PRINT.inkWidth);
 }
 
 function phaseProgress(ctx) {

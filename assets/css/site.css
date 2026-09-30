@@ -368,6 +368,18 @@ main { display: block; }
   padding: 36px 16px 20px;
 }
 .stamp-c__no { position: absolute; top: 12px; left: 14px; color: var(--ink-2); font-size: 11px; }
+.stamp-c__doc {
+  position: absolute;
+  top: 34px;
+  left: 20px;
+  width: calc(100% - 40px);
+  height: calc(100% - 50px);
+  object-fit: contain;
+  opacity: 0.42;
+  filter: saturate(0.6) drop-shadow(0 1px 3px rgb(0 0 0 / 0.2));
+  pointer-events: none;
+}
+.stamp-c__doc ~ .stamp-c__ink { position: relative; mix-blend-mode: multiply; }
 .stamp-c__ink {
   display: flex;
   flex-direction: column;
@@ -403,14 +415,17 @@ main { display: block; }
   .stamps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .stamp-c { aspect-ratio: 1; padding: 30px 8px 12px; }
   .stamps > .stamp-c:last-child:nth-child(odd) { grid-column: span 2; aspect-ratio: auto; min-height: 150px; }
+  .stamp-c__doc { top: 30px; left: 10px; width: calc(100% - 20px); height: calc(100% - 40px); }
   .stamp-c__ink { padding: 12px 10px 10px; min-width: 84%; }
   .stamp-c__ink small { font-size: 9.5px; }
 }
 
 /* ---------- Brand logos ---------- */
+.brands { padding-bottom: 0; }
 .logos {
+  --logo-h: 40px;
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(8, minmax(0, 1fr));
   place-items: stretch;
   gap: 1px;
   background: var(--rule);
@@ -419,28 +434,35 @@ main { display: block; }
 .logos li {
   position: relative;
   display: grid;
+  /* A zero-minimum row keeps each cell at 3:2 so img max-height can resolve against it. */
+  grid-template-rows: minmax(0, 1fr);
   place-items: center;
   aspect-ratio: 3 / 2;
   background: var(--paper);
-  padding: 28px 18%;
+  padding: 28px 12%;
   transition: background-color 0.25s;
 }
 .logos li .mono { position: absolute; top: 10px; left: 12px; font-size: 10.5px; color: var(--ink-2); }
+/* --k (inline, per logo) scales compact marks up and wide wordmarks down to a similar optical weight. */
 .logos img {
   width: auto;
-  height: auto;
+  height: calc(var(--logo-h) * var(--k, 1));
   max-width: 100%;
-  max-height: 46px;
+  max-height: 100%;
+  object-fit: contain;
   filter: grayscale(1) brightness(0);
-  transition: transform 0.35s var(--ease-out);
+  transition: transform 0.35s var(--ease-out), filter 0.35s var(--ease-out);
 }
 .logos li:hover { background: var(--paper-hi); }
 .logos li:hover .mono { color: var(--red-ink); }
 .logos li:hover img { transform: scale(1.06); }
+@media (hover: hover) {
+  .logos li:hover img { filter: none; }
+}
 @media (max-width: 899px) {
-  .logos { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .logos li { padding: 26px 16%; }
-  .logos img { max-height: 30px; }
+  .logos { --logo-h: clamp(22px, 5.6vw, 36px); grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .logos li { padding: 15px 8% 7px; }
+  .logos li .mono { top: 5px; left: 6px; font-size: 8.5px; }
 }
 
 /* ---------- Export routes ---------- */

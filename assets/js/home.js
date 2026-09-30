@@ -5,15 +5,26 @@ const REDUCED_MOTION = matchMedia("(prefers-reduced-motion: reduce)");
 const NARROW = matchMedia("(max-width: 899px)");
 const HAS_SCROLL_TIMELINE = CSS.supports("animation-timeline: view()");
 
-const DAILY_CAPACITY = 85000;
-const SECONDS_PER_DAY = 86400;
-const TICK_MS = 1000;
+const SHIFT_CAPACITY = 85000;
+const SHIFT_HOURS = 8;
+const MINUTES_PER_HOUR = 60;
+const PER_HOUR = SHIFT_CAPACITY / SHIFT_HOURS;
+const PER_MINUTE = Math.round(PER_HOUR / MINUTES_PER_HOUR);
+const THOUSAND = 1000;
+const SECOND_MS = 1000;
+// Time-lapse: one real second shows one production minute, so a shift hour plays in 60 s.
+const LIVE_HOUR_MS = MINUTES_PER_HOUR * SECOND_MS;
+const LIVE_TICK_MS = 250;
+const METER_THRESHOLD = 0.4;
+const METER_HOLD_MS = 1600;
+const METER_SHRINK_MS = 750;
+const METER_UNIT_TEXT = { shift: "pieces.", live: "pieces in one hour of a shift." };
+const LIVE_NOTE_TEXT = `Time-lapse: every second here is one minute on our floor, at about ${PER_MINUTE} pieces a minute on average.`;
 const FLIP_STEP_MS = 240;
 const HERO_RANGE = 0.8;
 const BOARD_DIGITS = 5;
-const THOUSAND = 1000;
 const FLAP_SEQUENCE = " 0123456789";
-const STATION_COUNT = 8;
+const STATION_COUNT = 10;
 const STATION_LEAD = 0.1;
 const MODEL_PRELOAD_MARGIN = "250% 0px";
 const IDLE_TIMEOUT_MS = 2000;
@@ -25,7 +36,6 @@ const cairoFormat = new Intl.DateTimeFormat("en-GB", {
   second: "2-digit",
   hourCycle: "h23",
 });
-const unitFormat = new Intl.NumberFormat("en-US");
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 const hasMotion = () => root.classList.contains("motion");
@@ -40,15 +50,7 @@ function syncMotionClass() {
   journey = null;
 }
 
-function getCairoTime(now = new Date()) {
-  const parts = Object.fromEntries(cairoFormat.formatToParts(now).map((p) => [p.type, p.value]));
-  const seconds = Number(parts.hour) * 3600 + Number(parts.minute) * 60 + Number(parts.second);
-  return { hm: `${parts.hour}:${parts.minute}`, hms: `${parts.hour}:${parts.minute}:${parts.second}`, seconds };
-}
-
-function getCapacityUnits(seconds) {
-  return Math.floor((DAILY_CAPACITY * seconds) / SECONDS_PER_DAY);
-}
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /* ---------- Split-flap board ---------- */
 
@@ -113,53 +115,123 @@ function setFlapTarget(cell, digit, animate) {
 
 /* ---------- Capacity meter ---------- */
 
+function toBoardDigits(value) {
+  return String(value).padStart(BOARD_DIGITS, " ").slice(-BOARD_DIGITS).split("");
+}
+
+function getFlipSteps(from, to) {
+  const count = FLAP_SEQUENCE.length;
+  return (FLAP_SEQUENCE.indexOf(to) - FLAP_SEQUENCE.indexOf(from) + count) % count;
+}
+
+// Resolves once every cell has flipped through to its digit.
+function flipBoardTo(board, value) {
+  const digits = toBoardDigits(value);
+  const steps = board.cells.map((cell, i) => getFlipSteps(cell.current, digits[i]));
+  board.cells.forEach((cell, i) => setFlapTarget(cell, digits[i], true));
+  return wait((Math.max(...steps) + 1) * FLIP_STEP_MS);
+}
+
+function clearBoard(board) {
+  board.cells.forEach((cell) => setFlapTarget(cell, " ", false));
+}
+
+// One flip straight to the digit, so the live counter can change several times a second.
+function flipCellTo(cell, digit) {
+  if (cell.current === digit) return;
+  clearTimeout(cell.timer);
+  cell.timer = 0;
+  cell.target = digit;
+  flipOnce(cell, digit);
+}
+
+function getDigitsBox(cells) {
+  const first = cells.find((cell) => cell.current !== " ").el.getBoundingClientRect();
+  const last = cells[cells.length - 1].el.getBoundingClientRect();
+  return { x: (first.left + last.right) / 2, y: (first.top + first.bottom) / 2, width: last.right - first.left, height: first.height };
+}
+
+// FLIP: the small shift total starts at the board's size and position, then settles into its line.
+function shrinkFrom(target, box) {
+  const rect = target.getBoundingClientRect();
+  const scale = Math.min(box.width / rect.width, box.height / rect.height);
+  const dx = box.x - (rect.left + rect.width / 2);
+  const dy = box.y - (rect.top + rect.height / 2);
+  target.animate(
+    [{ transform: `translate(${dx}px, ${dy}px) scale(${scale})` }, { transform: "none" }],
+    { duration: METER_SHRINK_MS, easing: "cubic-bezier(0.2, 0.7, 0.2, 1)" },
+  );
+}
+
+function showMeterPhase(meter, phase) {
+  meter.dataset.phase = phase;
+  meter.querySelector("[data-meter-unit]").textContent = METER_UNIT_TEXT[phase];
+}
+
+// Progress through the time-lapse hour, one tick ahead so the last tick lands on the full hour.
+function getLiveHourState(startTime) {
+  const progress = Math.min(1, (((performance.now() - startTime) % LIVE_HOUR_MS) + LIVE_TICK_MS) / LIVE_HOUR_MS);
+  return { progress, pieces: Math.round(PER_HOUR * progress), minute: Math.ceil(progress * MINUTES_PER_HOUR) };
+}
+
+function renderLiveHour(live) {
+  const { progress, pieces, minute } = getLiveHourState(live.start);
+  const digits = toBoardDigits(pieces);
+  live.board.cells.forEach((cell, i) => flipCellTo(cell, digits[i]));
+  live.board.separator.style.visibility = pieces >= THOUSAND ? "visible" : "hidden";
+  live.bar.classList.toggle("is-reset", pieces < live.pieces);
+  live.bar.style.transform = `scaleX(${progress.toFixed(4)})`;
+  live.minute.textContent = String(minute).padStart(2, "0");
+  live.pieces = pieces;
+}
+
+// Replays one shift hour every 60 s, then restarts; idle while off screen.
+function startLiveHour(meter, board) {
+  const live = {
+    board, start: performance.now(), pieces: 0, isVisible: true,
+    bar: meter.querySelector("[data-meter-bar]"), minute: meter.querySelector("[data-meter-min]"),
+  };
+  new IntersectionObserver(([entry]) => { live.isVisible = entry.isIntersecting; }).observe(meter);
+  renderLiveHour(live);
+  setInterval(() => { if (live.isVisible) renderLiveHour(live); }, LIVE_TICK_MS);
+}
+
+async function playMeter(meter, board) {
+  await flipBoardTo(board, SHIFT_CAPACITY);
+  await wait(METER_HOLD_MS);
+  const digitsBox = getDigitsBox(board.cells);
+  showMeterPhase(meter, "live");
+  shrinkFrom(meter.querySelector("[data-meter-was]"), digitsBox);
+  clearBoard(board);
+  startLiveHour(meter, board);
+}
+
+function observeOnce(el, callback) {
+  const observer = new IntersectionObserver(([entry]) => {
+    if (!entry.isIntersecting) return;
+    observer.disconnect();
+    callback();
+  }, { threshold: METER_THRESHOLD });
+  observer.observe(el);
+}
+
+function startCairoClock(clock) {
+  if (!clock) return;
+  const tick = () => { clock.textContent = cairoFormat.format(new Date()); };
+  tick();
+  setInterval(tick, SECOND_MS);
+}
+
 function initMeter() {
   const meter = document.querySelector("[data-meter]");
   if (!meter) return;
-  const cells = [...meter.querySelectorAll("[data-flap]")].map(buildFlap);
-  const separator = meter.querySelector(".meter__sep");
-  const text = meter.querySelector("[data-meter-text]");
-  const share = meter.querySelector("[data-meter-share]");
-  const srText = meter.querySelector("[data-meter-sr]");
-  const clock = meter.querySelector("[data-cairo-clock-s]");
-  text.textContent = "units by this time today.";
-
-  let isVisible = false;
-  let intervalId = 0;
-
-  function render() {
-    const time = getCairoTime();
-    const units = getCapacityUnits(time.seconds);
-    const digits = String(units).padStart(BOARD_DIGITS, " ").slice(-BOARD_DIGITS);
-    clock.textContent = time.hms;
-    share.textContent = `${((time.seconds / SECONDS_PER_DAY) * 100).toFixed(1)}% of today elapsed`;
-    srText.textContent = ` Approximately ${unitFormat.format(units)} units by ${time.hm} Cairo time.`;
-    separator.style.visibility = units >= THOUSAND ? "visible" : "hidden";
-    if (!isVisible) return;
-    const animate = !REDUCED_MOTION.matches;
-    cells.forEach((cell, i) => setFlapTarget(cell, digits[i], animate));
-  }
-
-  function syncTicker() {
-    const shouldRun = !document.hidden;
-    if (shouldRun && !intervalId) intervalId = setInterval(render, TICK_MS);
-    if (!shouldRun && intervalId) {
-      clearInterval(intervalId);
-      intervalId = 0;
-    }
-  }
-
-  new IntersectionObserver(([entry]) => {
-    isVisible = entry.isIntersecting;
-    render();
-  }, { threshold: 0.25 }).observe(meter);
-
-  document.addEventListener("visibilitychange", () => {
-    syncTicker();
-    if (!document.hidden) render();
-  });
-  render();
-  syncTicker();
+  startCairoClock(meter.querySelector("[data-cairo-clock-s]"));
+  if (!hasMotion()) return;
+  const board = { cells: [...meter.querySelectorAll("[data-flap]")].map(buildFlap), separator: meter.querySelector(".meter__sep") };
+  meter.querySelector("[data-meter-note]").textContent = LIVE_NOTE_TEXT;
+  meter.querySelector("[data-meter-unit-sizer]").textContent = METER_UNIT_TEXT.live;
+  showMeterPhase(meter, "shift");
+  observeOnce(meter, () => playMeter(meter, board));
 }
 
 /* ---------- Line progress ----------
@@ -288,6 +360,7 @@ function collectModelElements(section) {
     canvas: section.querySelector("[data-canvas]"),
     hudLabel: section.querySelector("[data-hud-label]"),
     hudFill: section.querySelector("[data-hud-fill]"),
+    unitList: section.querySelector("[data-units]"),
   };
 }
 

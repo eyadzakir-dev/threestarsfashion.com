@@ -167,11 +167,31 @@
 }
 .meter__tag { grid-column: 1 / -1; display: flex; align-items: center; gap: 10px; color: #FFB3B3; }
 .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--red); flex: none; }
-.meter__lead { grid-column: 1 / 5; font-size: 26px; line-height: 1.15; font-weight: 600; font-stretch: 90%; letter-spacing: -0.015em; }
-.meter__lead:nth-of-type(3) { grid-column: 1 / 5; grid-row: 4; }
+.meter__lead, .meter__was { font-size: 26px; line-height: 1.15; font-weight: 600; font-stretch: 90%; letter-spacing: -0.015em; }
+.meter__top { grid-column: 1 / 5; grid-row: 2; align-self: end; display: grid; }
+.meter__top > * { grid-area: 1 / 1; }
+.meter__was { color: rgba(243, 241, 236, 0.78); }
+.meter__was-num { position: relative; z-index: 4; display: inline-block; font-weight: 800; font-stretch: 80%; color: var(--paper); }
+.meter__was-txt { transition: opacity 0.4s ease 0.45s; }
+.meter__unit { grid-column: 1 / 5; grid-row: 3; display: grid; }
+.meter__unit > * { grid-area: 1 / 1; }
+/* Invisible copy of the longest unit text keeps the meter height fixed from shift to live. */
+.meter__unit-sizer { visibility: hidden; }
+.meter__note { grid-column: 1 / 5; grid-row: 4; align-self: start; max-width: 32ch; font-size: 15px; line-height: 1.45; color: rgba(243, 241, 236, 0.72); transition: opacity 0.4s ease 0.6s; }
+.meter__window { grid-column: 1 / 5; grid-row: 5; display: flex; align-items: center; gap: 12px; color: rgba(243, 241, 236, 0.72); font-variant-numeric: tabular-nums; transition: opacity 0.4s ease 0.6s; }
+.meter__bar { position: relative; width: 96px; height: 3px; overflow: hidden; background: rgba(243, 241, 236, 0.22); }
+.meter__bar i { position: absolute; inset: 0; background: var(--red); transform: scaleX(0); transform-origin: left center; transition: transform 0.25s linear; }
+.meter__bar i.is-reset { transition: none; }
+.meter[data-phase="shift"] .meter__was { visibility: hidden; }
+.meter[data-phase="shift"] .meter__was-txt,
+.meter[data-phase="shift"] .meter__note,
+.meter[data-phase="shift"] .meter__window { opacity: 0; transition: none; }
+.meter[data-phase="hour"] .meter__window { display: none; }
+.meter:not([data-phase="shift"]) .meter__tilde { display: none; }
+.meter:not([data-phase="shift"]) .meter__lead--shift { opacity: 0; visibility: hidden; transition: opacity 0.2s ease, visibility 0s 0.2s; }
 .meter__board {
   grid-column: 5 / 13;
-  grid-row: 2 / 5;
+  grid-row: 2 / 6;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -230,8 +250,8 @@
 
 @media (max-width: 899px) {
   .meter { grid-template-columns: 1fr; padding: 28px 20px 22px; margin-top: 40px; margin-inline: calc(var(--pad) * -1); }
-  .meter__lead, .meter__lead:nth-of-type(3), .meter__board { grid-column: 1; grid-row: auto; }
-  .meter__lead { font-size: 22px; }
+  .meter__top, .meter__unit, .meter__note, .meter__window, .meter__board { grid-column: 1; grid-row: auto; }
+  .meter__lead, .meter__was { font-size: 22px; }
   .meter__board { justify-content: flex-start; font-size: 17.5vw; }
   .meter__calc { flex-direction: column; }
 }
@@ -250,54 +270,67 @@
 @property --p { syntax: "<number>"; inherits: true; initial-value: 0; }
 
 .line {
-  --stations: 8;
+  --stations: 10;
   --seg: 70svh;
-  --t: calc(var(--p) * 8);
+  --t: calc(var(--p) * var(--stations));
+  --greige: #ECE4CF;
+  --dyed: #9BB9D9;
 
   /* track index: holds on each station, indexes to the next over the last 20% */
   --x: calc(
     clamp(0, (var(--t) - 0.8) * 5, 1) + clamp(0, (var(--t) - 1.8) * 5, 1) +
     clamp(0, (var(--t) - 2.8) * 5, 1) + clamp(0, (var(--t) - 3.8) * 5, 1) +
     clamp(0, (var(--t) - 4.8) * 5, 1) + clamp(0, (var(--t) - 5.8) * 5, 1) +
-    clamp(0, (var(--t) - 6.8) * 5, 1));
+    clamp(0, (var(--t) - 6.8) * 5, 1) + clamp(0, (var(--t) - 7.8) * 5, 1) +
+    clamp(0, (var(--t) - 8.8) * 5, 1));
   --step: calc(
     clamp(0, (var(--x) - 0.5) * 100, 1) + clamp(0, (var(--x) - 1.5) * 100, 1) +
     clamp(0, (var(--x) - 2.5) * 100, 1) + clamp(0, (var(--x) - 3.5) * 100, 1) +
     clamp(0, (var(--x) - 4.5) * 100, 1) + clamp(0, (var(--x) - 5.5) * 100, 1) +
-    clamp(0, (var(--x) - 6.5) * 100, 1));
+    clamp(0, (var(--x) - 6.5) * 100, 1) + clamp(0, (var(--x) - 7.5) * 100, 1) +
+    clamp(0, (var(--x) - 8.5) * 100, 1));
 
-  /* process progress per station */
+  /* process progress per station; embellishment runs longer (print, then embroidery) and is mirrored in journey.js */
   --a0: clamp(0, (var(--t) - 0.12) / 0.62, 1);
   --a1: clamp(0, (var(--t) - 1.12) / 0.62, 1);
   --a2: clamp(0, (var(--t) - 2.12) / 0.62, 1);
   --a3: clamp(0, (var(--t) - 3.12) / 0.62, 1);
-  --a4: clamp(0, (var(--t) - 4.12) / 0.62, 1);
+  --a4: clamp(0, (var(--t) - 4.04) / 0.74, 1);
   --a5: clamp(0, (var(--t) - 5.12) / 0.62, 1);
   --a6: clamp(0, (var(--t) - 6.12) / 0.62, 1);
   --a7: clamp(0, (var(--t) - 7.12) / 0.62, 1);
+  --a8: clamp(0, (var(--t) - 8.12) / 0.62, 1);
+  --a9: clamp(0, (var(--t) - 9.12) / 0.62, 1);
 
   /* sub-phases */
-  --mk: clamp(0, var(--a1) * 5, 1);
-  --cut: clamp(0, (var(--a1) - 0.1) / 0.6, 1);
-  --sepc: clamp(0, (var(--a1) - 0.72) / 0.28, 1);
-  --fd: clamp(0, var(--a2) / 0.22, 1);
-  --sw: clamp(0, (var(--a2) - 0.25) / 0.52, 1);
+  --dfill: clamp(0, var(--a1) / 0.2, 1);
+  --dye: clamp(0, (var(--a1) - 0.1) / 0.5, 1);
+  --dout: clamp(0, (var(--a1) - 0.45) / 0.3, 1);
+  --dpile: clamp(0, (var(--a1) - 0.7) / 0.3, 1);
+  --mk: clamp(0, var(--a3) * 5, 1);
+  --cut: clamp(0, (var(--a3) - 0.1) / 0.6, 1);
+  --sepc: clamp(0, (var(--a3) - 0.72) / 0.28, 1);
+  --fd: clamp(0, var(--a4) / 0.12, 1);
+  --sw: clamp(0, (var(--a4) - 0.14) / 0.32, 1);
   --pr: clamp(0, (var(--sw) * 128 - 28) / 70, 1);
-  --fl: clamp(0, (var(--a2) - 0.82) / 0.18, 1);
-  --jn: clamp(0, var(--a3) / 0.3, 1);
-  --st: clamp(0, (var(--a3) - 0.3) / 0.7, 1);
+  --fl: clamp(0, (var(--a4) - 0.48) / 0.12, 1);
+  --hd: clamp(0, (var(--a4) - 0.6) / 0.1, 1);
+  --em: clamp(0, (var(--a4) - 0.7) / 0.22, 1);
+  --hl: clamp(0, (var(--a4) - 0.92) / 0.08, 1);
+  --jn: clamp(0, var(--a5) / 0.3, 1);
+  --st: clamp(0, (var(--a5) - 0.3) / 0.7, 1);
   --sep: calc(var(--sepc) * (1 - var(--jn)));
-  --sc: clamp(0, var(--a4) / 0.68, 1);
-  --sp: clamp(0, (var(--a4) - 0.72) / 0.22, 1);
-  --f1: clamp(0, var(--a5) / 0.3, 1);
-  --f2: clamp(0, (var(--a5) - 0.32) / 0.3, 1);
-  --bg: clamp(0, (var(--a5) - 0.66) / 0.34, 1);
-  --ca: clamp(0, var(--a6) / 0.25, 1);
-  --dr: clamp(0, (var(--a6) - 0.26) / 0.36, 1);
-  --fc: clamp(0, (var(--a6) - 0.66) / 0.34, 1);
-  --in: clamp(0, var(--a7) / 0.45, 1);
-  --dc: clamp(0, (var(--a7) - 0.45) / 0.4, 1);
-  --sl: clamp(0, (var(--a7) - 0.86) / 0.14, 1);
+  --sc: clamp(0, var(--a6) / 0.68, 1);
+  --sp: clamp(0, (var(--a6) - 0.72) / 0.22, 1);
+  --f1: clamp(0, var(--a7) / 0.3, 1);
+  --f2: clamp(0, (var(--a7) - 0.32) / 0.3, 1);
+  --bg: clamp(0, (var(--a7) - 0.66) / 0.34, 1);
+  --ca: clamp(0, var(--a8) / 0.25, 1);
+  --dr: clamp(0, (var(--a8) - 0.26) / 0.36, 1);
+  --fc: clamp(0, (var(--a8) - 0.66) / 0.34, 1);
+  --in: clamp(0, var(--a9) / 0.45, 1);
+  --dc: clamp(0, (var(--a9) - 0.45) / 0.4, 1);
+  --sl: clamp(0, (var(--a9) - 0.86) / 0.14, 1);
 
   position: relative;
 }
@@ -307,7 +340,8 @@
 .line__pin { border-top: 1px solid var(--ink); }
 
 /* rail */
-.rail__list { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 6px; }
+/* Content-sized columns let "Embellishment" take the room the short names leave. */
+.rail__list { display: grid; grid-template-columns: repeat(var(--stations), auto); gap: 6px; }
 .rail li { --on: 0; --done: 1; }
 .rail a {
   position: relative;
@@ -334,6 +368,9 @@
 }
 .rail a::after { background: var(--red); transform-origin: 0 50%; transform: scaleX(var(--done)); }
 .rail a:hover { color: var(--red-ink); }
+@media (min-width: 900px) and (max-width: 1099px) {
+  .rail a { flex-direction: column; align-items: flex-start; gap: 5px; }
+}
 
 /* stage: the drawing */
 .stage {
@@ -387,12 +424,29 @@
 .st { transform: translateX(calc((var(--i) - var(--x)) * 640px)); }
 .lbl { font: 500 11px var(--f-mono); letter-spacing: 0.1em; fill: var(--ink-2); }
 
-/* 01 fabric */
-.sheet { transform-origin: 50px 0; transform: scaleX(var(--a0)); opacity: calc(1 - var(--sepc)); }
-.roll { transform: translateX(calc(var(--a0) * 300px)); }
+/* 01 knit: yarn feeds the cylinder, greige jersey flows down onto the roll */
+.yarn { fill: none; stroke: var(--ink); stroke-width: 0.9; stroke-dasharray: 4 3; stroke-dashoffset: calc(var(--a0) * -84px); }
+.knit-needles { stroke: var(--ink); stroke-width: 20; stroke-opacity: 0.45; stroke-dasharray: 1 4; stroke-dashoffset: calc(var(--a0) * -50px); }
+.knit-web { transform: translateY(calc(var(--a0) * 60px)); }
+.knit-roll { transform-origin: 320px 400px; transform: scaleY(calc(0.45 + var(--a0) * 0.55)); }
 
-/* 02 cut */
-.piece { fill: url(#knit); stroke: var(--ink); stroke-width: 1.8; stroke-linejoin: round; }
+/* 02 dye: greige rope circulates in the jet vessel and leaves dyed */
+.dye-edge { fill: none; stroke: var(--ink); stroke-width: 11; stroke-linejoin: round; }
+.dye-web { fill: none; stroke: var(--dyed); stroke-width: 8; stroke-linejoin: round; }
+.dye-web--greige { stroke: var(--greige); }
+.dye-web--rope { stroke: color-mix(in srgb, var(--dyed) calc(var(--dye) * 100%), var(--greige)); }
+.dye-flow { fill: none; stroke: var(--ink); stroke-opacity: 0.3; stroke-dasharray: 5 7; stroke-dashoffset: calc(var(--a1) * -240px); }
+.dye-out { stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--dout)); }
+.dye-liquor { transform: translateY(calc((0.8 - var(--dfill) * 0.35) * 132px)); }
+.dye-reel { transform-origin: 392px 180px; transform: rotate(calc(var(--a1) * 540deg)); }
+.dye-pile { clip-path: inset(calc((1 - var(--dpile)) * 100% - 4px) -4px -4px -4px); }
+
+/* 03 fabric */
+.sheet { transform-origin: 50px 0; transform: scaleX(var(--a2)); opacity: calc(1 - var(--sepc)); }
+.roll { transform: translateX(calc(var(--a2) * 300px)); }
+
+/* 04 cut */
+.piece { fill: url(#knit-dyed); stroke: var(--ink); stroke-width: 1.8; stroke-linejoin: round; }
 .collar { fill: none; stroke: var(--ink); stroke-width: 7; stroke-linecap: round; }
 .pieces { opacity: var(--sepc); clip-path: inset(-40px -40px calc(var(--f2) * 42%) -40px); }
 .marker path { fill: none; stroke: var(--ink); stroke-width: 1.2; stroke-dasharray: 6 5; }
@@ -410,18 +464,23 @@
   transform-origin: 146px 128px;
   transform: translate(calc(var(--sep) * -30px), calc(var(--sep) * 10px)) rotate(calc(var(--sep) * -8deg)) scaleX(calc(1 - var(--f1) * 0.97));
 }
-.sleeve--r {
+/* The embroidered mark rides on the right sleeve panel. */
+.sleeve--r, .emb-mark {
   transform-origin: 254px 128px;
   transform: translate(calc(var(--sep) * 30px), calc(var(--sep) * 10px)) rotate(calc(var(--sep) * 8deg)) scaleX(calc(1 - var(--f1) * 0.97));
 }
 
-/* 03 print */
-.frame { transform: translateY(calc((1 - var(--fd) + var(--fl)) * -320px)); }
+/* 05 embellishment: screen print, then embroidery */
+/* Parked 420 units up: clear of the stage's letterbox margin while the embroidery head works. */
+.frame { transform: translateY(calc((1 - var(--fd) + var(--fl)) * -420px)); }
 .stencil { color: var(--ink) !important; opacity: 0.2; }
 .squeegee { transform: translateX(calc(var(--sw) * 128px)); }
 .print { clip-path: inset(-2px calc((1 - var(--pr)) * 100%) -2px -2px); }
+.emb { transform: translateY(calc((1 - var(--hd) + var(--hl)) * -420px)); }
+.emb__bar { transform: translateY(calc(sin(var(--t) * 42rad) * 4px)); }
+.stage .emb-mark { --sd: var(--em); --star-stroke: 6; color: var(--ink); }
 
-/* 04 sew */
+/* 06 sew */
 .stitch path { fill: none; stroke: var(--red); stroke-width: 1.6; stroke-dasharray: 4 3; }
 .stitch-reveal path {
   stroke-dasharray: 1 1;
@@ -430,23 +489,23 @@
 .stitch { opacity: calc(1 - var(--f2)); }
 .needle__bar { transform: translateY(calc(sin(var(--t) * 42rad) * 6px)); }
 
-/* 05 QC */
+/* 07 QC */
 .scan { transform: translateY(calc(118px + var(--sc) * 250px)); opacity: calc(min(var(--sc) * 8, 1) * (1 - var(--sp))); }
 .stamp { transform-origin: 420px 332px; transform: rotate(-7deg) scale(calc(1.7 - var(--sp) * 0.7)); opacity: var(--sp); }
 .stamp__big { font: 800 22px var(--f-sans); font-stretch: 80%; letter-spacing: 0.02em; fill: var(--red-ink); }
 .stamp__small { font: 500 8.5px var(--f-mono); letter-spacing: 0.1em; fill: var(--red-ink); }
 
-/* 06 fold + bag */
+/* 08 fold + bag */
 .bag { transform: translateY(calc((1 - var(--bg)) * -340px)); opacity: var(--bg); }
 
-/* 07 carton */
+/* 09 carton */
 .pack { transform-origin: 200px 147px; transform: translateY(calc(var(--dr) * 166px)) scale(calc(1 - var(--dr) * 0.22)); }
 .carton { opacity: var(--ca); transform: translateY(calc((1 - var(--ca)) * 50px)); }
 .cflap--l { transform-origin: 120px 249px; transform: rotate(calc(-110deg + var(--fc) * 110deg)); }
 .cflap--r { transform-origin: 280px 249px; transform: rotate(calc(110deg - var(--fc) * 110deg)); }
 .tape { opacity: clamp(0, (var(--fc) - 0.86) * 8, 1); }
 
-/* 08 container */
+/* 10 container */
 /* The container sits behind the product; the carton fades into its dark hold before the doors close. */
 .prod { transform-origin: 200px 315px; transform: scale(calc(1 - var(--in) * 0.3)); opacity: clamp(0, (1 - var(--in)) / 0.6, 1); }
 .door--l { transform-origin: 164px 0; transform: scaleX(calc(0.05 + var(--dc) * 0.95)); }
@@ -503,7 +562,7 @@
   display: block;
   height: 10px;
   background:
-    repeating-linear-gradient(to right, var(--ink) 0 1px, transparent 1px calc(100% / 8)) 0 0 / 100% 100%,
+    repeating-linear-gradient(to right, var(--ink) 0 1px, transparent 1px calc(100% / var(--stations))) 0 0 / 100% 100%,
     linear-gradient(var(--rule), var(--rule)) 0 50% / 100% 1px no-repeat;
   border-right: 1px solid var(--ink);
 }
@@ -516,7 +575,7 @@
 }
 
 /* static sheet: no JS or reduced motion */
-:root:not(.motion) .line { --p: 0.62375; }
+:root:not(.motion) .line { --p: 0.699; }
 :root:not(.motion) .line__anchors { display: none; }
 :root:not(.motion) .rail { padding-block: 20px 4px; }
 :root:not(.motion) .roll-digits > span,
@@ -533,6 +592,9 @@
   }
   :root:not(.motion) .station__n { font-size: 64px; }
   :root:not(.motion) .station__fig { margin-top: 20px; }
+}
+@media (min-width: 1200px) {
+  :root:not(.motion) .track { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 }
 
 /* motion: rail follows the line */
@@ -568,11 +630,11 @@
     position: absolute;
     inset: 0 auto 0 0;
     display: flex;
-    width: 800%;
-    transform: translateX(calc(var(--x) * -12.5%));
+    width: calc(var(--stations) * 100%);
+    transform: translateX(calc(var(--x) * -100% / var(--stations)));
   }
   .motion .station {
-    flex: 0 0 12.5%;
+    flex: 0 0 calc(100% / var(--stations));
     display: grid;
     grid-template-columns: repeat(12, minmax(0, 1fr));
     column-gap: var(--gut);
@@ -610,7 +672,7 @@
   .station { padding: 36px var(--pad) 40px; border-bottom: 1px solid var(--rule); }
   .station__n { font-size: 72px; }
   .station__fig { margin-top: 26px; }
-  .rail__list { grid-template-columns: repeat(4, minmax(0, 1fr)); row-gap: 4px; }
+  .rail__list { display: flex; flex-wrap: wrap; gap: 4px 14px; }
   :root:not(.motion) .stage__svg { height: auto; aspect-ratio: 4 / 3; }
 
   .motion .rail, .motion .line__anchors { display: none; }
@@ -673,6 +735,22 @@
 .panel__copy { margin-top: 14px; font-size: 15px; line-height: 1.5; }
 .panel__note { margin-top: 12px; padding-left: 10px; border-left: 2px solid var(--red); color: var(--ink-2); font-size: 11px; }
 .panel__fig { margin-top: 16px; }
+.units {
+  display: grid;
+  grid-template-rows: repeat(5, auto);
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 3px 14px;
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid var(--rule);
+  list-style: none;
+  counter-reset: unit;
+  font-size: 10px;
+  letter-spacing: 0.03em;
+}
+.units li { display: flex; gap: 6px; min-width: 0; counter-increment: unit; }
+.units li::before { content: counter(unit, decimal-leading-zero); flex: none; color: var(--red-ink); font-weight: 700; }
 
 /* static sheet (no WebGL, no JS, or reduced motion) */
 :root:not(.has-3d) .scale {
@@ -732,6 +810,48 @@
 .scale__tblock .belt-bar__meter i { transform: scaleX(var(--progress, 0)); }
 .scale__tblock [data-hud-label] { color: var(--red-ink); }
 
+/* production-unit tags, positioned by assets/js/factory/unit-tags.js */
+.scale__units { position: absolute; inset: 0; pointer-events: none; }
+.scale__units[hidden] { display: none; }
+.unit-tag { position: absolute; top: 0; left: 0; opacity: 0; will-change: transform, opacity; }
+.unit-tag::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: -0.5px;
+  width: 1px;
+  height: var(--lead, 16px);
+  background: var(--ink);
+  box-shadow: 0 0 0 1px rgba(250, 249, 245, 0.6);
+}
+.unit-tag::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  width: 6px;
+  height: 6px;
+  background: var(--red);
+  box-shadow: 0 0 0 1px var(--paper-hi);
+}
+.unit-tag__chip {
+  position: absolute;
+  bottom: var(--lead, 16px);
+  left: 0;
+  display: flex;
+  gap: 6px;
+  padding: 3px 6px 4px;
+  border: 1px solid var(--ink);
+  background: var(--paper-hi);
+  color: var(--ink);
+  font: 500 10px/1.2 var(--f-mono);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transform: translateX(calc(-50% + var(--dx, 0px)));
+}
+.unit-tag__n { color: var(--red-ink); font-weight: 700; }
+
 .has-3d .scale__ch { position: relative; z-index: 1; height: 180vh; padding-inline: var(--pad); }
 .has-3d .scale__ch--entry { height: 150vh; }
 .has-3d .scale__ch--long { height: 300vh; }
@@ -771,6 +891,8 @@
   .has-3d .panel__stat .num { font-size: 44px; }
   .has-3d .panel__copy { margin-top: 8px; font-size: 14px; }
   .has-3d .panel__fig, .has-3d .panel__note { display: none; }
+  .has-3d .units { margin-top: 8px; padding-top: 8px; font-size: 9.5px; }
+  .unit-tag__name { display: none; }
 }
 
 /* ---------- Star journey overlay (assets/js/journey.js) ---------- */
