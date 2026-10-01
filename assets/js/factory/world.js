@@ -27,7 +27,8 @@ export const LAYOUT = {
   knitting: { xs: [-80, -74, -68, -62, -56], zs: [-40, -34, -28, -22, -16, -10, 10, 16, 22, 28, 34, 40] },
   dyeing: { xs: [-37, -26, -15], zs: [-30, -20, -11, 11, 20, 30], stenter: { x0: -42, x1: -12, z: -43 } },
   cutting: { x0: 2, tableLen: 24, tables: [-26, -18, -10, 10, 18, 26] },
-  sewing: { x0: 50, cols: 62, rows: 50, pitchX: 1.25, pairPitch: 3.6, aisleEvery: 31, aisleW: 4 },
+  // 70 × 50 = 3,500 stations, one per sewing machine in the group.
+  sewing: { x0: 50, cols: 70, rows: 50, pitchX: 1.25, pairPitch: 3.6, aisleEvery: 35, aisleW: 4 },
   printing: { xs: [156, 167, 178], zs: [-7, 7], radius: 3.4, arms: 8 },
   embroidery: { x: 167, zs: [-20, -27, -34, -41], length: 16, heads: 20 },
   warehouse: { x0: 196, x1: 236, z0: -44, z1: 44, rowPitch: 6.4, bay: 2.7, levels: 4, levelH: 1.35 },

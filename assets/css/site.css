@@ -16,6 +16,8 @@
   --gut: 24px;
   --cols: 12;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  /* Ink-stamp grain, shared by the certification and duty stamps. */
+  --stamp-noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2.2 1.75'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 @media (max-width: 899px) {
@@ -193,6 +195,20 @@ button { font: inherit; color: inherit; }
 .hdr__clock { color: var(--ink-2); white-space: nowrap; }
 .hdr__clock span { color: var(--red-ink); }
 .hdr__cta { padding: 12px 16px; font-size: 14px; }
+/* LinkedIn sits tight against the inquiry button, so it pulls back part of the header gap. */
+.hdr__social {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 42px;
+  height: 42px;
+  margin-right: -16px;
+  border: 2px solid var(--ink);
+  color: var(--ink);
+  transition: background-color 0.2s, color 0.2s;
+}
+.hdr__social svg { width: 18px; height: 18px; fill: currentColor; }
+.hdr__social:hover { background: var(--ink); color: var(--paper); }
 
 .menu { display: none; position: relative; }
 .menu__btn {
@@ -237,6 +253,8 @@ button { font: inherit; color: inherit; }
 @media (max-width: 1180px) {
   .hdr__nav, .hdr__clock { display: none; }
   .menu { display: block; }
+  .hdr__in { gap: 12px; }
+  .hdr__social { margin-right: 0; }
 }
 @media (max-width: 520px) {
   .hdr__cta { display: none; }
@@ -291,6 +309,8 @@ main { display: block; }
   .sec__lead { margin-left: 0; font-size: 19px; }
   .sec__head + .sec__lead { margin-top: -12px; margin-bottom: 40px; }
 }
+/* Back-to-back homepage sections keep one gap between them (the next section's top padding). */
+.sec--flush { padding-bottom: 0; }
 
 /* ---------- Capacity numbers ---------- */
 .nums {
@@ -394,8 +414,8 @@ main { display: block; }
   text-align: center;
   text-transform: uppercase;
   transform: rotate(var(--r, 0deg));
-  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2.2 1.75'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E") 0 0 / 160px;
-  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2.2 1.75'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E") 0 0 / 160px;
+  -webkit-mask: var(--stamp-noise) 0 0 / 160px;
+  mask: var(--stamp-noise) 0 0 / 160px;
 }
 .stamp-c__ink b { font-size: clamp(24px, 2.3vw, 34px); font-weight: 800; font-stretch: 78%; line-height: 0.95; letter-spacing: -0.01em; }
 .stamp-c__ink em { font: 500 12px/1 var(--f-mono); letter-spacing: 0.12em; font-style: normal; padding: 3px 6px; background: var(--red-ink); color: var(--paper); }
@@ -421,7 +441,6 @@ main { display: block; }
 }
 
 /* ---------- Brand logos ---------- */
-.brands { padding-bottom: 0; }
 .logos {
   --logo-h: 40px;
   display: grid;
@@ -476,6 +495,7 @@ main { display: block; }
 .routes__map svg { width: 100%; height: auto; overflow: visible; }
 .route { fill: none; stroke: var(--red); stroke-width: 6; stroke-linejoin: round; }
 .route--us { stroke: var(--ink); }
+.route--gcc { stroke: var(--ink-2); }
 .node { fill: var(--paper-hi); stroke: var(--ink); stroke-width: 4; }
 .node--origin { fill: var(--red); stroke: var(--ink); }
 .r-lbl { font: 500 13px var(--f-mono); letter-spacing: 0.08em; fill: var(--ink-2); }
@@ -485,6 +505,7 @@ main { display: block; }
 .routes.is-armed .route { stroke-dasharray: 1; stroke-dashoffset: 1; }
 .routes.is-in .route { stroke-dashoffset: 0; transition: stroke-dashoffset 1.6s var(--ease-out); }
 .routes.is-in .route--us { transition-delay: 0.25s; }
+.routes.is-in .route--gcc { transition-delay: 0.5s; }
 
 .routes__side { grid-column: 9 / 13; display: flex; flex-direction: column; gap: 24px; }
 .routes__gpl { width: 150px; height: auto; }
@@ -639,6 +660,8 @@ main { display: block; }
 .ftr__addr { grid-column: 4 / 7; }
 .ftr__contact { grid-column: 7 / 10; }
 .ftr__contact p + p { margin-top: 10px; }
+.ftr__social { display: inline-flex; align-items: center; gap: 8px; }
+.ftr__social svg { width: 16px; height: 16px; fill: currentColor; }
 .ftr__nav { grid-column: 10 / 13; display: flex; flex-direction: column; gap: 4px; }
 .ftr__legal {
   grid-column: 1 / -1;

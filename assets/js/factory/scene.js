@@ -1,4 +1,5 @@
-// Scroll-driven factory model: one renderer, one camera on a CatmullRom path through the chapters.
+// Factory model: one renderer, one camera on a CatmullRom path through the chapters' keyframes.
+// The caller drives the camera with setProgress(u), u in keyframe units (0 … keyframes.length - 1).
 import * as THREE from '../vendor/three.module.min.js';
 import * as W from './world.js';
 import * as M from './machines.js';
@@ -25,7 +26,7 @@ const SUN_DAY = new THREE.Color('#fffaf3');
 const SUN_DUSK = new THREE.Color('#aebbd9');
 const SEW_GROW_MAX = 60;
 const PRINT_DAILY = 65000;
-const DISPATCH_DAILY = 85000;
+const DISPATCH_DAILY = 100000;
 const SHELL_LIFT = 46;
 const PORTRAIT_REACH = 1.25;
 const PORTRAIT_REACH_WIDE = 4.2;
@@ -64,27 +65,27 @@ const damp = (current, target, lambda, dt) => current + (target - current) * (1 
 function buildKeyframes(focus) {
   const f = (dx, dy, dz) => v3(focus.x + dx, dy, focus.z + dz);
   return [
-    { name: 'entry', chapter: 'entry', at: 0, frame: 'wide', pos: v3(-200, 84, 214), target: v3(70, 0, -4) },
-    { name: 'entryHold', chapter: 'entry', at: 0.35, frame: 'wide', pos: v3(-150, 64, 168), target: v3(56, 0, -2) },
+    { name: 'entry', chapter: 'entry', frame: 'wide', pos: v3(-200, 84, 214), target: v3(70, 0, -4) },
+    { name: 'entryHold', chapter: 'entry', frame: 'wide', pos: v3(-150, 64, 168), target: v3(56, 0, -2) },
     // Interior views look east-south-east with the flow, so each zone-to-zone move barely turns.
-    { name: 'knitA', chapter: 'knitting', at: 0, pos: v3(-86, 17, 30), target: v3(-66, 0.8, -6) },
-    { name: 'knitB', chapter: 'knitting', at: 0.6, pos: v3(-79, 4.6, 5), target: v3(-66, 1.4, -12) },
-    { name: 'dyeA', chapter: 'dyeing', at: 0.1, pos: v3(-44, 12, 22), target: v3(-26, 1.2, -8) },
-    { name: 'dyeB', chapter: 'dyeing', at: 0.6, pos: v3(-40, 5.2, 4.5), target: v3(-25, 1.8, -12) },
-    { name: 'cutA', chapter: 'cutting', at: 0, pos: v3(6, 44, 50), target: v3(20, 0, 2) },
+    { name: 'knitA', chapter: 'knitting', pos: v3(-86, 17, 30), target: v3(-66, 0.8, -6) },
+    { name: 'knitB', chapter: 'knitting', pos: v3(-79, 4.6, 5), target: v3(-66, 1.4, -12) },
+    { name: 'dyeA', chapter: 'dyeing', pos: v3(-44, 12, 22), target: v3(-26, 1.2, -8) },
+    { name: 'dyeB', chapter: 'dyeing', pos: v3(-40, 5.2, 4.5), target: v3(-25, 1.8, -12) },
+    { name: 'cutA', chapter: 'cutting', pos: v3(6, 44, 50), target: v3(20, 0, 2) },
     // Looks along the tables toward the sewing hall, so the dive into the sewing close-up barely turns.
-    { name: 'cutB', chapter: 'cutting', at: 0.5, pos: v3(-4, 13, 34), target: v3(22, 0.9, -8) },
-    { name: 'sewA', chapter: 'sewing', at: 0, pos: f(-2.3, 1.55, 1.9), target: f(0.05, 0.92, 0.35) },
-    { name: 'sewHold', chapter: 'sewing', at: 0.12, pos: f(-2.7, 1.8, 2.3), target: f(0.1, 0.9, 0.3) },
-    { name: 'sewMid', chapter: 'sewing', at: 0.46, pos: f(-13, 10, 18), target: f(12, 0, -4) },
-    { name: 'sewEnd', chapter: 'sewing', at: 0.9, pos: v3(42, 118, 96), target: v3(92, 0, -4) },
+    { name: 'cutB', chapter: 'cutting', pos: v3(-4, 13, 34), target: v3(22, 0.9, -8) },
+    { name: 'sewA', chapter: 'sewing', pos: f(-2.3, 1.55, 1.9), target: f(0.05, 0.92, 0.35) },
+    { name: 'sewHold', chapter: 'sewing', pos: f(-2.7, 1.8, 2.3), target: f(0.1, 0.9, 0.3) },
+    { name: 'sewMid', chapter: 'sewing', pos: f(-13, 10, 18), target: f(12, 0, -4) },
+    { name: 'sewEnd', chapter: 'sewing', pos: v3(42, 118, 96), target: v3(92, 0, -4) },
     // Carousels in front, embroidery rows behind; then down to the carousels on the way to the dock.
-    { name: 'embA', chapter: 'embellishment', at: 0.1, pos: v3(152, 15, 22), target: v3(170, 0.8, -20) },
-    { name: 'embB', chapter: 'embellishment', at: 0.78, pos: v3(158, 5.2, 17), target: v3(172, 1.3, 1) },
-    { name: 'dispA', chapter: 'dispatch', at: 0.1, pos: v3(226, 14, 30), target: v3(252, 1.4, -1) },
-    { name: 'dispB', chapter: 'dispatch', at: 0.78, pos: v3(233, 8.5, 25), target: v3(254, 1.6, -1) },
-    { name: 'siteA', chapter: 'site', at: 0.34, reach: PORTRAIT_REACH_SITE, pos: v3(60, 760, 560), target: v3(84, 0, 4) },
-    { name: 'siteB', chapter: 'site', at: 1, reach: PORTRAIT_REACH_SITE, pos: v3(24, 700, 515), target: v3(84, 0, 8) },
+    { name: 'embA', chapter: 'embellishment', pos: v3(152, 15, 22), target: v3(170, 0.8, -20) },
+    { name: 'embB', chapter: 'embellishment', pos: v3(158, 5.2, 17), target: v3(172, 1.3, 1) },
+    { name: 'dispA', chapter: 'dispatch', pos: v3(226, 14, 30), target: v3(252, 1.4, -1) },
+    { name: 'dispB', chapter: 'dispatch', pos: v3(233, 8.5, 25), target: v3(254, 1.6, -1) },
+    { name: 'siteA', chapter: 'site', reach: PORTRAIT_REACH_SITE, pos: v3(60, 760, 560), target: v3(84, 0, 4) },
+    { name: 'siteB', chapter: 'site', reach: PORTRAIT_REACH_SITE, pos: v3(24, 700, 515), target: v3(84, 0, 8) },
   ];
 }
 
@@ -175,36 +176,9 @@ function buildWorld(scene) {
   };
 }
 
-// ---------- Scroll mapping ----------
-
-function chapterRange(el, viewportH) {
-  const top = el.getBoundingClientRect().top + window.scrollY;
-  return { top, span: Math.max(1, el.offsetHeight - viewportH) };
-}
-
-function computeAnchors(keyframes, chapters, viewportH) {
-  return keyframes.map((k) => {
-    const el = chapters[k.chapter];
-    if (!el) return 0;
-    const { top, span } = chapterRange(el, viewportH);
-    return top + k.at * span;
-  });
-}
-
-function scrollToU(anchors, y) {
-  if (y <= anchors[0]) return 0;
-  for (let i = 0; i < anchors.length - 1; i++) {
-    if (y < anchors[i + 1]) {
-      const f = (y - anchors[i]) / Math.max(1, anchors[i + 1] - anchors[i]);
-      return i + smootherstep(clamp01(f));
-    }
-  }
-  return anchors.length - 1;
-}
-
 // ---------- Scene factory ----------
 
-export async function initScene({ canvas, stage, tour, chapters, counters, hudLabel, hudFill, unitList }) {
+export async function initScene({ canvas, stage, counters, hudLabel, hudFill, unitList, isPanelBeside = () => true, onChapter = () => {} }) {
   const isMobile = window.matchMedia('(max-width: 640px), (pointer: coarse)').matches;
   const dprCap = isMobile ? DPR_CAP_MOBILE : DPR_CAP_DESKTOP;
   const renderer = createRenderer(canvas, isMobile);
@@ -227,7 +201,7 @@ export async function initScene({ canvas, stage, tour, chapters, counters, hudLa
   const forcedQuality = Number.parseInt(new URLSearchParams(window.location.search).get('q'), 10);
   const isQualityLocked = forcedQuality >= 0 && forcedQuality < QUALITY_LEVELS.length;
   const state = {
-    anchors: [], uTarget: 0, u: 0, pointer: { x: 0, y: 0, tx: 0, ty: 0 },
+    uTarget: 0, u: 0, pointer: { x: 0, y: 0, tx: 0, ty: 0 },
     viewW: 1, viewH: 1, aspect: 1, quality: isQualityLocked ? forcedQuality : QUALITY_LEVELS.length - 1,
     running: false, raf: 0, last: 0, frames: 0, sampleSum: 0, sampleCount: 0, time: 0,
     counterValues: {}, hudChapter: '', ready: false, destroyed: false,
@@ -247,23 +221,17 @@ export async function initScene({ canvas, stage, tour, chapters, counters, hudLa
     renderer.setSize(state.viewW, state.viewH, false);
   }
 
-  function measure() {
-    state.anchors = computeAnchors(keyframes, chapters, window.innerHeight);
-    readScroll();
-  }
-
   function resize() {
     state.viewW = stage.clientWidth || window.innerWidth;
     state.viewH = stage.clientHeight || window.innerHeight;
     state.aspect = state.viewW / state.viewH;
     camera.aspect = state.aspect;
     applyQuality();
-    measure();
     unitTags.measure();
   }
 
-  function readScroll() {
-    state.uTarget = scrollToU(state.anchors, window.scrollY);
+  function setProgress(u) {
+    state.uTarget = THREE.MathUtils.clamp(u, 0, keyframes.length - 1);
   }
 
   function blendFrames(u, valueOf) {
@@ -272,7 +240,9 @@ export async function initScene({ canvas, stage, tour, chapters, counters, hudLa
     return THREE.MathUtils.lerp(valueOf(keyframes[i]), valueOf(keyframes[j]), u - i);
   }
 
+  // Leaves room for a panel laid over the left (landscape) or bottom (portrait) of the stage.
   function frameShift(u) {
+    if (!isPanelBeside()) return 0;
     const isPortrait = state.aspect < 1;
     const shiftOf = (k) => {
       if (isPortrait) return k.frame === 'wide' ? -0.12 : -0.19;
@@ -374,6 +344,7 @@ export async function initScene({ canvas, stage, tour, chapters, counters, hudLa
     if (k.chapter !== state.hudChapter) {
       state.hudChapter = k.chapter;
       hudLabel.textContent = HUD_LABELS[k.chapter] || '';
+      onChapter(k.chapter);
     }
     hudFill.style.setProperty('--progress', (state.u / (keyframes.length - 1)).toFixed(4));
   }
@@ -514,36 +485,31 @@ export async function initScene({ canvas, stage, tour, chapters, counters, hudLa
     visible = entry.isIntersecting;
     if (visible) start(); else stop();
   });
-  observer.observe(tour);
+  observer.observe(stage);
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) stop(); else if (visible) start();
   });
-  window.addEventListener('scroll', readScroll, { passive: true });
   window.addEventListener('pointermove', handlePointerMove, { passive: true });
   const stageObserver = new ResizeObserver(resize);
-  const pageObserver = new ResizeObserver(measure);
   stageObserver.observe(stage);
-  pageObserver.observe(document.body);
-  document.fonts?.ready.then(() => {
-    measure();
-    unitTags.measure();
-  });
+  document.fonts?.ready.then(() => unitTags.measure());
 
   function destroy() {
     state.destroyed = true;
     observer.disconnect();
     stageObserver.disconnect();
-    pageObserver.disconnect();
     stop();
-    window.removeEventListener('scroll', readScroll);
     window.removeEventListener('pointermove', handlePointerMove);
   }
 
   resize();
-  state.u = state.uTarget;
   updateBeats();
   updateCamera();
   renderer.compile(scene, camera);
   start();
-  return { stop: destroy };
+  return {
+    keyframes: keyframes.map(({ name, chapter }) => ({ name, chapter })),
+    setProgress,
+    stop: destroy,
+  };
 }

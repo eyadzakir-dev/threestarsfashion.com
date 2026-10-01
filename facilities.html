@@ -5,16 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#F3F1EC">
   <title>Facilities | Three Stars Group - State-of-the-Art Garment Production Units in Egypt</title>
-  <meta name="description" content="Tour Three Stars Group's state-of-the-art garment manufacturing facilities in Alexandria, Egypt. 10 production units with automated Gerber cutting systems, in-house printing, and 85,000+ daily unit capacity in the Alexandria Free Zone.">
+  <meta name="description" content="Tour Three Stars Group's state-of-the-art garment manufacturing facilities in Alexandria, Egypt. 10 production units with automated Gerber cutting systems, in-house printing and embroidery, and 100,000 units of daily capacity in the Alexandria Free Zone.">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Three Stars Group">
   <meta property="og:title" content="Facilities | Three Stars Group | Egypt Production Units">
-  <meta property="og:description" content="State-of-the-art garment production units in Alexandria's Free Zone. Automated Gerber cutting, in-house printing, and 85,000+ daily unit capacity.">
+  <meta property="og:description" content="State-of-the-art garment production units in Alexandria's Free Zone. Automated Gerber cutting, in-house printing, and 100,000 units of daily capacity.">
   <meta property="og:url" content="https://threestarsfashion.com/facilities">
   <meta property="og:image" content="https://threestarsfashion.com/assets/og-image.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Facilities | Three Stars Group | Egypt Production Units">
-  <meta name="twitter:description" content="State-of-the-art garment production units in Alexandria's Free Zone. Automated Gerber cutting, in-house printing, and 85,000+ daily unit capacity.">
+  <meta name="twitter:description" content="State-of-the-art garment production units in Alexandria's Free Zone. Automated Gerber cutting, in-house printing, and 100,000 units of daily capacity.">
   <meta name="twitter:image" content="https://threestarsfashion.com/assets/og-image.jpg">
   <link rel="canonical" href="https://threestarsfashion.com/facilities">
   <link rel="icon" type="image/png" href="assets/favicon/favicon-96x96.png" sizes="96x96">
@@ -27,7 +27,16 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=IBM+Plex+Mono:wght@400;500&display=swap">
   <link rel="stylesheet" href="assets/css/site.css">
   <link rel="stylesheet" href="assets/css/pages.css">
+  <link rel="stylesheet" href="assets/css/model.css">
+  <script>
+    (function () {
+      var root = document.documentElement;
+      root.classList.add('js');
+      if ('WebGL2RenderingContext' in window) root.classList.add('has-3d');
+    })();
+  </script>
   <script type="module" src="assets/js/site.js"></script>
+  <script type="module" src="assets/js/model-demo.js"></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -48,6 +57,7 @@
         <a href="/contact">Contact</a>
       </nav>
       <p class="hdr__clock mono"><span aria-hidden="true">ALX</span><span class="sr-only">Alexandria local time</span> <time data-cairo-clock>UTC+2</time></p>
+      <a class="hdr__social" href="https://www.linkedin.com/company/three-stars-fashion-group/" target="_blank" rel="noopener noreferrer" aria-label="Three Stars Group on LinkedIn"><svg viewBox="3 3 18 18" aria-hidden="true" focusable="false"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452z"/></svg></a>
       <a class="btn btn--red hdr__cta" href="/contact">Submit an Inquiry</a>
       <details class="menu">
         <summary class="menu__btn mono"><span class="menu__open">Menu</span><span class="menu__close">Close</span></summary>
@@ -79,10 +89,147 @@
       </div>
     </section>
 
-    <section class="sec" aria-labelledby="loc-title">
+    <section class="sec model-sec" id="model" aria-labelledby="model-title">
       <div class="wrap">
         <header class="sec__head">
           <p class="sec__idx mono">01</p>
+          <h2 class="sec__title" id="model-title">Walk the Model Factory in&nbsp;3D.</h2>
+          <p class="sec__note mono">Interactive · stylized, not to scale</p>
+        </header>
+
+        <!-- Click-to-play: assets/js/model-demo.js loads three.js and factory/scene.js on the first press of play. -->
+        <div class="model" data-model>
+          <div class="model__stage" data-stage>
+            <picture class="model__poster">
+              <source media="(max-width: 899px)" srcset="assets/model-factory-tall.webp" width="800" height="1000">
+              <img src="assets/model-factory-wide.webp" width="1600" height="900" decoding="async" alt="Stylized 3D model of the Three Stars Group factory floor, seen from above the sewing hall">
+            </picture>
+            <canvas class="model__canvas" data-canvas aria-hidden="true"></canvas>
+            <button class="model__start" type="button" data-start>
+              <span class="model__start-icon" aria-hidden="true"></span>
+              <span class="model__start-txt">Play the 3D tour</span>
+              <span class="model__start-meta mono">1 min · 8 stops</span>
+            </button>
+            <p class="model__status mono" data-status role="status"></p>
+            <dl class="model__tblock mono" aria-hidden="true">
+              <div><dt>Dwg</dt><dd>TSF-FLOOR-01</dd></div>
+              <div><dt>View</dt><dd data-hud-label>00 · Model Factory</dd></div>
+              <div><dt>Model</dt><dd>Stylized · not to scale</dd></div>
+              <div><dt>Tour</dt><dd><span class="model__meter"><i data-hud-fill></i></span></dd></div>
+            </dl>
+          </div>
+
+          <div class="model__bar" data-controls hidden>
+            <button class="model__btn model__play" type="button" data-play data-mode="paused" aria-label="Play the tour">
+              <svg class="model__icon model__icon--play" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 5v14l11-7z"/></svg>
+              <svg class="model__icon model__icon--pause" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
+              <svg class="model__icon model__icon--replay" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 4.5V1.5L7 5.5l5 4V6.5a5.5 5.5 0 1 1-5.5 5.5h-2a7.5 7.5 0 1 0 7.5-7.5z"/></svg>
+            </button>
+            <ol class="model__rail mono">
+              <li><button type="button" data-jump="entry"><span>00</span> Building</button></li>
+              <li><button type="button" data-jump="knitting"><span>01</span> Knitting</button></li>
+              <li><button type="button" data-jump="dyeing"><span>02</span> Dyeing</button></li>
+              <li><button type="button" data-jump="cutting"><span>03</span> Cutting</button></li>
+              <li><button type="button" data-jump="sewing"><span>04</span> Sewing</button></li>
+              <li><button type="button" data-jump="embellishment"><span>05</span> Print</button></li>
+              <li><button type="button" data-jump="dispatch"><span>06</span> Dispatch</button></li>
+              <li><button type="button" data-jump="site"><span>07</span> Group</button></li>
+            </ol>
+            <p class="model__time mono"><span data-time>0:00</span> / <span data-total>1:03</span></p>
+            <button class="model__btn model__fs" type="button" data-fullscreen data-mode="enter" aria-label="Full screen">
+              <svg class="model__icon model__icon--enter" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></svg>
+              <svg class="model__icon model__icon--exit" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 4v5H4M20 9h-5V4M15 20v-5h5M4 15h5v5"/></svg>
+            </button>
+          </div>
+
+          <div class="model__panels">
+            <article class="panel panel--entry" data-panel="entry" aria-labelledby="mp-entry">
+              <p class="panel__no"><span class="mono">Model</span><span class="panel__n">00</span></p>
+              <h3 class="panel__name" id="mp-entry">Model Factory.</h3>
+              <p class="panel__copy">The roof lifts, then the camera walks the floor from yarn to the dispatch dock and out to the whole group.</p>
+              <p class="panel__note mono">Stylized visualization · buildings illustrative</p>
+            </article>
+            <article class="panel" data-panel="knitting" aria-labelledby="mp-knitting">
+              <p class="panel__no"><span class="mono">Knitting</span><span class="panel__n">01</span></p>
+              <h3 class="panel__name" id="mp-knitting">Yarn in, fabric out.</h3>
+              <p class="panel__copy">Yarn is knitted into greige jersey, rib and fleece on circular knitting machines.</p>
+              <figure class="panel__fig fig">
+                <img src="assets/Cutting%20Area/3.jpg" width="900" height="600" loading="lazy" decoding="async" alt="Rolls of white knit fabric stacked on pallets in the fabric store">
+                <figcaption class="mono">Knit fabric rolls, fabric store</figcaption>
+              </figure>
+            </article>
+            <article class="panel" data-panel="dyeing" aria-labelledby="mp-dyeing">
+              <p class="panel__no"><span class="mono">Dyeing</span><span class="panel__n">02</span></p>
+              <h3 class="panel__name" id="mp-dyeing">Every roll, dyed to shade.</h3>
+              <p class="panel__copy">Greige fabric is dyed and finished to shade before it reaches the cutting room.</p>
+            </article>
+            <article class="panel" data-panel="cutting" aria-labelledby="mp-cutting">
+              <p class="panel__no"><span class="mono">Cutting</span><span class="panel__n">03</span></p>
+              <h3 class="panel__name" id="mp-cutting">Every marker, cut to the millimetre.</h3>
+              <p class="panel__stat"><span class="num">6</span><span class="mono">Automated cutting machines</span></p>
+              <p class="panel__copy">CAD-optimized markers, multi-layer lays, Gerber Paragon cutters.</p>
+              <figure class="panel__fig fig">
+                <img src="assets/4%20Pics%20home%20page/cutting.jpg" width="900" height="600" loading="lazy" decoding="async" alt="Gerber Paragon automated cutters on the Three Stars Group cutting floor">
+                <figcaption class="mono">Gerber Paragon cutters, Alexandria</figcaption>
+              </figure>
+            </article>
+            <article class="panel" data-panel="sewing" aria-labelledby="mp-sewing">
+              <p class="panel__no"><span class="mono">Sewing</span><span class="panel__n">04</span></p>
+              <h3 class="panel__name" id="mp-sewing">One station. Then three thousand, five hundred.</h3>
+              <p class="panel__stat"><span class="num"><span data-count="sewing" aria-hidden="true">3,500</span></span><span class="sr-only">3,500</span><span class="mono">Sewing machines</span></p>
+              <p class="panel__copy">Egypt’s largest flat-seam inventory.<span class="model-only"> The model draws every station.</span></p>
+              <figure class="panel__fig fig">
+                <img src="assets/Production/2.jpg" width="900" height="600" loading="lazy" decoding="async" alt="Long sewing lines with operators and garment bundles on the Three Stars Group production floor">
+                <figcaption class="mono">Sewing lines, Alexandria</figcaption>
+              </figure>
+            </article>
+            <article class="panel" data-panel="embellishment" aria-labelledby="mp-embellishment">
+              <p class="panel__no"><span class="mono">Embellishment</span><span class="panel__n">05</span></p>
+              <h3 class="panel__name" id="mp-embellishment">Print or embroider, in-house.</h3>
+              <p class="panel__stat"><span class="num"><span data-count="printing" aria-hidden="true">65,000</span><b aria-hidden="true">+</b></span><span class="sr-only">65,000+</span><span class="mono">Pieces printed daily</span></p>
+              <p class="panel__copy">Six automatic screen printers and four multi-head embroidery machines.</p>
+              <figure class="panel__fig fig">
+                <img src="assets/4%20Pics%20home%20page/printing.jpg" width="900" height="600" loading="lazy" decoding="async" alt="An automatic carousel screen printing machine in the Three Stars printing facility">
+                <figcaption class="mono">Printing facility</figcaption>
+              </figure>
+            </article>
+            <article class="panel" data-panel="dispatch" aria-labelledby="mp-dispatch">
+              <p class="panel__no"><span class="mono">Dispatch</span><span class="panel__n">06</span></p>
+              <h3 class="panel__name" id="mp-dispatch">Packed, loaded, on the water.</h3>
+              <p class="panel__stat"><span class="num"><span data-count="dispatch" aria-hidden="true">100,000</span></span><span class="sr-only">100,000</span><span class="mono">Units daily capacity</span></p>
+              <p class="panel__copy">Hanger, flat-pack or custom packing, loaded at our own dock for Green Point Logistics.</p>
+              <figure class="panel__fig fig">
+                <img src="assets/4%20Pics%20home%20page/warehousing.jpg" width="900" height="600" loading="lazy" decoding="async" alt="Steel racks stacked with wrapped fabric rolls in the Three Stars Group warehouse">
+                <figcaption class="mono">Warehouse, Alexandria</figcaption>
+              </figure>
+            </article>
+            <article class="panel" data-panel="site" aria-labelledby="mp-site">
+              <p class="panel__no"><span class="mono">The group</span><span class="panel__n">07</span></p>
+              <h3 class="panel__name" id="mp-site">Ten production units. Running around the clock.</h3>
+              <p class="panel__stat"><span class="num"><span data-count="site" aria-hidden="true">10</span></span><span class="sr-only">10</span><span class="mono">Production units · 24/7 capability</span></p>
+              <!-- Unit names: the single source for this list and the 3D model's building tags (main walk-through building first). -->
+              <ol class="units mono" data-units>
+                <li>Three Stars Fashion · TSF 1</li>
+                <li>TSA</li>
+                <li>TSF 3</li>
+                <li>TSF 4</li>
+                <li>Golden Star 1</li>
+                <li>Golden Star 2</li>
+                <li>TSF 5</li>
+                <li>Three Stars Apparels 1</li>
+                <li>Three Stars Apparels 2</li>
+                <li>Printing Facility</li>
+              </ol>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" aria-labelledby="loc-title">
+      <div class="wrap">
+        <header class="sec__head">
+          <p class="sec__idx mono">02</p>
           <h2 class="sec__title" id="loc-title">Strategically located in the Alexandria Free&nbsp;Zone.</h2>
           <p class="sec__note mono">Site register</p>
         </header>
@@ -113,16 +260,13 @@
             <p class="site__desc">Our primary production building: the sewing department, packing area, accessories store and finished goods warehouse.</p>
           </li>
         </ul>
-        <div class="links">
-          <a class="link-arrow mono" href="/#scale">Walk the 3D model of the floor <span aria-hidden="true">→</span></a>
-        </div>
       </div>
     </section>
 
     <section class="sec" aria-labelledby="areas-title">
       <div class="wrap">
         <header class="sec__head">
-          <p class="sec__idx mono">02</p>
+          <p class="sec__idx mono">03</p>
           <h2 class="sec__title" id="areas-title">Inside the floor.</h2>
           <p class="sec__note mono">Photo record</p>
         </header>
@@ -162,7 +306,7 @@
             <div class="area__head">
               <p class="area__no mono">A/03</p>
               <h3 class="area__title" id="area-production">Production</h3>
-              <p class="area__desc">Sewing lines with 3,100+ machines and experienced operators delivering quality garments at volume.</p>
+              <p class="area__desc">Sewing lines with 3,500 machines and experienced operators delivering quality garments at volume.</p>
               <p class="area__count mono">5 photos · select to enlarge</p>
             </div>
             <div class="thumbs" data-gallery>
@@ -196,18 +340,18 @@
     <section class="sec sec--tight" aria-labelledby="cap-title">
       <div class="wrap">
         <header class="sec__head">
-          <p class="sec__idx mono">03</p>
+          <p class="sec__idx mono">04</p>
           <h2 class="sec__title" id="cap-title">Capacity, in plain numbers.</h2>
           <p class="sec__note mono">Source: Three Stars Group operations data</p>
         </header>
         <dl class="nums nums--short">
           <div class="nums__cell">
             <dt class="mono">Daily production capacity</dt>
-            <dd><span class="num">85,000<b>+</b></span><span class="nums__unit mono">Units / day</span></dd>
+            <dd><span class="num">100,000</span><span class="nums__unit mono">Units / day</span></dd>
           </div>
           <div class="nums__cell">
             <dt class="mono">Sewing machines</dt>
-            <dd><span class="num">3,100<b>+</b></span><span class="nums__unit mono">Machines</span></dd>
+            <dd><span class="num">3,500</span><span class="nums__unit mono">Machines</span></dd>
           </div>
           <div class="nums__cell">
             <dt class="mono">Production units</dt>
@@ -223,7 +367,7 @@
 
     <section class="cta" aria-labelledby="cta-title">
       <div class="wrap cta__in">
-        <p class="sec__idx mono">04</p>
+        <p class="sec__idx mono">05</p>
         <h2 class="cta__title" id="cta-title">Schedule a production unit audit or tour.</h2>
         <p class="cta__lead">We welcome sourcing teams and prospective partners to conduct production unit audits, evaluate our production capabilities, and tour our facilities firsthand.</p>
         <div class="cta__actions"><a class="btn btn--ink btn--xl" href="/contact">Submit an Inquiry <span aria-hidden="true">→</span></a></div>
@@ -247,7 +391,7 @@
         <p><a href="mailto:info@tsf.com.eg">info@tsf.com.eg</a><br>
           <a href="tel:+2034500550">+2&nbsp;03&nbsp;4500550</a><br>
           <a href="tel:+201141333589">+2&nbsp;011&nbsp;41333589</a></p>
-        <p><a href="https://www.linkedin.com/company/three-stars-fashion-group/" target="_blank" rel="noopener noreferrer">LinkedIn <span aria-hidden="true">↗</span></a></p>
+        <p><a class="ftr__social" href="https://www.linkedin.com/company/three-stars-fashion-group/" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>LinkedIn <span aria-hidden="true">↗</span></a></p>
       </div>
       <nav class="ftr__nav" aria-label="Footer">
         <p class="mono">Site</p>

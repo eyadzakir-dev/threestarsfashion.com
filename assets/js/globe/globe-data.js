@@ -44,4 +44,6 @@ export const PLACES = {
   alex: { lat: 31.2, lon: 29.9 },
   us: { lat: 39.5, lon: -76.5 },
   eu: { lat: 50.5, lon: 6.5 },
+  // Jebel Ali / Dubai, standing in for the six GCC states.
+  gcc: { lat: 25, lon: 55.1 },
 };

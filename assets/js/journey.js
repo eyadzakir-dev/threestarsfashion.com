@@ -1,5 +1,6 @@
 // Homepage star journey: the three stars of the TSF logo travel the page as you scroll.
-// Hero logo → capacity figures → screen-printing stencil (printed onto the shirt) → globe routes → closing logo.
+// Hero logo → key figures → right-hand margin (while the page runs on) → screen-printing stencil (printed onto
+// the shirt) → globe routes → closing logo.
 // Star shapes come from the shared #three-stars symbol, and every position is derived from live element rects,
 // so the stars stay attached to the page at any scroll offset.
 
@@ -20,6 +21,9 @@ const HEAL_FADE_RADII = 1.5;
 const IGNITE = { delay: 0.45, gap: 0.26, length: 1.1 };
 const LINE_STATIONS = 10;
 const PRINT = { station: 4, start: 0.04, span: 0.74, sweepStart: 0.14, sweepSpan: 0.32, squeegeeTravel: 128, inkLeft: 28, inkWidth: 70 };
+// Parked in the page gutter (half of --pad from the edge) between the key figures and the production line.
+const PARK = { wide: { inset: 16, radii: [4.5, 6, 7.5], gap: 24 }, narrow: { inset: 10, radii: [3.5, 4.5, 6], gap: 18 } };
+const NARROW = matchMedia('(max-width: 899px)');
 const RED = [229, 34, 34];
 const WHITE = [255, 255, 255];
 
@@ -134,6 +138,12 @@ function clampGroupToStage(points, stage) {
   return points.map((p) => ({ ...p, x: p.x + dx, y: p.y + dy }));
 }
 
+function parkAnchors() {
+  const park = NARROW.matches ? PARK.narrow : PARK.wide;
+  const x = document.documentElement.clientWidth - park.inset;
+  return park.radii.map((r, i) => ({ x, y: innerHeight / 2 + (i - 1) * park.gap, r, rot: 0 }));
+}
+
 function stencilAnchors(ctx) {
   return clampGroupToStage(symbolAnchors(ctx.stencil, ctx), ctx.stage);
 }
@@ -178,12 +188,12 @@ function phaseProgress(ctx) {
   const vh = innerHeight;
   const dockTop = ctx.docks[0].getBoundingClientRect().top;
   const lineTop = ctx.line.getBoundingClientRect().top;
-  const travel = Math.max(0, 0.3 * vh - dockTop);
   const figTop = ctx.globe.getBoundingClientRect().top;
   const ctaTop = ctx.cta.getBoundingClientRect().top;
   return {
     toDocks: clamp01((1.25 * vh - dockTop) / (0.7 * vh)),
-    toLine: clamp01(travel / Math.max(1, travel + lineTop)),
+    leaveDocks: clamp01((0.35 * vh - dockTop) / (0.45 * vh)),
+    toLine: clamp01((vh - lineTop) / vh),
     print: printProgress(lineProgress(ctx.line)),
     globeNear: figTop < vh * 1.1 && figTop > -ctx.globe.offsetHeight,
     toCta: clamp01((1.1 * vh - ctaTop) / (0.6 * vh)),
@@ -240,6 +250,14 @@ function clipLeftOf(geo, edge) {
   return clamp01((edge - (geo.cx - half)) / (half * 2)) * 100;
 }
 
+// Docks → margin as the key figures scroll away; the line's approach then flies them on from wherever they are.
+function parkedPoints(ctx, leave) {
+  const docks = dockAnchors(ctx.docks);
+  if (leave <= 0) return docks;
+  const park = parkAnchors();
+  return docks.map((a, i) => fly(a, park[i], leave, i));
+}
+
 function printingPoints(ctx, print) {
   const edge = ctx.ink.x0 + print * (ctx.ink.x1 - ctx.ink.x0);
   return stencilAnchors(ctx).map((p, i) => ({ ...p, clipLeft: clipLeftOf(ctx.geo[i], edge) }));
@@ -263,7 +281,7 @@ function resolve(ctx, ph, elapsed, ignite) {
     if (ph.toDocks === 0) return withColor(hero);
     return flight(hero, dockAnchors(ctx.docks), ph.toDocks);
   }
-  if (ph.toLine < 1) return flight(dockAnchors(ctx.docks), stencilAnchors(ctx), ph.toLine);
+  if (ph.leaveDocks < 1 || ph.toLine < 1) return flight(parkedPoints(ctx, ph.leaveDocks), stencilAnchors(ctx), ph.toLine);
   if (ph.print > 0 && ph.print < 1) return withColor(printingPoints(ctx, ph.print));
   if (ph.print < 1) return withColor(stencilAnchors(ctx));
   if (ph.globeNear) return withColor(globeAnchors(ctx));

@@ -1,0 +1,238 @@
+/* Homepage 02 "At a glance" (company-profile figures as isotypes and a ruler, the group strip),
+   03 fabrics and 06 "Where we ship" (the duty-free market tiles). Reveal classes (is-armed / is-in) come from initReveal in site.js. */
+
+/* ---------- Key figures: a 6 / 3 / 3 + 6 / 6 bento ---------- */
+.figs {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+.kf {
+  position: relative;
+  grid-column: span 6;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
+  padding: 18px 20px 22px;
+  border-left: 1px solid var(--rule);
+}
+.kf--units, .kf--machines { grid-column: span 3; }
+.kf:nth-child(n + 4) { border-top: 1px solid var(--rule); }
+.kf:nth-child(1), .kf:nth-child(4) { border-left: 0; padding-left: 0; }
+.kf dt { padding-right: 40px; color: var(--ink-2); }
+.kf dd { flex: 1; display: flex; flex-direction: column; gap: 12px; }
+.kf .num { font-size: clamp(56px, 6.2vw, 104px); }
+.kf--cap .num { font-size: clamp(72px, 8.8vw, 152px); }
+.kf .num small { margin-left: 0.04em; font-size: 0.42em; letter-spacing: 0; color: var(--ink-2); }
+.kf__unit { color: var(--ink-2); }
+
+.iso-wrap { display: flex; flex-direction: column; gap: 10px; margin-bottom: auto; padding-bottom: 32px; }
+.iso { width: min(100%, calc(var(--cols) * var(--g))); height: auto; }
+.iso__key { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; color: var(--ink-2); font-size: 10.5px; }
+.iso__lg { display: inline-flex; align-items: center; gap: 6px; margin-right: 8px; white-space: nowrap; }
+.sw { display: inline-block; width: 9px; height: 9px; background: var(--ink); }
+.sw--red { background: var(--red); }
+
+.ruler { display: block; width: min(100%, 320px); height: auto; overflow: visible; }
+.ruler text { font: 500 8.5px var(--f-mono); letter-spacing: 0.06em; text-transform: uppercase; fill: var(--ink-2); }
+.ruler__line { fill: none; stroke: var(--ink); stroke-width: 1.5; }
+.ruler__ticks { stroke: var(--ink); stroke-width: 1; }
+.ruler__start { fill: var(--red); }
+
+/* Glyphs tick in one column at a time, like a tally, and the ruler draws. */
+.figs.is-armed .iso { clip-path: inset(0 100% 0 0); }
+.figs.is-in .iso { animation: iso-fill 1.1s steps(var(--cols), end) both; }
+.figs.is-in .kf:nth-child(2) .iso { animation-delay: 0.12s; }
+.figs.is-in .kf:nth-child(3) .iso { animation-delay: 0.24s; }
+.figs.is-in .kf:nth-child(4) .iso { animation-delay: 0.36s; }
+.figs.is-armed .ruler__line { stroke-dasharray: 1; stroke-dashoffset: 1; }
+.figs.is-in .ruler__line { stroke-dashoffset: 0; transition: stroke-dashoffset 1.2s var(--ease-out) 0.3s; }
+.figs.is-armed .ruler__ticks, .figs.is-armed .ruler__start { opacity: 0; }
+.figs.is-in .ruler__ticks, .figs.is-in .ruler__start { opacity: 1; transition: opacity 0.6s 0.9s; }
+@keyframes iso-fill {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0); }
+}
+
+@media (max-width: 1180px) {
+  .kf--cap { grid-column: span 12; }
+  .kf--units, .kf--machines { grid-column: span 6; }
+  .kf:nth-child(n + 2) { border-top: 1px solid var(--rule); }
+  .kf:nth-child(2) { border-left: 0; padding-left: 0; }
+  .kf:nth-child(4) { border-left: 0; }
+}
+@media (max-width: 899px) {
+  .figs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .kf { grid-column: span 1; gap: 14px; padding: 14px 12px 16px; }
+  .kf--cap { grid-column: span 2; }
+  .kf:nth-child(odd) { border-left: 1px solid var(--rule); padding-left: 12px; }
+  .kf:nth-child(1), .kf:nth-child(2), .kf:nth-child(4) { border-left: 0; padding-left: 0; }
+  .kf dt { padding-right: 26px; }
+  .kf dd { gap: 8px; }
+  .kf .num { font-size: clamp(38px, 11vw, 56px); }
+  .kf--cap .num { font-size: clamp(56px, 17vw, 76px); }
+  .kf__unit { font-size: 10.5px; letter-spacing: 0.04em; }
+  .iso-wrap { gap: 8px; padding-bottom: 14px; }
+  .iso__key { font-size: 9.5px; }
+}
+
+/* ---------- One group, four companies ---------- */
+.group {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gut);
+  align-items: baseline;
+  padding: 16px 0 18px;
+  border-bottom: 1px solid var(--ink);
+}
+.group__k { grid-column: 1 / 4; color: var(--red-ink); }
+.group__list { grid-column: 4 / 13; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px var(--gut); }
+.group__list li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; }
+.group__n { color: var(--ink-2); }
+.group__name { font-size: clamp(17px, 1.5vw, 21px); font-weight: 700; font-stretch: 88%; line-height: 1.1; letter-spacing: -0.01em; }
+.group__tag { flex-basis: 100%; padding-left: calc(2ch + 10px); color: var(--red-ink); font-size: 10.5px; }
+@media (max-width: 1180px) {
+  .group__k { grid-column: 1 / -1; margin-bottom: 10px; }
+  .group__list { grid-column: 1 / -1; }
+}
+@media (max-width: 899px) {
+  .group__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .group__name { font-size: 16px; }
+}
+
+/* ---------- 03 Fabrics: pinked swatches from a swatch book ---------- */
+.fabrics { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 32px var(--gut); }
+.fab { display: flex; flex-direction: column; transform-origin: 50% 0; }
+.fab__card {
+  position: relative;
+  transform: rotate(var(--r, 0deg));
+  transition: transform 0.35s var(--ease-out);
+}
+.fab__swatch { display: block; width: 100%; height: auto; overflow: visible; }
+.fab__swatch use { stroke: var(--ink); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.fab__no {
+  position: absolute;
+  top: 12%;
+  left: 10%;
+  padding: 2px 5px 3px;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  font-size: 9.5px;
+}
+.fab:hover .fab__card { transform: translateY(-5px) rotate(0deg); }
+.fab__name { margin-top: 16px; font-size: clamp(17px, 1.4vw, 21px); font-weight: 700; font-stretch: 88%; line-height: 1.05; letter-spacing: -0.01em; }
+.fab__tag { margin-top: 6px; font-size: 10px; color: var(--red-ink); }
+
+/* Swatches drop onto the table one after another (fill-mode backwards so hover still lifts them). */
+@media (prefers-reduced-motion: no-preference) {
+  .fabrics.is-armed:not(.is-in) .fab { opacity: 0; }
+  .fabrics.is-in .fab { animation: swatch-in 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) backwards; animation-delay: calc(var(--n, 0) * 70ms); }
+}
+@keyframes swatch-in {
+  0% { opacity: 0; transform: translateY(-26px) rotate(-9deg); }
+  55% { opacity: 1; transform: translateY(2px) rotate(2.5deg); }
+  100% { opacity: 1; transform: none; }
+}
+
+@media (max-width: 1180px) {
+  .fabrics { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (max-width: 899px) {
+  .fabrics { gap: 22px 12px; }
+  .fab__no { padding: 1px 3px 2px; font-size: 8px; }
+  .fab__name { margin-top: 10px; font-size: 14px; }
+  .fab__tag { margin-top: 4px; font-size: 9px; letter-spacing: 0.04em; }
+}
+
+/* ---------- 06 Where we ship: duty-free markets ---------- */
+.ship {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+}
+.ship > li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 256px;
+  padding: 20px 20px 18px;
+  background: var(--paper);
+}
+/* Code and stamp scale together so "GCC" and its stamp share the tile at every width. */
+.ship__code {
+  font-size: clamp(56px, 6.6vw, 128px);
+  font-weight: 800;
+  font-stretch: 72%;
+  line-height: 0.8;
+  letter-spacing: -0.045em;
+}
+.ship__name {
+  margin-top: 18px;
+  font-size: clamp(20px, 1.7vw, 26px);
+  font-weight: 700;
+  font-stretch: 88%;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+}
+.ship__meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 12px;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--ink);
+  color: var(--ink-2);
+}
+.ship__meta > :first-child { color: var(--red-ink); }
+.ship__meta a { color: var(--ink); text-decoration: none; }
+.ship__meta a:hover { color: var(--red-ink); }
+.ship__stamp {
+  position: absolute;
+  top: 22px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 11px 15px 10px;
+  border: 3px solid currentColor;
+  outline: 1px solid currentColor;
+  outline-offset: -7px;
+  color: var(--red-ink);
+  transform: rotate(var(--r, 0deg));
+  -webkit-mask: var(--stamp-noise) 0 0 / 160px;
+  mask: var(--stamp-noise) 0 0 / 160px;
+}
+.ship__stamp b { font-size: clamp(26px, 2.6vw, 46px); font-weight: 800; font-stretch: 78%; line-height: 0.9; letter-spacing: -0.02em; }
+.ship__stamp small { font: 500 11px/1 var(--f-mono); letter-spacing: 0.18em; text-transform: uppercase; }
+.ship.is-armed .ship__stamp { opacity: 0; }
+.ship.is-in .ship__stamp {
+  animation: stamp-in 0.42s cubic-bezier(0.3, 1.5, 0.5, 1) both;
+  animation-delay: calc(0.25s + var(--n, 0) * 0.16s);
+}
+
+.ship__reach { background: var(--paper-hi) !important; }
+.ship__count { display: flex; flex-direction: column; gap: 10px; }
+.ship__count .num { font-size: clamp(56px, 6.6vw, 128px); line-height: 0.8; }
+.ship__count .mono { color: var(--ink-2); }
+.ship__gpl { width: 132px; height: auto; margin-top: 22px; }
+
+@media (max-width: 1180px) {
+  .ship { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ship > li { min-height: 220px; }
+}
+@media (max-width: 899px) {
+  .ship > li { min-height: 200px; padding: 14px 12px 12px; }
+  .ship__code, .ship__count .num { font-size: 56px; }
+  .ship__name { margin-top: 12px; font-size: 18px; }
+  .ship__meta { flex-direction: column; font-size: 10px; }
+  .ship__stamp { top: 14px; right: 10px; gap: 2px; padding: 5px 7px 5px; border-width: 2px; outline-offset: -5px; }
+  .ship__stamp b { font-size: 24px; }
+  .ship__stamp small { font-size: 8px; letter-spacing: 0.12em; }
+  .ship__gpl { width: 104px; margin-top: 14px; }
+}

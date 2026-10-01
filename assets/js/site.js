@@ -144,6 +144,6 @@ function initLightbox() {
 
 initHeaderClock();
 initMenu();
-initReveal(".stamps, .routes, .cta__stars");
+initReveal(".stamps, .routes, .cta__stars, .figs, .fabrics, .ship, .adv, .rack, .hangtags, .solar");
 initLightbox();
 initGlobes();

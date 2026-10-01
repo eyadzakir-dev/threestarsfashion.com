@@ -1,4 +1,4 @@
-/* Homepage: hero, capacity meter, the production line and the 3D factory model.
+/* Homepage: hero, the production line and the capacity meter (key figures live in glance.css).
    html.motion = JS on and motion allowed. Without it every scroll sequence renders as a static sheet. */
 
 /* ---------- 01 Hero ---------- */
@@ -59,8 +59,9 @@
   display: block;
   margin-top: clamp(18px, 3vh, 36px);
   margin-left: -0.05em;
-  font-size: clamp(84px, 16.6vw, 250px);
+  font-size: clamp(84px, 14.6vw, 228px);
   font-weight: 800;
+  font-stretch: 75%;
   line-height: 0.8;
   letter-spacing: -0.055em;
 }
@@ -70,7 +71,7 @@
   padding-block: 0.04em 0.05em;
   white-space: pre;
 }
-.hero__scale { font-stretch: calc(100% + var(--hp) * 25%); }
+.hero__scale { font-stretch: calc(75% + var(--hp) * 25%); }
 .ch { display: inline-block; }
 .ch--dot { color: var(--red); }
 
@@ -151,7 +152,7 @@
   .hero__ctas .btn { width: 100%; }
 }
 
-/* ---------- 02 Capacity meter ---------- */
+/* ---------- 05 Capacity meter ("Now multiply it") ---------- */
 .meter {
   position: relative;
   margin-top: 56px;
@@ -252,9 +253,12 @@
   .meter { grid-template-columns: 1fr; padding: 28px 20px 22px; margin-top: 40px; margin-inline: calc(var(--pad) * -1); }
   .meter__top, .meter__unit, .meter__note, .meter__window, .meter__board { grid-column: 1; grid-row: auto; }
   .meter__lead, .meter__was { font-size: 22px; }
-  .meter__board { justify-content: flex-start; font-size: 17.5vw; }
+  .meter__board { justify-content: flex-start; font-size: 14.5vw; }
   .meter__calc { flex-direction: column; }
 }
+
+.mult .meter { margin-top: 0; }
+.mult__link { margin-top: 28px; }
 
 .cap .nums__cell { position: relative; }
 .star-dock { position: absolute; top: 12px; right: 14px; width: 30px; height: 30px; pointer-events: none; }
@@ -262,7 +266,7 @@
   .star-dock { right: 0; width: 24px; height: 24px; }
 }
 
-/* ---------- 03 Production line ---------- */
+/* ---------- 04 Production line ---------- */
 .line-intro { padding-bottom: 48px; }
 .line-intro .sec__head { margin-bottom: 28px; }
 .line-intro .sec__head + .sec__lead { margin-top: 0; margin-bottom: 0; }
@@ -681,219 +685,6 @@
 }
 
 @keyframes line-progress { from { --p: 0; } to { --p: 1; } }
-
-/* ---------- 04 The line at scale: 3D factory model ---------- */
-.scale-intro { padding-bottom: 56px; }
-.scale-intro .sec__head { margin-bottom: 28px; }
-.scale-intro .sec__head + .sec__lead { margin-top: 0; margin-bottom: 0; }
-
-.scale { position: relative; }
-.scale__stage { display: none; }
-.scale__skip {
-  position: absolute;
-  left: var(--pad);
-  top: 0;
-  z-index: 5;
-  padding: 10px 14px;
-  background: var(--ink);
-  color: var(--paper);
-  transform: translateY(-200%);
-  pointer-events: none;
-}
-.scale__skip:focus { transform: none; pointer-events: auto; }
-
-.panel { background: var(--paper); }
-.panel__no { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-.panel__no .mono { color: var(--ink-2); }
-.panel__n {
-  font-size: 64px;
-  font-weight: 800;
-  font-stretch: 72%;
-  line-height: 0.82;
-  letter-spacing: -0.04em;
-  color: var(--red);
-}
-.panel__name {
-  margin-top: 14px;
-  font-size: clamp(24px, 2vw, 30px);
-  font-weight: 750;
-  font-stretch: 88%;
-  line-height: 1.02;
-  letter-spacing: -0.025em;
-  text-wrap: balance;
-}
-.panel__stat {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-top: 18px;
-  padding-top: 12px;
-  border-top: 1px solid var(--ink);
-}
-.panel__stat .num { font-size: clamp(48px, 4.2vw, 64px); }
-.panel__stat .mono { color: var(--ink-2); }
-.panel__copy { margin-top: 14px; font-size: 15px; line-height: 1.5; }
-.panel__note { margin-top: 12px; padding-left: 10px; border-left: 2px solid var(--red); color: var(--ink-2); font-size: 11px; }
-.panel__fig { margin-top: 16px; }
-.units {
-  display: grid;
-  grid-template-rows: repeat(5, auto);
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(0, 1fr);
-  gap: 3px 14px;
-  margin-top: 14px;
-  padding-top: 10px;
-  border-top: 1px solid var(--rule);
-  list-style: none;
-  counter-reset: unit;
-  font-size: 10px;
-  letter-spacing: 0.03em;
-}
-.units li { display: flex; gap: 6px; min-width: 0; counter-increment: unit; }
-.units li::before { content: counter(unit, decimal-leading-zero); flex: none; color: var(--red-ink); font-weight: 700; }
-
-/* static sheet (no WebGL, no JS, or reduced motion) */
-:root:not(.has-3d) .scale {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 48px var(--gut);
-  max-width: 1440px;
-  margin-inline: auto;
-  padding: 24px var(--pad) 120px;
-}
-:root:not(.has-3d) .scale__ch--entry,
-:root:not(.has-3d) .scale__skip,
-:root:not(.has-3d) .panel__note,
-:root:not(.has-3d) .model-only { display: none; }
-:root:not(.has-3d) .panel { padding-top: 16px; border-top: 3px solid var(--ink); }
-
-@media (max-width: 899px) {
-  :root:not(.has-3d) .scale { grid-template-columns: 1fr; padding-bottom: 80px; }
-}
-
-/* live model */
-.has-3d .scale__stage {
-  display: block;
-  position: sticky;
-  top: var(--hdr-h);
-  z-index: 0;
-  height: calc(100svh - var(--hdr-h));
-  margin-bottom: calc((100svh - var(--hdr-h)) * -1);
-  background: var(--paper);
-  border-block: 1px solid var(--ink);
-  overflow: hidden;
-}
-.scale__canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  transition: opacity 1s var(--ease-out);
-}
-.scale__stage.is-ready .scale__canvas { opacity: 1; }
-.scale__loading {
-  position: absolute;
-  inset: 50% auto auto 50%;
-  transform: translate(-50%, -50%);
-  color: var(--ink-2);
-  transition: opacity 0.4s;
-}
-.scale__stage.is-ready .scale__loading { opacity: 0; }
-.scale__tblock {
-  position: absolute;
-  inset: auto 0 0;
-  grid-template-columns: 1fr 1.4fr 1.2fr 1.6fr;
-  background: var(--paper);
-}
-.scale__tblock .belt-bar__meter { margin-top: 5px; height: 8px; }
-.scale__tblock .belt-bar__meter i { transform: scaleX(var(--progress, 0)); }
-.scale__tblock [data-hud-label] { color: var(--red-ink); }
-
-/* production-unit tags, positioned by assets/js/factory/unit-tags.js */
-.scale__units { position: absolute; inset: 0; pointer-events: none; }
-.scale__units[hidden] { display: none; }
-.unit-tag { position: absolute; top: 0; left: 0; opacity: 0; will-change: transform, opacity; }
-.unit-tag::before {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: -0.5px;
-  width: 1px;
-  height: var(--lead, 16px);
-  background: var(--ink);
-  box-shadow: 0 0 0 1px rgba(250, 249, 245, 0.6);
-}
-.unit-tag::after {
-  content: "";
-  position: absolute;
-  top: -3px;
-  left: -3px;
-  width: 6px;
-  height: 6px;
-  background: var(--red);
-  box-shadow: 0 0 0 1px var(--paper-hi);
-}
-.unit-tag__chip {
-  position: absolute;
-  bottom: var(--lead, 16px);
-  left: 0;
-  display: flex;
-  gap: 6px;
-  padding: 3px 6px 4px;
-  border: 1px solid var(--ink);
-  background: var(--paper-hi);
-  color: var(--ink);
-  font: 500 10px/1.2 var(--f-mono);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  transform: translateX(calc(-50% + var(--dx, 0px)));
-}
-.unit-tag__n { color: var(--red-ink); font-weight: 700; }
-
-.has-3d .scale__ch { position: relative; z-index: 1; height: 180vh; padding-inline: var(--pad); }
-.has-3d .scale__ch--entry { height: 150vh; }
-.has-3d .scale__ch--long { height: 300vh; }
-.has-3d .scale__ch--last { height: 210vh; }
-.has-3d .panel {
-  position: sticky;
-  top: calc(var(--hdr-h) + 24px);
-  width: min(400px, 100%);
-  padding: 20px 22px 22px;
-  border: 1px solid var(--ink);
-  background: rgba(243, 241, 236, 0.96);
-}
-.has-3d .panel__fig {
-  display: grid;
-  grid-template-columns: 96px 1fr;
-  gap: 12px;
-  align-items: center;
-  padding-top: 14px;
-  border-top: 1px solid var(--rule);
-}
-.has-3d .panel__fig::before { display: none; }
-.has-3d .panel__fig figcaption { margin: 0; }
-
-@media (min-width: 900px) {
-  .has-3d .scale__ch { padding-left: max(var(--pad), calc((100vw - 1440px) / 2 + var(--pad))); }
-}
-
-@media (max-width: 899px) {
-  .scale__tblock { inset: 0 0 auto; grid-template-columns: 1.4fr 1fr; border-top: 0; border-bottom: 1px solid var(--ink); }
-  .scale__tblock > div:nth-child(1), .scale__tblock > div:nth-child(3) { display: none; }
-  .scale__tblock > div:nth-child(2) { border-left: 0; }
-  .has-3d .scale__ch { display: flex; flex-direction: column; justify-content: flex-end; padding-inline: 12px; }
-  .has-3d .panel { top: auto; bottom: 12px; width: 100%; padding: 14px 16px 16px; }
-  .has-3d .panel__n { font-size: 44px; }
-  .has-3d .panel__name { margin-top: 8px; font-size: 22px; }
-  .has-3d .panel__stat { margin-top: 10px; padding-top: 8px; }
-  .has-3d .panel__stat .num { font-size: 44px; }
-  .has-3d .panel__copy { margin-top: 8px; font-size: 14px; }
-  .has-3d .panel__fig, .has-3d .panel__note { display: none; }
-  .has-3d .units { margin-top: 8px; padding-top: 8px; font-size: 9.5px; }
-  .unit-tag__name { display: none; }
-}
 
 /* ---------- Star journey overlay (assets/js/journey.js) ---------- */
 .journey { position: fixed; inset: 0; z-index: 40; overflow: hidden; pointer-events: none; }

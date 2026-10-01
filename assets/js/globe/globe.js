@@ -1,5 +1,5 @@
 // Duty-free route globe, in the constellation style: a night-side dotted Earth with glowing arcs from
-// Alexandria to the US and EU. WebGL (three.js) when motion is allowed; a still flat-canvas drawing otherwise.
+// Alexandria to the US, EU and GCC. WebGL (three.js) when motion is allowed; a still flat-canvas drawing otherwise.
 // Publishes live pin and arc-head positions on `figure.globeState` for the homepage star journey.
 import { landPoints, latLonToVec, PLACES } from './globe-data.js';
 
@@ -26,6 +26,9 @@ const smooth = (v, a, b) => { const t = clamp01((v - a) / (b - a)); return t * t
 const lerp = (a, b, t) => a + (b - a) * t;
 const easeOutCubic = (t) => 1 - (1 - t) ** 3;
 const PLACE_VECS = Object.fromEntries(Object.entries(PLACES).map(([k, p]) => [k, latLonToVec(p.lat, p.lon)]));
+// One arc per duty-free market, all from Alexandria; the order is the arcs array order.
+const ARC_KEYS = ['eu', 'us', 'gcc'];
+const RING_KEYS = ['alex', ...ARC_KEYS];
 
 /* ---------- Shared math: both renderers and the HTML pins use the same projection ---------- */
 
@@ -61,6 +64,7 @@ function viewAt(progress) {
     tilt: lerp(VIEW.startTilt, VIEW.endTilt, spin),
     zoom: lerp(ZOOM_START, 1, easeOutCubic(smooth(progress, 0, 0.45))),
     eu: smooth(progress, 0.3, 0.72),
+    gcc: smooth(progress, 0.38, 0.8),
     us: smooth(progress, 0.48, 0.98),
   };
 }
@@ -122,7 +126,7 @@ function publishState(figure, view, box, arcs) {
   figure.globeState = {
     view,
     places: Object.fromEntries(Object.keys(PLACE_VECS).map((k) => [k, toScreen(PLACE_VECS[k], view, box)])),
-    heads: { eu: toScreen(pointAlong(arcs[0], view.eu), view, box), us: toScreen(pointAlong(arcs[1], view.us), view, box) },
+    heads: Object.fromEntries(ARC_KEYS.map((k, i) => [k, toScreen(pointAlong(arcs[i], view[k]), view, box)])),
   };
 }
 
@@ -270,10 +274,10 @@ const ARC_FRAGMENT = `
     gl_FragColor = vec4(col * (0.55 + pulse * 0.9 + head * 1.2), 1.0);
   }`;
 const RING_VERTEX = `
-  attribute float aIndex; uniform vec3 uShow; uniform float uPx;
+  attribute float aIndex; uniform vec4 uShow; uniform float uPx;
   varying float vShow; varying float vPhase;
   void main() {
-    vShow = aIndex < 0.5 ? uShow.x : (aIndex < 1.5 ? uShow.y : uShow.z);
+    vShow = aIndex < 0.5 ? uShow.x : (aIndex < 1.5 ? uShow.y : (aIndex < 2.5 ? uShow.z : uShow.w));
     vPhase = aIndex * 0.37;
     vec3 n = normalize(normalMatrix * position);
     vShow *= smoothstep(0.05, 0.35, n.z);
@@ -338,11 +342,10 @@ function createArc(THREE, points) {
 }
 
 function createRings(THREE) {
-  const keys = ['alex', 'us', 'eu'];
   const geometry = new THREE.BufferGeometry();
-  geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(keys.flatMap((k) => PLACE_VECS[k])), 3));
-  geometry.setAttribute('aIndex', new THREE.BufferAttribute(new Float32Array([0, 1, 2]), 1));
-  const uniforms = { uShow: { value: new THREE.Vector3() }, uPx: { value: 34 }, uTime: { value: 0 } };
+  geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(RING_KEYS.flatMap((k) => PLACE_VECS[k])), 3));
+  geometry.setAttribute('aIndex', new THREE.BufferAttribute(new Float32Array(RING_KEYS.map((_, i) => i)), 1));
+  const uniforms = { uShow: { value: new THREE.Vector4() }, uPx: { value: 34 }, uTime: { value: 0 } };
   const points = new THREE.Points(geometry, additive(THREE, { vertexShader: RING_VERTEX, fragmentShader: RING_FRAGMENT, uniforms, depthTest: false }));
   points.renderOrder = 5;
   return points;
@@ -397,10 +400,11 @@ async function createGlRenderer(canvas, dots, arcs) {
       globe.scale.setScalar(box.r);
       spin.rotation.set(view.tilt * DEG, -view.lon * DEG, 0);
       points.material.uniforms.uDotPx.value = Math.min(4, Math.max(1.8, box.r / 105)) * dpr;
-      arcMeshes[0].material.uniforms.uDraw.value = view.eu;
-      arcMeshes[1].material.uniforms.uDraw.value = view.us;
-      arcMeshes.forEach((m) => { m.material.uniforms.uTime.value = time; });
-      rings.material.uniforms.uShow.value.set(smooth(view.zoom, 1.3, 1), smooth(view.us, 0.9, 1), smooth(view.eu, 0.9, 1));
+      arcMeshes.forEach((m, i) => {
+        m.material.uniforms.uDraw.value = view[ARC_KEYS[i]];
+        m.material.uniforms.uTime.value = time;
+      });
+      rings.material.uniforms.uShow.value.set(smooth(view.zoom, 1.3, 1), ...ARC_KEYS.map((k) => smooth(view[k], 0.9, 1)));
       rings.material.uniforms.uPx.value = 34 * dpr;
       rings.material.uniforms.uTime.value = time;
       sky.points.material.uniforms.uTime.value = time;
@@ -446,7 +450,7 @@ function startLoop(figure, frame) {
 export async function initGlobe(figure) {
   const canvas = figure.querySelector('.globe__canvas');
   const dots = landPoints(NARROW.matches ? DOT_SAMPLES.narrow : DOT_SAMPLES.wide).map(([lat, lon]) => latLonToVec(lat, lon));
-  const arcs = [arcPoints(PLACE_VECS.alex, PLACE_VECS.eu), arcPoints(PLACE_VECS.alex, PLACE_VECS.us)];
+  const arcs = ARC_KEYS.map((k) => arcPoints(PLACE_VECS.alex, PLACE_VECS[k]));
   const renderer = await createRenderer(canvas, dots, arcs);
   const pins = createPins(figure);
   let box = measure(figure);

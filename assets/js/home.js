@@ -1,11 +1,12 @@
-// Homepage: capacity meter, production-line scroll progress, station rail, 3D factory loader.
+// Homepage: key-figure count-ups, portfolio tabs, capacity meter, production-line scroll progress,
+// station rail, star journey.
 
 const root = document.documentElement;
 const REDUCED_MOTION = matchMedia("(prefers-reduced-motion: reduce)");
 const NARROW = matchMedia("(max-width: 899px)");
 const HAS_SCROLL_TIMELINE = CSS.supports("animation-timeline: view()");
 
-const SHIFT_CAPACITY = 85000;
+const SHIFT_CAPACITY = 100000;
 const SHIFT_HOURS = 8;
 const MINUTES_PER_HOUR = 60;
 const PER_HOUR = SHIFT_CAPACITY / SHIFT_HOURS;
@@ -22,12 +23,14 @@ const METER_UNIT_TEXT = { shift: "pieces.", live: "pieces in one hour of a shift
 const LIVE_NOTE_TEXT = `Time-lapse: every second here is one minute on our floor, at about ${PER_MINUTE} pieces a minute on average.`;
 const FLIP_STEP_MS = 240;
 const HERO_RANGE = 0.8;
-const BOARD_DIGITS = 5;
+const BOARD_DIGITS = 6;
 const FLAP_SEQUENCE = " 0123456789";
 const STATION_COUNT = 10;
 const STATION_LEAD = 0.1;
-const MODEL_PRELOAD_MARGIN = "250% 0px";
-const IDLE_TIMEOUT_MS = 2000;
+const COUNT_MS = 1100;
+// Matches REVEAL_THRESHOLD in site.js, so the numbers count while the isotypes tick in.
+const COUNT_THRESHOLD = 0.3;
+const TAB_STEP = { ArrowRight: 1, ArrowLeft: -1 };
 
 const cairoFormat = new Intl.DateTimeFormat("en-GB", {
   timeZone: "Africa/Cairo",
@@ -45,7 +48,6 @@ let journey = null;
 function syncMotionClass() {
   root.classList.toggle("motion", !REDUCED_MOTION.matches);
   if (!REDUCED_MOTION.matches) return;
-  root.classList.remove("has-3d");
   journey?.stop();
   journey = null;
 }
@@ -206,12 +208,12 @@ async function playMeter(meter, board) {
   startLiveHour(meter, board);
 }
 
-function observeOnce(el, callback) {
+function observeOnce(el, callback, threshold = METER_THRESHOLD) {
   const observer = new IntersectionObserver(([entry]) => {
     if (!entry.isIntersecting) return;
     observer.disconnect();
     callback();
-  }, { threshold: METER_THRESHOLD });
+  }, { threshold });
   observer.observe(el);
 }
 
@@ -232,6 +234,76 @@ function initMeter() {
   meter.querySelector("[data-meter-unit-sizer]").textContent = METER_UNIT_TEXT.live;
   showMeterPhase(meter, "shift");
   observeOnce(meter, () => playMeter(meter, board));
+}
+
+/* ---------- Key figures: numbers count up as the isotypes tick in ---------- */
+
+const easeOutCubic = (t) => 1 - (1 - t) ** 3;
+
+function countUp(el) {
+  const target = Number(el.dataset.countTo);
+  const start = performance.now();
+  const step = (now) => {
+    const t = clamp((now - start) / COUNT_MS, 0, 1);
+    el.textContent = Math.round(target * easeOutCubic(t)).toLocaleString("en-US");
+    if (t < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+function initCountUps() {
+  const figs = document.querySelector(".figs");
+  if (!figs || !hasMotion()) return;
+  const counters = [...figs.querySelectorAll("[data-count-to]")];
+  counters.forEach((el) => { el.textContent = "0"; });
+  observeOnce(figs, () => counters.forEach(countUp), COUNT_THRESHOLD);
+}
+
+/* ---------- Product portfolio: ARIA tabs; each panel's rack swings in as it opens ---------- */
+
+function replayRack(panel) {
+  const rack = panel.querySelector(".rack");
+  if (!rack?.classList.contains("is-armed")) return;
+  rack.classList.remove("is-in");
+  void rack.offsetWidth;
+  rack.classList.add("is-in");
+}
+
+function selectTab(tabs, next, { focus = false, replay = true } = {}) {
+  tabs.forEach((tab) => {
+    const isSelected = tab === next;
+    tab.setAttribute("aria-selected", String(isSelected));
+    tab.tabIndex = isSelected ? 0 : -1;
+    document.getElementById(tab.getAttribute("aria-controls")).hidden = !isSelected;
+  });
+  if (focus) next.focus();
+  if (replay) replayRack(document.getElementById(next.getAttribute("aria-controls")));
+}
+
+function getTabTarget(key, index, count) {
+  if (key === "Home") return 0;
+  if (key === "End") return count - 1;
+  if (key in TAB_STEP) return (index + TAB_STEP[key] + count) % count;
+  return -1;
+}
+
+function handleTabKey(event, tabs) {
+  const target = getTabTarget(event.key, tabs.indexOf(event.currentTarget), tabs.length);
+  if (target < 0) return;
+  event.preventDefault();
+  selectTab(tabs, tabs[target], { focus: true });
+}
+
+function initPortfolio() {
+  const list = document.querySelector("[data-port-tabs]");
+  if (!list) return;
+  const tabs = [...list.querySelectorAll('[role="tab"]')];
+  list.hidden = false;
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => { if (tab.getAttribute("aria-selected") !== "true") selectTab(tabs, tab); });
+    tab.addEventListener("keydown", (event) => handleTabKey(event, tabs));
+  });
+  selectTab(tabs, tabs[0], { replay: false });
 }
 
 /* ---------- Line progress ----------
@@ -338,68 +410,6 @@ function initRail() {
   });
 }
 
-/* ---------- 3D factory model: loaded on approach, static sheet on any failure ---------- */
-
-function useStaticModel() {
-  root.classList.remove("has-3d");
-}
-
-function canCreateWebGL2() {
-  return Boolean(document.createElement("canvas").getContext("webgl2"));
-}
-
-function collectModelElements(section) {
-  const pick = (attr) => Object.fromEntries(
-    [...section.querySelectorAll(`[data-${attr}]`)].map((el) => [el.dataset[attr], el]),
-  );
-  return {
-    tour: section,
-    chapters: pick("chapter"),
-    counters: pick("count"),
-    stage: section.querySelector("[data-stage]"),
-    canvas: section.querySelector("[data-canvas]"),
-    hudLabel: section.querySelector("[data-hud-label]"),
-    hudFill: section.querySelector("[data-hud-fill]"),
-    unitList: section.querySelector("[data-units]"),
-  };
-}
-
-async function loadModel(section) {
-  if (!canCreateWebGL2()) {
-    useStaticModel();
-    return;
-  }
-  try {
-    const { initScene } = await import("./factory/scene.js");
-    const elements = collectModelElements(section);
-    const scene = await initScene(elements);
-    elements.canvas.addEventListener("webglcontextlost", (event) => {
-      event.preventDefault();
-      scene.stop();
-      useStaticModel();
-    }, { once: true });
-  } catch (error) {
-    console.warn("3D factory model unavailable; showing the static version.", error);
-    useStaticModel();
-  }
-}
-
-function whenIdle(callback) {
-  if ("requestIdleCallback" in window) requestIdleCallback(callback, { timeout: IDLE_TIMEOUT_MS });
-  else setTimeout(callback, 1);
-}
-
-function initFactoryModel() {
-  const section = document.querySelector("[data-scale]");
-  if (!section || !root.classList.contains("has-3d")) return;
-  const observer = new IntersectionObserver(([entry]) => {
-    if (!entry.isIntersecting) return;
-    observer.disconnect();
-    whenIdle(() => loadModel(section));
-  }, { rootMargin: MODEL_PRELOAD_MARGIN });
-  observer.observe(section);
-}
-
 function initStarJourney() {
   if (!hasMotion()) return;
   import("./journey.js")
@@ -407,8 +417,9 @@ function initStarJourney() {
     .catch((error) => console.warn("Star journey unavailable; showing the static marks.", error));
 }
 
+initCountUps();
+initPortfolio();
 initMeter();
 initLineProgress();
 initRail();
-initFactoryModel();
 initStarJourney();
