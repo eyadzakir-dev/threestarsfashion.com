@@ -1,6 +1,7 @@
-// Facilities page: scroll-driven walk-through of the Model Factory. three.js and factory/scene.js load as
-// the tour approaches; scrolling through the chapter sections then moves the camera along the keyframes.
-// Any failure (no WebGL 2, import error, lost context) falls back to the static chapter sheet.
+// Facilities page: the whole page is a scroll-driven walk-through of the Model Factory. three.js and
+// factory/scene.js load straight away; scrolling through the chapter sections moves the camera along the
+// keyframes, and the chapter rail tracks (and jumps between) chapters. Any failure (no WebGL 2, import error,
+// lost context) falls back to the static chapter sheet.
 
 const root = document.documentElement;
 const PRELOAD_MARGIN = "250% 0px";
@@ -58,7 +59,41 @@ function followScroll(scene, chapters) {
   document.fonts?.ready.then(measure);
 }
 
-/* ---------- Boot: load on approach ---------- */
+/* ---------- Chapter rail: per-chapter progress and the current chapter ---------- */
+
+function initRail(tour) {
+  const links = [...tour.querySelectorAll(".scale__rail a")];
+  const targets = links.map((link) => document.getElementById(link.hash.slice(1)));
+  let spans = [];
+  let frame = 0;
+
+  function update() {
+    frame = 0;
+    const y = window.scrollY;
+    const current = Math.max(0, spans.findLastIndex((s) => s.top <= y + window.innerHeight / 2));
+    tour.dataset.current = targets[current].dataset.chapter;
+    links.forEach((link, i) => {
+      link.parentElement.style.setProperty("--done", clamp01((y - spans[i].top) / spans[i].span).toFixed(3));
+      if (i === current) link.setAttribute("aria-current", "step");
+      else link.removeAttribute("aria-current");
+    });
+  }
+
+  function measure() {
+    spans = targets.map((el) => ({
+      top: el.getBoundingClientRect().top + window.scrollY,
+      span: Math.max(1, el.offsetHeight - window.innerHeight),
+    }));
+    update();
+  }
+
+  window.addEventListener("scroll", () => { frame ||= requestAnimationFrame(update); }, { passive: true });
+  window.addEventListener("resize", measure);
+  new ResizeObserver(measure).observe(document.body);
+  measure();
+}
+
+/* ---------- Boot ---------- */
 
 function useStaticSheet() {
   root.classList.remove("has-3d");
@@ -110,6 +145,7 @@ function whenIdle(callback) {
 function initModelTour() {
   const tour = document.querySelector("[data-scale]");
   if (!tour || !root.classList.contains("has-3d")) return;
+  initRail(tour);
   const observer = new IntersectionObserver(([entry]) => {
     if (!entry.isIntersecting) return;
     observer.disconnect();

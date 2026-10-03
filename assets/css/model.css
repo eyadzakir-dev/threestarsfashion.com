@@ -1,42 +1,47 @@
-/* Facilities 03: scroll-driven 3D walk-through of the Model Factory (assets/js/model-scroll.js + factory/scene.js).
-   html.has-3d = WebGL 2 and motion allowed. Without it the chapters render as a static sheet.
-   .scale__stage.is-ready = the model's first frame has rendered (the poster stands in until then). */
+/* Facilities: the whole page is one scroll-driven walk-through of the Model Factory
+   (assets/js/model-scroll.js + factory/scene.js). html.has-3d = WebGL 2 and motion allowed; without it the
+   chapters render as a static sheet. .scale__view.is-ready = the model's first frame has rendered; the poster,
+   rendered from that same first frame, stands in until then. */
 
-/* ---------- Intro ---------- */
-.model-intro { padding-bottom: 56px; }
-.model-intro .sec__head { margin-bottom: 28px; }
-.model-intro .sec__head + .sec__lead { margin-top: 0; margin-bottom: 0; }
-
-.scale { position: relative; }
+.scale { --rail-h: 44px; position: relative; }
 .scale__track { display: none; }
 .scale__skip {
   position: absolute;
   left: var(--pad);
-  top: 0;
+  top: calc(var(--hdr-h) + 8px);
   z-index: 5;
   padding: 10px 14px;
   background: var(--ink);
   color: var(--paper);
-  transform: translateY(-200%);
+  transform: translateY(-300%);
   pointer-events: none;
 }
 .scale__skip:focus { transform: none; pointer-events: auto; }
 
-/* ---------- Chapter panels ---------- */
-.panel { background: var(--paper); }
+/* ---------- Chapter panels (live tour and static sheet) ---------- */
 .panel__no { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
 .panel__no .mono { color: var(--ink-2); }
 .panel__n {
-  font-size: 64px;
+  font-size: 52px;
   font-weight: 800;
   font-stretch: 72%;
   line-height: 0.82;
   letter-spacing: -0.04em;
   color: var(--red);
 }
-.panel__name {
+.panel__title {
   margin-top: 14px;
-  font-size: clamp(24px, 2vw, 30px);
+  font-size: clamp(30px, 2.6vw, 42px);
+  font-weight: 800;
+  font-stretch: 80%;
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+.panel__title .dot { color: var(--red); }
+.panel__name {
+  margin-top: 12px;
+  font-size: clamp(22px, 1.8vw, 27px);
   font-weight: 750;
   font-stretch: 88%;
   line-height: 1.02;
@@ -46,23 +51,45 @@
 .panel__stat {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin-top: 18px;
-  padding-top: 12px;
+  gap: 4px;
+  margin-top: 14px;
+  padding-top: 10px;
   border-top: 1px solid var(--ink);
 }
-.panel__stat .num { font-size: clamp(48px, 4.2vw, 64px); }
+.panel__stat .num { font-size: clamp(42px, 3.6vw, 56px); }
 .panel__stat .mono { color: var(--ink-2); }
-.panel__copy { margin-top: 14px; font-size: 15px; line-height: 1.5; }
+.panel__copy { margin-top: 12px; font-size: 15px; line-height: 1.45; text-wrap: pretty; }
+.panel__cue { margin-top: 16px; color: var(--red-ink); }
+.panel__cue span { display: inline-block; }
 .panel__note { margin-top: 12px; padding-left: 10px; border-left: 2px solid var(--red); color: var(--ink-2); font-size: 11px; }
-.panel__fig { margin-top: 16px; }
+
+/* Photo strip: four squares, the rest of the set one tap away in the lightbox (site.js). */
+.panel__gallery { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-top: 14px; }
+.panel__gallery a { position: relative; display: block; overflow: hidden; background: var(--paper-hi); }
+.panel__gallery a:nth-child(n + 5) { display: none; }
+.panel__gallery img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; transition: transform 0.5s var(--ease-out); }
+.panel__gallery a:hover img,
+.panel__gallery a:focus-visible img { transform: scale(1.06); }
+.panel__gallery a:focus-visible { outline-offset: 2px; }
+.panel__gallery a[data-more]::after {
+  content: attr(data-more);
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgb(17 17 17 / 0.58);
+  color: #fff;
+  font: 700 15px/1 var(--f-mono);
+}
+.panel__count { margin-top: 6px; color: var(--ink-2); font-size: 10px; }
+
 .units {
   display: grid;
   grid-template-rows: repeat(5, auto);
   grid-auto-flow: column;
   grid-auto-columns: minmax(0, 1fr);
   gap: 3px 14px;
-  margin-top: 14px;
+  margin-top: 12px;
   padding-top: 10px;
   border-top: 1px solid var(--rule);
   counter-reset: unit;
@@ -72,6 +99,19 @@
 .units li { display: flex; gap: 6px; min-width: 0; counter-increment: unit; }
 .units li::before { content: counter(unit, decimal-leading-zero); flex: none; color: var(--red-ink); font-weight: 700; }
 
+.panel__facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  margin-top: 16px;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+}
+.panel__facts > div { padding: 8px 10px 10px; background: var(--paper); }
+.panel__facts dt { color: var(--ink-2); font-size: 10px; }
+.panel__facts dd { margin-top: 6px; font: 800 30px/1 var(--f-sans); font-stretch: 78%; letter-spacing: -0.02em; }
+.panel__cta { width: 100%; margin-top: 16px; justify-content: space-between; }
+
 /* ---------- Static sheet: no WebGL 2, reduced motion, or the model failed to start ---------- */
 :root:not(.has-3d) .scale {
   display: grid;
@@ -79,29 +119,41 @@
   gap: 48px var(--gut);
   max-width: 1440px;
   margin-inline: auto;
-  padding: 24px var(--pad) 120px;
+  padding: calc(var(--hdr-h) + 56px) var(--pad) 96px;
 }
-:root:not(.has-3d) .scale__ch--entry,
 :root:not(.has-3d) .scale__skip,
+:root:not(.has-3d) .panel__cue,
 :root:not(.has-3d) .panel__note,
 :root:not(.has-3d) .model-only { display: none; }
+:root:not(.has-3d) .scale__ch--entry,
+:root:not(.has-3d) .scale__ch--visit { grid-column: 1 / -1; }
 :root:not(.has-3d) .panel { padding-top: 16px; border-top: 3px solid var(--ink); }
-
+:root:not(.has-3d) .panel--entry { padding-top: 0; border-top: 0; }
+:root:not(.has-3d) .panel--entry .panel__title { max-width: 14em; font-size: clamp(44px, 6.4vw, 104px); }
+:root:not(.has-3d) .panel--entry .panel__copy { max-width: 36em; font-size: 20px; }
+:root:not(.has-3d) .panel--visit .panel__facts { grid-template-columns: repeat(4, minmax(0, 1fr)); max-width: 960px; }
+:root:not(.has-3d) .panel--visit .panel__cta { width: auto; }
+:root:not(.has-3d) .panel__gallery a:nth-child(n + 5) { display: block; }
+:root:not(.has-3d) .panel__gallery a[data-more]::after { display: none; }
+@media (max-width: 1100px) {
+  :root:not(.has-3d) .scale { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 @media (max-width: 899px) {
-  :root:not(.has-3d) .scale { grid-template-columns: 1fr; padding-bottom: 80px; }
+  :root:not(.has-3d) .scale { grid-template-columns: 1fr; gap: 40px; padding: calc(var(--hdr-h) + 32px) var(--pad) 72px; }
+  :root:not(.has-3d) .panel--visit .panel__facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-/* ---------- Live model: a pinned stage that the chapters scroll over ---------- */
+/* ---------- Live tour: a full-screen pinned stage that the chapters scroll over ---------- */
 /* The track spans the whole tour behind the chapters, so the stage unpins exactly where the tour ends. */
 .has-3d .scale__track { display: block; position: absolute; inset: 0; z-index: 0; }
 .scale__stage {
   position: sticky;
   top: var(--hdr-h);
   height: calc(100svh - var(--hdr-h));
-  background: var(--paper);
-  border-block: 1px solid var(--ink);
   overflow: hidden;
+  background: var(--paper);
 }
+.scale__view { position: absolute; inset: 0 0 var(--rail-h); }
 .scale__poster img,
 .scale__canvas {
   position: absolute;
@@ -111,48 +163,92 @@
 }
 .scale__poster img { object-fit: cover; transition: opacity 1s var(--ease-out); }
 .scale__canvas { opacity: 0; transition: opacity 1s var(--ease-out); }
-.scale__stage.is-ready .scale__canvas { opacity: 1; }
-.scale__stage.is-ready .scale__poster img { opacity: 0; }
+.scale__view.is-ready .scale__canvas { opacity: 1; }
+.scale__view.is-ready .scale__poster img { opacity: 0; }
 .scale__loading {
   position: absolute;
-  inset: 50% auto auto 50%;
+  inset: auto var(--pad) 16px auto;
   padding: 4px 8px;
   background: var(--paper);
   color: var(--ink-2);
-  transform: translate(-50%, -50%);
   transition: opacity 0.4s;
 }
-.scale__stage.is-ready .scale__loading { opacity: 0; }
+.scale__view.is-ready .scale__loading { opacity: 0; }
+.scale__now {
+  position: absolute;
+  top: 16px;
+  right: var(--pad);
+  display: flex;
+  gap: 8px;
+  padding: 5px 9px 6px;
+  border: 1px solid var(--ink);
+  background: rgb(243 241 236 / 0.92);
+  font-size: 11px;
+}
+.scale__now span:first-child { color: var(--ink-2); }
+.scale__now [data-hud-label] { color: var(--red-ink); }
+/* The closing chapter has no camera view of its own, so the view tag steps aside. */
+.scale__now { transition: opacity 0.3s; }
+[data-current="visit"] .scale__now { opacity: 0; }
 
-.scale__tblock {
+/* Chapter rail: per-chapter progress, the current chapter, and a jump to any chapter. */
+.scale__rail {
   position: absolute;
   inset: auto 0 0;
-  display: grid;
-  grid-template-columns: 1fr 1.4fr 1.2fr 1.6fr;
+  z-index: 2;
+  height: var(--rail-h);
   border-top: 1px solid var(--ink);
   background: var(--paper);
   font-size: 11px;
 }
-.scale__tblock > div { min-width: 0; padding: 7px 10px 8px; border-left: 1px solid var(--ink); }
-.scale__tblock > div:first-child { border-left: 0; }
-.scale__tblock dt { color: var(--ink-2); font-size: 9.5px; }
-.scale__tblock dd { overflow: hidden; color: var(--ink); white-space: nowrap; text-overflow: ellipsis; }
-.scale__tblock [data-hud-label] { color: var(--red-ink); }
-.scale__meter {
-  position: relative;
-  display: block;
-  height: 8px;
-  margin-top: 5px;
-  background: linear-gradient(var(--rule), var(--rule)) 0 50% / 100% 1px no-repeat;
-  border-right: 1px solid var(--ink);
-}
-.scale__meter i {
+.scale__progress { position: absolute; inset: -1px 0 auto; height: 2px; }
+.scale__progress i {
   position: absolute;
-  inset: 2px 0;
+  inset: 0;
   background: var(--red);
   transform-origin: 0 50%;
   transform: scaleX(var(--progress, 0));
 }
+.scale__rail ol {
+  display: grid;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  height: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: var(--pad);
+}
+.scale__rail li { --done: 0; min-width: 0; }
+.scale__rail a {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 100%;
+  padding-right: 10px;
+  overflow: hidden;
+  color: var(--ink-2);
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.scale__rail a::before,
+.scale__rail a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 10px;
+  bottom: 7px;
+  height: 2px;
+  background: var(--rule);
+}
+.scale__rail a::after { background: var(--red); transform-origin: 0 50%; transform: scaleX(var(--done)); }
+.scale__rn { flex: none; padding: 2px 5px; border: 1px solid currentColor; }
+.scale__rl { overflow: hidden; text-overflow: ellipsis; }
+.scale__rail a:hover { color: var(--red-ink); }
+.scale__rail a:focus-visible { outline-offset: -3px; }
+.scale__rail a[aria-current] { color: var(--ink); }
+.scale__rail a[aria-current] .scale__rn { border-color: var(--ink); background: var(--ink); color: var(--paper); }
 
 /* Production-unit tags, positioned by assets/js/factory/unit-tags.js */
 .scale__units { position: absolute; inset: 0; pointer-events: none; }
@@ -196,47 +292,80 @@
 }
 .unit-tag__n { color: var(--red-ink); font-weight: 700; }
 
-/* Each chapter's height is its share of the walk-through; its panel stays pinned while the camera moves. */
-.has-3d .scale__ch { position: relative; z-index: 1; height: 180vh; padding-inline: var(--pad); }
+/* Each chapter's height is its share of the walk-through. Chapters let clicks through to the rail;
+   only their pinned panel takes pointer input. */
+.has-3d .scale__ch { position: relative; z-index: 1; height: 180vh; padding-inline: var(--pad); pointer-events: none; }
 .has-3d .scale__ch--entry { height: 150vh; }
 .has-3d .scale__ch--long { height: 300vh; }
-.has-3d .scale__ch--last { height: 210vh; }
+.has-3d .scale__ch--site { height: 210vh; }
+.has-3d .scale__ch--visit { height: 150vh; }
 .has-3d .panel {
   position: sticky;
-  top: calc(var(--hdr-h) + 24px);
-  width: min(400px, 100%);
-  padding: 20px 22px 22px;
+  top: calc(var(--hdr-h) + 20px);
+  width: min(360px, 100%);
+  max-height: calc(100svh - var(--hdr-h) - var(--rail-h) - 40px);
+  overflow-y: auto;
+  padding: 18px 20px 20px;
   border: 1px solid var(--ink);
   background: rgb(243 241 236 / 0.96);
+  pointer-events: auto;
 }
-.has-3d .panel__fig {
-  display: grid;
-  grid-template-columns: 96px 1fr;
-  gap: 12px;
-  align-items: center;
-  padding-top: 14px;
-  border-top: 1px solid var(--rule);
-}
-.has-3d .panel__fig::before { display: none; }
-.has-3d .panel__fig figcaption { margin: 0; }
+.has-3d .panel--entry { width: min(440px, 100%); }
+.has-3d .panel--visit { width: min(420px, 100%); }
+.has-3d .panel__cue span { animation: cue-bob 1.6s ease-in-out infinite; }
+@keyframes cue-bob { 50% { transform: translateY(4px); } }
 
+/* Desktop: panels line up with the page grid and stop above the bottom rail when their chapter ends. */
 @media (min-width: 900px) {
-  .has-3d .scale__ch { padding-left: max(var(--pad), calc((100vw - 1440px) / 2 + var(--pad))); }
+  .has-3d .scale__ch { padding-left: max(var(--pad), calc((100vw - 1440px) / 2 + var(--pad))); padding-bottom: calc(var(--rail-h) + 20px); }
+}
+@media (max-width: 1180px) {
+  .scale__rl { display: none; }
+  .scale__rail a { justify-content: center; padding-right: 0; }
+  .scale__rail a::before, .scale__rail a::after { left: 4px; right: 4px; }
 }
 
-/* ---------- Narrow screens: title block on top, panel pinned to the bottom ---------- */
+/* ---------- Narrow screens: rail on top, compact panel pinned to the bottom ---------- */
 @media (max-width: 899px) {
-  .scale__tblock { inset: 0 0 auto; grid-template-columns: 1.4fr 1fr; border-top: 0; border-bottom: 1px solid var(--ink); }
-  .scale__tblock > div:nth-child(1), .scale__tblock > div:nth-child(3) { display: none; }
-  .scale__tblock > div:nth-child(2) { border-left: 0; }
-  .has-3d .scale__ch { display: flex; flex-direction: column; justify-content: flex-end; padding-inline: 12px; }
-  .has-3d .panel { top: auto; bottom: 12px; width: 100%; padding: 14px 16px 16px; }
-  .has-3d .panel__n { font-size: 44px; }
-  .has-3d .panel__name { margin-top: 8px; font-size: 22px; }
-  .has-3d .panel__stat { margin-top: 10px; padding-top: 8px; }
-  .has-3d .panel__stat .num { font-size: 44px; }
-  .has-3d .panel__copy { margin-top: 8px; font-size: 14px; }
-  .has-3d .panel__fig, .has-3d .panel__note { display: none; }
-  .has-3d .units { margin-top: 8px; padding-top: 8px; font-size: 9.5px; }
+  .scale { --rail-h: 36px; }
+  .scale__view { inset: var(--rail-h) 0 0; }
+  .scale__rail { inset: 0 0 auto; border-top: 0; border-bottom: 1px solid var(--ink); }
+  .scale__progress { inset: auto 0 -1px; }
+  .scale__rail ol { gap: 3px; padding-inline: 8px; }
+  .scale__rail a::before, .scale__rail a::after { left: 2px; right: 2px; bottom: 5px; }
+  .scale__rn { padding: 1px 3px; font-size: 10px; }
+  .scale__now { display: none; }
+  .scale__loading { inset: 10px auto auto 10px; }
+  .has-3d .scale__ch { display: flex; flex-direction: column; justify-content: flex-end; padding: 0 10px 10px; }
+  .has-3d .panel {
+    top: auto;
+    bottom: 10px;
+    width: 100%;
+    max-height: calc((100svh - var(--hdr-h)) * 0.52);
+    padding: 12px 14px 14px;
+  }
+  .has-3d .panel--entry, .has-3d .panel--visit { width: 100%; }
+  .panel__n { font-size: 34px; }
+  .panel__title { margin-top: 8px; font-size: 27px; }
+  .panel__name { margin-top: 8px; font-size: 20px; }
+  .panel__stat { flex-direction: row; align-items: baseline; gap: 10px; margin-top: 10px; padding-top: 8px; }
+  .panel__stat .num { font-size: 34px; }
+  .panel__stat .mono { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .panel__copy { margin-top: 8px; font-size: 14px; line-height: 1.4; }
+  .panel__cue { margin-top: 10px; }
+  .panel__gallery { gap: 5px; margin-top: 10px; }
+  .panel__gallery img { aspect-ratio: 3 / 2; }
+  .has-3d .panel__count, .has-3d .panel__note { display: none; }
+  .units { margin-top: 8px; padding-top: 8px; font-size: 9.5px; }
+  .panel__facts { margin-top: 10px; }
+  .panel__facts dd { font-size: 24px; }
+  .panel__cta { margin-top: 12px; }
   .unit-tag__name { display: none; }
+}
+
+/* Short phones: the closing card drops its sentence and tightens the facts so it never scrolls inside. */
+@media (max-width: 899px) and (max-height: 760px) {
+  .has-3d .panel--visit .panel__copy { display: none; }
+  .has-3d .panel--visit .panel__facts dd { font-size: 21px; }
+  .has-3d .panel--visit .panel__facts > div { padding: 6px 8px 8px; }
 }

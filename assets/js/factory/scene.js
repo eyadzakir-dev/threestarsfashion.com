@@ -29,7 +29,7 @@ const PRINT_DAILY = 65000;
 const DISPATCH_DAILY = 100000;
 const SHELL_LIFT = 46;
 const PORTRAIT_REACH = 1.25;
-const PORTRAIT_REACH_WIDE = 4.2;
+const PORTRAIT_REACH_WIDE = 3.4;
 const PORTRAIT_REACH_SITE = 2.5;
 const CAROUSEL_INDEX_S = 1.7;
 const KNIT_RATE = 0.6;
@@ -51,7 +51,7 @@ const HUD_LABELS = {
   dyeing: '02 · Dyeing',
   cutting: '03 · Cutting room',
   sewing: '04 · Sewing hall',
-  embellishment: '05 · Embellishment',
+  embellishment: '05 · Print',
   dispatch: '06 · Dispatch dock',
   site: '07 · The group, 24/7',
 };
