@@ -1,0 +1,377 @@
+/* About page: company file (hero), group tree, timeline drawn to scale, values register, vision + mission band,
+   leadership register. Shared chrome, .phero, .prose and .cta come from site.css and pages.css; .tl reveal classes come from about.js. */
+
+/* ---------- Hero: headline and lead on the left, the company file on the right ---------- */
+.ahero .phero__in { padding-bottom: 56px; }
+.ahero .phero__title { grid-column: 1 / 8; grid-row: 2; margin-top: clamp(28px, 5vh, 64px); font-size: clamp(52px, 6.6vw, 108px); }
+.ahero .phero__lead { grid-column: 1 / 7; grid-row: 3; align-self: start; max-width: 32em; }
+
+.file {
+  position: relative;
+  grid-column: 8 / 13;
+  grid-row: 2 / span 2;
+  align-self: start;
+  margin-top: clamp(32px, 5.5vh, 72px);
+  border: 1px solid var(--ink);
+  background: var(--paper-hi);
+}
+.file__bar { display: flex; justify-content: space-between; gap: 12px; padding: 11px 16px 10px; border-bottom: 1px solid var(--ink); }
+.file__title { color: var(--red-ink); }
+.file__id { color: var(--ink-2); }
+.file__row {
+  display: grid;
+  grid-template-columns: 136px minmax(0, 1fr);
+  column-gap: var(--gut);
+  align-items: baseline;
+  padding: 12px 16px 14px;
+}
+.file__row + .file__row { border-top: 1px solid var(--rule); }
+.file__row dt { color: var(--ink-2); }
+.file__row dd { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+.file__num { font-size: clamp(36px, 3.3vw, 52px); }
+.file__note { color: var(--ink-2); font-size: 10.5px; }
+.file__lg { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.file__key { display: inline-flex; flex-wrap: wrap; gap: 4px 14px; }
+.file__sw { flex: none; width: 8px; height: 8px; background: var(--ink); }
+.file__sw--red { background: var(--red); }
+/* One block per production unit; the machine bar splits 2,300 : 1,200 to scale. */
+.file__units { flex-basis: 100%; display: flex; gap: 4px; margin-top: 2px; }
+.file__units i { width: 16px; height: 10px; background: var(--ink); }
+.file__split { flex-basis: 100%; display: flex; gap: 2px; height: 10px; margin-top: 2px; }
+.file__split i { flex: 2300 0 0; background: var(--ink); transform-origin: 0 50%; }
+.file__split i + i { flex-grow: 1200; background: var(--red); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .file__units { animation: file-tally 0.7s steps(10, end) 0.35s both; }
+  .file__split i { animation: file-grow 0.7s var(--ease-out) 0.45s both; }
+  .file__split i + i { animation-delay: 0.7s; }
+}
+@keyframes file-tally { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0); } }
+@keyframes file-grow { from { transform: scaleX(0); } }
+
+/* ---------- 01 Who we are: tree + range on the left, story + building on the right ---------- */
+.who {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  column-gap: var(--gut);
+  row-gap: 48px;
+  align-items: start;
+}
+.who__map { grid-column: 1 / 6; }
+.who__text { grid-column: 7 / 13; }
+.who__prose { font-size: 19px; }
+.who__fig { max-width: 556px; margin-top: 44px; }
+
+/* Group tree: same structure as the one on /logistics. */
+.org__root {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--ink);
+  background: var(--paper-hi);
+}
+.org__root img { width: 44px; height: auto; mix-blend-mode: multiply; }
+.org__name { font-size: 22px; font-weight: 800; font-stretch: 80%; line-height: 0.95; text-transform: uppercase; }
+.org__est { margin-left: auto; color: var(--ink-2); font-size: 10.5px; text-align: right; }
+/* The trunk drops from the centre of the group mark (16px padding + half the 44px mark + 1px border). */
+.org__list { margin-left: 39px; }
+.org__list li {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 58px;
+  padding-left: 36px;
+  font-size: 20px;
+  font-weight: 700;
+  font-stretch: 88%;
+  letter-spacing: -0.01em;
+}
+.org__list li::before { content: ""; position: absolute; top: 0; bottom: 0; left: 0; border-left: 1px solid var(--ink); }
+.org__list li:last-child::before { bottom: 50%; }
+.org__list li::after { content: ""; position: absolute; top: 50%; left: 0; width: 28px; border-top: 1px solid var(--ink); }
+.org__list .mono { color: var(--ink-2); font-size: 11px; }
+.org__list .org__gpl { padding-block: 10px 0; }
+.org__list li.org__gpl::before { bottom: calc(50% - 5px); }
+.org__list .org__gpl::after { top: calc(50% + 5px); width: 36px; border-top: 2px solid var(--red); }
+.org__box {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 18px;
+  padding: 16px 18px;
+  border: 2px solid var(--red);
+  background: var(--paper-hi);
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+.org__box .mono { color: var(--red-ink); }
+.org__box img { width: auto; height: 84px; }
+.org__tag { flex-basis: 100%; }
+.org__box:hover { background: #fff; }
+.org__box:hover .org__tag { text-decoration: underline; text-underline-offset: 3px; }
+
+.range { margin-top: 48px; border-top: 1px solid var(--ink); }
+.range > div { display: grid; grid-template-columns: 7.5em minmax(0, 1fr); gap: var(--gut); padding: 12px 0 14px; border-bottom: 1px solid var(--rule); }
+.range dt { padding-top: 4px; color: var(--red-ink); }
+.range dd { font-size: 17px; font-weight: 600; line-height: 1.35; text-wrap: pretty; }
+
+/* ---------- 02 Timeline: one tick per year (2008–2030); bar heights are the solar share, 100% = --h ---------- */
+/* --x(t) = t / 22 of the plot width left of the y-label gutter (--ya). Plot and event layer share that width. */
+.tl { --h: 200px; --ya: 52px; --plot-h: calc(var(--h) + 72px); position: relative; }
+.tl__plot { position: relative; height: var(--plot-h); margin-bottom: 44px; }
+.tl__plot::after {
+  content: "";
+  position: absolute;
+  left: -6px;
+  bottom: -5px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--red);
+}
+.tl__grid { position: absolute; inset: 0; }
+/* Gridlines cover only the stretch with solar data (from 2027); labels sit in the gutter. */
+.tl__grid span {
+  position: absolute;
+  left: calc(19 / 22 * (100% - var(--ya)));
+  right: 0;
+  bottom: calc(var(--p) * var(--h) + 2px);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 1px;
+  background: repeating-linear-gradient(to right, rgb(17 17 17 / 0.26) 0 4px, transparent 4px 8px) 0 0 / calc(100% - var(--ya)) 1px no-repeat;
+  font: 500 10.5px/1 var(--f-mono);
+  letter-spacing: 0.04em;
+  color: var(--ink-2);
+}
+.tl__k { position: absolute; top: 0; right: 0; color: var(--ink-2); font-size: 10.5px; }
+
+.tl__axis { position: absolute; left: 0; bottom: 0; width: calc(100% - var(--ya)); height: 3px; }
+.tl__axis::before { content: ""; position: absolute; inset: 0; background: var(--ink); transform-origin: 0 50%; }
+.tl__axis::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 3px;
+  height: 12px;
+  border-right: 1px solid var(--ink);
+  background:
+    linear-gradient(to right, var(--ink) 1px, transparent 1px) 0 0 / calc(100% / 22) 6px repeat-x,
+    linear-gradient(to right, var(--ink) 1px, transparent 1px) 0 0 / calc(100% / 11) 12px repeat-x;
+}
+.tl__axis span {
+  position: absolute;
+  top: 22px;
+  left: calc(var(--t) / 22 * 100%);
+  color: var(--ink-2);
+  font: 500 10.5px/1 var(--f-mono);
+  letter-spacing: 0.04em;
+  transform: translateX(-50%);
+}
+.tl__axis span:first-child { transform: none; }
+
+.tl__bar { position: absolute; bottom: 3px; transform-origin: 50% 100%; }
+/* From Q1 2027: 25% solid, 25–30% hatched. */
+.tl__bar--now {
+  left: calc(19 / 22 * (100% - var(--ya)));
+  width: calc(2 / 22 * (100% - var(--ya)) - 3px);
+  height: calc(0.3 * var(--h));
+  background:
+    linear-gradient(var(--red), var(--red)) 0 100% / 100% calc(25 / 30 * 100%) no-repeat,
+    repeating-linear-gradient(135deg, var(--red) 0 1.5px, transparent 1.5px 5px);
+}
+/* Target by the end of 2029: dashed outline to 80%, 70–80% hatched. */
+.tl__bar--goal {
+  left: calc(21 / 22 * (100% - var(--ya)));
+  width: calc(1 / 22 * (100% - var(--ya)));
+  height: calc(0.8 * var(--h));
+  border: 2px dashed var(--red);
+  border-bottom: 0;
+  background: repeating-linear-gradient(135deg, rgb(229 34 34 / 0.6) 0 1.5px, transparent 1.5px 5px) 0 0 / 100% calc(10 / 80 * 100%) no-repeat;
+}
+
+.tl__events { position: absolute; top: 0; left: 0; right: 0; height: var(--plot-h); }
+.tl__ev { position: absolute; }
+.tl__ev--found { left: 20px; bottom: 26px; }
+.tl__ev--now { right: calc(100% - 19 / 22 * (100% - var(--ya)) + 16px); bottom: 6px; text-align: right; }
+.tl__ev--goal { right: calc(100% - 21 / 22 * (100% - var(--ya)) + 16px); bottom: calc(0.3 * var(--h) + 64px); padding: 4px 0 4px 12px; background: var(--paper); text-align: right; }
+.tl__when { color: var(--red-ink); }
+.tl__key { display: none; }
+.tl__big { margin-top: 6px; font-size: clamp(44px, 4.4vw, 72px); }
+.tl__big small { margin-left: 0.04em; font-size: 0.5em; letter-spacing: 0; color: var(--ink-2); }
+.tl__what { margin-top: 8px; font-size: clamp(18px, 1.5vw, 22px); font-weight: 700; font-stretch: 88%; line-height: 1.1; letter-spacing: -0.01em; }
+.tl__note { margin-top: 4px; font-size: 15px; line-height: 1.4; color: var(--ink-2); }
+.tl__cap { color: var(--ink-2); font-size: 10.5px; }
+
+.tl.is-armed:not(.is-in) .tl__axis::before { transform: scaleX(0); }
+.tl.is-armed:not(.is-in) .tl__bar { transform: scaleY(0); }
+.tl.is-armed:not(.is-in) .tl__ev, .tl.is-armed:not(.is-in) .tl__plot::after { opacity: 0; }
+.tl.is-in .tl__axis::before { transition: transform 1s var(--ease-out); }
+.tl.is-in .tl__bar { transition: transform 0.6s var(--ease-out) 0.8s; }
+.tl.is-in .tl__bar--goal { transition-delay: 1.05s; }
+.tl.is-in .tl__ev, .tl.is-in .tl__plot::after { transition: opacity 0.5s 0.1s; }
+.tl.is-in .tl__ev--now { transition-delay: 0.9s; }
+.tl.is-in .tl__ev--goal { transition-delay: 1.15s; }
+
+/* ---------- 03 Values register: value, what it means, what is on record ---------- */
+.vals__bar, .val { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gut); }
+.vals__bar { padding: 0 0 10px; border-bottom: 1px solid var(--ink); color: var(--ink-2); font-size: 10.5px; }
+.vals__bar span:nth-child(1) { grid-column: 1 / 5; }
+.vals__bar span:nth-child(2) { grid-column: 5 / 9; }
+.vals__bar span:nth-child(3) { grid-column: 9 / 13; }
+.val { align-items: start; padding: 24px 0 28px; border-bottom: 1px solid var(--rule); }
+.val:last-child { border-bottom-color: var(--ink); }
+.val__no { grid-column: 1; padding-top: 8px; color: var(--ink-2); font-size: 11px; }
+.val__title { grid-column: 2 / 5; font-size: clamp(28px, 2.6vw, 40px); font-weight: 750; font-stretch: 86%; line-height: 0.98; letter-spacing: -0.03em; }
+.val__copy { grid-column: 5 / 9; font-size: 16.5px; line-height: 1.5; text-wrap: pretty; }
+.val__proof { grid-column: 9 / 13; border-top: 1px solid var(--ink); }
+.val__proof li { display: flex; align-items: baseline; gap: 12px; padding: 8px 0 9px; border-bottom: 1px solid var(--rule); font-size: 15px; line-height: 1.35; }
+.val__proof li::before {
+  content: "";
+  flex: none;
+  width: 10px;
+  height: 5px;
+  border-left: 2px solid var(--red);
+  border-bottom: 2px solid var(--red);
+  transform: translateY(-3px) rotate(-45deg);
+}
+.val__proof li:last-child { border-bottom: 0; }
+.val__link { display: inline-flex; align-items: center; gap: 8px; min-height: 24px; font-weight: 650; text-decoration: none; background: linear-gradient(var(--red), var(--red)) 0 100% / 100% 2px no-repeat; }
+.val__link:hover { color: var(--red-ink); }
+
+/* ---------- 04 Vision + mission (ink band) ---------- */
+.vis__k { grid-column: 2 / 10; color: #FF8A8A; font-size: 14px; }
+.vis__statement {
+  max-width: 13em;
+  font-size: clamp(48px, 7.4vw, 124px);
+  font-weight: 800;
+  font-stretch: 80%;
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+.vis__statement em { font-style: normal; color: #FF8A8A; }
+.vis__statement .dot { color: var(--red); }
+.vis__lead { max-width: 34em; margin-top: 36px; font-size: 20px; line-height: 1.45; color: rgb(243 241 236 / 0.86); text-wrap: pretty; }
+.vis__block { margin-top: 80px; padding-top: 14px; border-top: 1px solid rgb(243 241 236 / 0.3); }
+.vis__h { color: #FF8A8A; font-size: 12px; font-weight: 500; }
+.mis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: var(--gut); row-gap: 32px; margin-top: 28px; }
+.mis__item { position: relative; padding-top: 16px; border-top: 1px solid var(--paper); }
+.mis__item::before { content: ""; position: absolute; top: -2px; left: 0; width: 28px; height: 3px; background: var(--red); }
+.mis__no { color: rgb(243 241 236 / 0.66); font-size: 11px; }
+.mis__title { margin-top: 22px; font-size: clamp(22px, 1.9vw, 28px); font-weight: 750; font-stretch: 88%; line-height: 1.02; letter-spacing: -0.02em; }
+.mis__copy { margin-top: 10px; max-width: 22em; font-size: 15.5px; line-height: 1.45; color: rgb(243 241 236 / 0.8); text-wrap: pretty; }
+.vis__next { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gut); row-gap: 16px; margin-top: 64px; }
+.vis__next .vis__h { grid-column: 1 / 4; padding-top: 3px; }
+.next { grid-column: 4 / 13; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--gut); }
+.next li { display: flex; gap: 12px; padding: 9px 0 10px; border-bottom: 1px solid rgb(243 241 236 / 0.18); font-size: 17px; line-height: 1.35; }
+.next li::before { content: "→"; color: #FF8A8A; }
+
+/* ---------- 05 Leadership register ---------- */
+.team__bar, .ldr { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gut); }
+.team__bar { padding: 0 0 10px; border-bottom: 1px solid var(--ink); color: var(--ink-2); font-size: 10.5px; }
+.team__bar span:nth-child(2) { grid-column: 2 / 6; }
+.team__bar span:nth-child(3) { grid-column: 6 / 9; }
+.team__bar span:nth-child(4) { grid-column: 9 / 13; }
+.ldr { align-items: baseline; padding: 24px 0 26px; border-bottom: 1px solid var(--rule); }
+.ldr:last-child { border-bottom-color: var(--ink); }
+.ldr__no { grid-column: 1; color: var(--ink-2); font-size: 11px; }
+.ldr__name { grid-column: 2 / 6; font-size: clamp(32px, 3.4vw, 54px); font-weight: 800; font-stretch: 80%; line-height: 0.92; letter-spacing: -0.035em; }
+.ldr__role { grid-column: 6 / 9; color: var(--red-ink); }
+.ldr__focus { grid-column: 9 / 13; font-size: 15.5px; line-height: 1.5; color: var(--ink-2); text-wrap: pretty; }
+.ldr__focus b { display: block; margin-bottom: 4px; color: var(--ink); font-size: 17px; font-weight: 650; }
+
+/* ---------- Tablet ---------- */
+@media (max-width: 1180px) {
+  .file__row { grid-template-columns: 112px minmax(0, 1fr); padding-inline: 14px; }
+  .val__title { grid-column: 2 / 5; }
+}
+
+/* ---------- Phone ---------- */
+@media (max-width: 899px) {
+  .ahero .phero__in { padding-bottom: 40px; }
+  .ahero .phero__title { grid-column: 1 / -1; font-size: clamp(44px, 12.6vw, 64px); }
+  .ahero .phero__lead { grid-column: 1 / -1; margin-top: 24px; font-size: 18px; }
+  .file { grid-column: 1 / -1; grid-row: auto; margin-top: 32px; }
+  .file__bar { padding-inline: 14px; }
+  .file__row { grid-template-columns: 104px minmax(0, 1fr); column-gap: 12px; padding: 10px 14px 12px; }
+  .file__row dt { font-size: 10.5px; }
+  .file__num { font-size: 36px; }
+
+  .who__map, .who__text { grid-column: 1 / -1; }
+  .who__prose { font-size: 17px; }
+  .who__fig { margin-top: 32px; }
+  .org__name { font-size: 19px; }
+  .org__list li { font-size: 18px; min-height: 52px; padding-left: 28px; }
+  .org__list li::after { width: 20px; }
+  .org__list .org__gpl::after { width: 28px; }
+  .org__box { padding: 12px 14px; }
+  .org__box img { height: 64px; }
+  .range { margin-top: 36px; }
+  .range > div { grid-template-columns: 6.5em minmax(0, 1fr); gap: 12px; }
+  .range dd { font-size: 16px; }
+
+  /* The chart keeps its scale; the three dates move into a keyed list underneath. */
+  .tl { --h: 120px; --ya: 40px; --plot-h: calc(var(--h) + 28px); }
+  .tl__plot { margin-bottom: 52px; }
+  .tl__k { right: auto; left: 18px; }
+  .tl__axis span:nth-child(even) { display: none; }
+  .tl__events { position: static; height: auto; border-top: 1px solid var(--ink); }
+  .tl__ev, .tl__ev--found, .tl__ev--now, .tl__ev--goal {
+    position: static;
+    background: none;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 12px;
+    align-items: center;
+    padding: 12px 0 14px;
+    border-bottom: 1px solid var(--rule);
+    text-align: left;
+  }
+  .tl__when { display: flex; align-items: center; gap: 10px; grid-column: 1; }
+  .tl__key { display: block; flex: none; width: 14px; height: 14px; }
+  .tl__ev--found .tl__key { width: 13px; height: 13px; border-radius: 50%; background: var(--red); }
+  .tl__ev--now .tl__key { background: linear-gradient(var(--red), var(--red)) 0 100% / 100% 70% no-repeat, repeating-linear-gradient(135deg, var(--red) 0 1.5px, transparent 1.5px 4px); }
+  .tl__ev--goal .tl__key { border: 2px dashed var(--red); }
+  .tl__big { grid-column: 2; grid-row: 1 / span 3; margin-top: 0; font-size: 40px; }
+  .tl__what, .tl__note { grid-column: 1; }
+  .tl__what { margin-top: 6px; font-size: 18px; }
+  .tl__note { font-size: 14px; }
+  .tl__cap { margin-top: 14px; }
+
+  .vals__bar { display: none; }
+  .val { grid-template-columns: 44px minmax(0, 1fr); row-gap: 12px; padding: 20px 0 22px; }
+  .val:first-child { border-top: 1px solid var(--ink); }
+  .val__no { grid-column: 1; padding-top: 6px; }
+  .val__title { grid-column: 2; font-size: 30px; }
+  .val__copy, .val__proof { grid-column: 1 / -1; }
+  .val__copy { font-size: 16px; }
+  .val__proof li { font-size: 14.5px; }
+  .val__link { min-height: 40px; }
+
+  .vis__k { grid-column: 3 / 5; grid-row: 1; text-align: right; font-size: 12px; }
+  .vis__head .sec__note { display: none; }
+  .vis__statement { font-size: clamp(44px, 12.4vw, 64px); }
+  .vis__lead { margin-top: 24px; font-size: 18px; }
+  .vis__block { margin-top: 56px; }
+  .mis { grid-template-columns: minmax(0, 1fr); row-gap: 24px; margin-top: 22px; }
+  .mis__title { margin-top: 12px; font-size: 24px; }
+  .vis__next { grid-template-columns: minmax(0, 1fr); margin-top: 48px; }
+  .vis__next .vis__h, .next { grid-column: 1; }
+  .next { grid-template-columns: minmax(0, 1fr); }
+  .next li { font-size: 16px; }
+
+  .team__bar { display: none; }
+  .ldr { grid-template-columns: 44px minmax(0, 1fr); row-gap: 8px; padding: 20px 0 22px; }
+  .ldr:first-child { border-top: 1px solid var(--ink); }
+  .ldr__no { grid-column: 1; }
+  .ldr__name { grid-column: 2; font-size: 34px; }
+  .ldr__role, .ldr__focus { grid-column: 2; }
+  .ldr__focus { margin-top: 6px; font-size: 15px; }
+  .ldr__focus b { font-size: 16px; }
+}

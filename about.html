@@ -27,7 +27,9 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=IBM+Plex+Mono:wght@400;500&display=swap">
   <link rel="stylesheet" href="assets/css/site.css">
   <link rel="stylesheet" href="assets/css/pages.css">
+  <link rel="stylesheet" href="assets/css/about.css">
   <script type="module" src="assets/js/site.js"></script>
+  <script type="module" src="assets/js/about.js"></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -67,7 +69,8 @@
   </header>
 
   <main id="main">
-    <section class="phero" aria-labelledby="page-title">
+    <!-- HERO: who we are in one line, plus the company file (key figures) -->
+    <section class="phero ahero" aria-labelledby="page-title">
       <div class="wrap phero__in">
         <ul class="phero__meta mono">
           <li><span class="k">PG.</span> 01 · About</li>
@@ -75,146 +78,269 @@
           <li><span class="k">LOC.</span> Alexandria Free Zone, EG</li>
           <li><span class="k">CAT.</span> Knit + woven garments</li>
         </ul>
-        <h1 class="phero__title" id="page-title">Built on precision. Engineered for&nbsp;scale<span class="dot">.</span></h1>
-        <p class="phero__lead">Three Stars Group is a vertically integrated garment manufacturer and apparel exporter in Alexandria, Egypt, producing knitted and woven garments for globally recognized brands since 2008.</p>
+        <h1 class="phero__title" id="page-title">Making garments in Alexandria since&nbsp;2008<span class="dot">.</span></h1>
+        <p class="phero__lead">Three Stars Group is a vertically integrated garment manufacturer and exporter. Four companies under one management team make knitted and woven garments for global brands and retailers.</p>
+
+        <div class="file" role="group" aria-labelledby="file-title">
+          <div class="file__bar">
+            <h2 class="file__title mono" id="file-title">Company file</h2>
+            <p class="file__id mono">Three Stars Group</p>
+          </div>
+          <dl class="file__rows">
+            <div class="file__row" style="--n:0">
+              <dt class="mono">Founded</dt>
+              <dd><span class="file__num num">2008</span><span class="file__note mono">Alexandria, Egypt</span></dd>
+            </div>
+            <div class="file__row" style="--n:1">
+              <dt class="mono">Production units</dt>
+              <dd><span class="file__num num">10</span><span class="file__note mono">Alexandria Public Free Zone</span><span class="file__units" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></dd>
+            </div>
+            <div class="file__row" style="--n:2">
+              <dt class="mono">Sewing machines</dt>
+              <dd><span class="file__num num">3,500</span><span class="file__note file__key mono"><span class="file__lg"><i class="file__sw"></i>2,300 Three Stars</span> <span class="file__lg"><i class="file__sw file__sw--red"></i>1,200 Golden Stars</span></span><span class="file__split" aria-hidden="true"><i></i><i></i></span></dd>
+            </div>
+            <div class="file__row" style="--n:3">
+              <dt class="mono">Capacity</dt>
+              <dd><span class="file__num num">100,000</span><span class="file__note mono">Units a day</span></dd>
+            </div>
+            <div class="file__row" style="--n:4">
+              <dt class="mono">Countries served</dt>
+              <dd><span class="file__num num">40<b>+</b></span><span class="file__note mono">Duty-free to US · EU · GCC</span></dd>
+            </div>
+          </dl>
+        </div>
       </div>
     </section>
 
-    <section class="sec" aria-labelledby="story-title">
+    <!-- 01 WHO WE ARE: the group tree (same structure as /logistics), the story, the range -->
+    <section class="sec sec--flush" aria-labelledby="group-title">
       <div class="wrap">
         <header class="sec__head">
           <p class="sec__idx mono">01</p>
-          <h2 class="sec__title" id="story-title">Vertically integrated manufacturing since&nbsp;2008.</h2>
-          <p class="sec__note mono">Our story</p>
+          <h2 class="sec__title" id="group-title">Four companies. One vertically integrated group.</h2>
+          <p class="sec__note mono">Who we are</p>
         </header>
-        <div class="split">
-          <div class="split__text prose">
-            <p>Three Stars Group is a pioneering garment manufacturing company and prominent apparel exporter based in Alexandria, Egypt. Established in 2008, the group specializes in the production of high-quality knitted and woven garments for globally recognized brands and retailers.</p>
-            <p>Driven by innovation, sustainability, and social responsibility, we combine advanced manufacturing technology with skilled production capabilities across our state-of-the-art facilities. Our vertically integrated structure allows us to deliver consistent quality, competitive lead times, and scalable production solutions tailored to our partners’ needs.</p>
-            <p>Three Stars Group brings together Three Stars Fashion, Three Stars Apparels, Golden Stars Textile and Green Point Logistics. Together, we are ranked as one of the largest apparel manufacturers and exporters in Egypt.</p>
-            <p>Our product range spans activewear and athletics, casualwear, uniforms, and underwear, covering men’s, ladies’, and kids’ categories. Supported by one of the largest flat-seam machine inventories in Egypt, we are particularly recognized for our expertise in performance and athletic garments.</p>
+        <div class="who">
+          <div class="who__map">
+            <figure class="org">
+              <p class="org__root"><img src="assets/Brands/tsf-mark.png" width="170" height="160" loading="lazy" alt=""><span class="org__name">Three Stars Group</span><span class="org__est mono">Est. 2008 · Alexandria</span></p>
+              <ol class="org__list">
+                <li><span class="mono">01</span>Three Stars Fashion</li>
+                <li><span class="mono">02</span>Three Stars Apparels</li>
+                <li><span class="mono">03</span>Golden Stars Textile</li>
+                <li class="org__gpl"><a class="org__box" href="/logistics"><span class="mono">04</span><img src="assets/Greenpoint/logo.webp" width="942" height="432" loading="lazy" alt="Green Point Logistics"><span class="org__tag mono">Our logistics arm <span aria-hidden="true">→</span></span></a></li>
+              </ol>
+              <figcaption class="sr-only">Three Stars Group has four member companies: Three Stars Fashion, Three Stars Apparels, Golden Stars Textile and Green Point Logistics, the group’s logistics arm.</figcaption>
+            </figure>
+            <dl class="range">
+              <div><dt class="mono">Products</dt><dd>Activewear + athletics&nbsp;· Casualwear&nbsp;· Uniforms&nbsp;· Underwear</dd></div>
+              <div><dt class="mono">For</dt><dd>Men&nbsp;· Ladies&nbsp;· Kids</dd></div>
+              <div><dt class="mono">Fabrics</dt><dd>Knit + woven</dd></div>
+              <div><dt class="mono">Known for</dt><dd>Performance and athletic garments, on one of the largest flat-seam machine inventories in Egypt</dd></div>
+            </dl>
           </div>
-          <figure class="split__fig split__fig--pad fig">
-            <img src="assets/Buildings/TSF%20Building%20%28B%29.jpg" width="556" height="311" loading="lazy" decoding="async" alt="Exterior of TSF Building (B), the group’s primary production hub in the Alexandria Free Zone">
-            <figcaption class="mono"><span>Fig. 01 · TSF Building (B)</span><span>Alexandria FZ</span></figcaption>
-          </figure>
+          <div class="who__text">
+            <div class="prose who__prose">
+              <p>Three Stars Group makes knitted and woven garments for globally recognized brands and retailers. The group was established in Alexandria, Egypt, in 2008 and is ranked among the largest apparel manufacturers and exporters in Egypt.</p>
+              <p>Design, cutting, sewing, printing and logistics stay inside the group, run on modern manufacturing technology and skilled production teams. That gives your program consistent quality, competitive lead times and room to scale.</p>
+            </div>
+            <figure class="fig who__fig">
+              <img src="assets/Buildings/TSF%20Building%20%28B%29.jpg" width="556" height="311" loading="lazy" decoding="async" alt="Exterior of TSF Building (B), the group’s primary production hub in the Alexandria Free Zone">
+              <figcaption class="mono"><span>Fig. 01 · TSF Building (B)</span><span>Alexandria FZ</span></figcaption>
+            </figure>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="sec" aria-labelledby="values-title">
+    <!-- 02 TIMELINE: only dates on record, time and solar share both drawn to scale (about.css) -->
+    <section class="sec sec--flush" aria-labelledby="tl-title">
       <div class="wrap">
         <header class="sec__head">
           <p class="sec__idx mono">02</p>
-          <h2 class="sec__title" id="values-title">Principles that guide every stitch.</h2>
-          <p class="sec__note mono">Our values</p>
+          <h2 class="sec__title" id="tl-title">Founded in 2008. Going solar from 2027.</h2>
+          <p class="sec__note mono">Timeline · to scale</p>
         </header>
-        <ul class="cells">
-          <li class="cell">
-            <p class="cell__no mono">V/01</p>
-            <h3 class="cell__title">Sustainability</h3>
-            <p class="cell__copy">Committed to reducing our environmental footprint through eco-friendly practices and the use of sustainable materials and energy. Solar panels cover 25–30% of our energy needs from Q1 2027, with a target of 70–80% by the end of 2029.</p>
-          </li>
-          <li class="cell">
-            <p class="cell__no mono">V/02</p>
-            <h3 class="cell__title">Innovation</h3>
-            <p class="cell__copy">Continuously investing in manufacturing technology, process automation, and production engineering to maintain efficiency and quality standards across high-volume, multi-category programs.</p>
-          </li>
-          <li class="cell">
-            <p class="cell__no mono">V/03</p>
-            <h3 class="cell__title">Ethical practices</h3>
-            <p class="cell__copy">Upholding fair labor practices and contributing to the well-being of our employees and communities. We actively support local communities through food programs and healthcare partnerships.</p>
-          </li>
-          <li class="cell">
-            <p class="cell__no mono">V/04</p>
-            <h3 class="cell__title">Customer satisfaction</h3>
-            <p class="cell__copy">Prioritizing partner requirements at every stage, from sampling and development through bulk production, quality assurance, and on-time delivery, with transparent communication and dedicated account management.</p>
-          </li>
-        </ul>
+        <figure class="tl">
+          <div class="tl__plot">
+            <div class="tl__grid" aria-hidden="true">
+              <span style="--p:1">100%</span>
+              <span style="--p:0.5">50%</span>
+            </div>
+            <p class="tl__k mono" aria-hidden="true">Solar share of energy needs</p>
+            <span class="tl__bar tl__bar--now" aria-hidden="true"></span>
+            <span class="tl__bar tl__bar--goal" aria-hidden="true"></span>
+            <div class="tl__axis" aria-hidden="true">
+              <span style="--t:0">2008</span><span style="--t:2">2010</span><span style="--t:4">2012</span><span style="--t:6">2014</span><span style="--t:8">2016</span><span style="--t:10">2018</span><span style="--t:12">2020</span><span style="--t:14">2022</span><span style="--t:16">2024</span><span style="--t:18">2026</span><span style="--t:20">2028</span><span style="--t:22">2030</span>
+            </div>
+          </div>
+          <ol class="tl__events">
+            <li class="tl__ev tl__ev--found">
+              <p class="tl__when mono"><i class="tl__key" aria-hidden="true"></i>Est.</p>
+              <p class="tl__big num">2008</p>
+              <h3 class="tl__what">Founded in Alexandria</h3>
+              <p class="tl__note">Alexandria Public Free Zone, Amreya</p>
+            </li>
+            <li class="tl__ev tl__ev--now">
+              <p class="tl__when mono"><i class="tl__key" aria-hidden="true"></i>From Q1 2027</p>
+              <p class="tl__big num">25–30<small>%</small></p>
+              <h3 class="tl__what">of energy from our solar panels</h3>
+            </li>
+            <li class="tl__ev tl__ev--goal">
+              <p class="tl__when mono"><i class="tl__key" aria-hidden="true"></i>By the end of 2029</p>
+              <p class="tl__big num">70–80<small>%</small></p>
+              <h3 class="tl__what">solar target</h3>
+            </li>
+          </ol>
+          <figcaption class="tl__cap mono">One year per tick, 2008 to 2030. Bar heights show the solar share of energy needs.</figcaption>
+        </figure>
       </div>
     </section>
 
-    <section class="sec" aria-labelledby="mission-title">
+    <!-- 03 VALUES: how we work today, each with what is on record -->
+    <section class="sec" aria-labelledby="values-title">
       <div class="wrap">
         <header class="sec__head">
           <p class="sec__idx mono">03</p>
-          <h2 class="sec__title" id="mission-title">Four strategic commitments.</h2>
-          <p class="sec__note mono">Our mission</p>
+          <h2 class="sec__title" id="values-title">Four values, and what backs each one.</h2>
+          <p class="sec__note mono">Our values · today</p>
         </header>
-        <ul class="cells cells--short">
-          <li class="cell">
-            <p class="cell__no mono">M/01</p>
-            <h3 class="cell__title">Promote sustainable fashion</h3>
-            <p class="cell__copy">Eco-friendly products made with recycled, sustainable yarns and materials.</p>
-          </li>
-          <li class="cell">
-            <p class="cell__no mono">M/02</p>
-            <h3 class="cell__title">Expand global presence</h3>
-            <p class="cell__copy">Strong partnerships and new opportunities across diverse international markets.</p>
-          </li>
-          <li class="cell">
-            <p class="cell__no mono">M/03</p>
-            <h3 class="cell__title">Adapt to market demands</h3>
-            <p class="cell__copy">Agile and responsive to consumer preferences, with products aligned to current trends.</p>
-          </li>
-          <li class="cell">
-            <p class="cell__no mono">M/04</p>
-            <h3 class="cell__title">Promote transparency</h3>
-            <p class="cell__copy">Transparency from sourcing to delivery, building trust and integrity with every customer.</p>
-          </li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="sec sec--ink" aria-labelledby="vision-title">
-      <div class="wrap">
-        <header class="sec__head">
-          <p class="sec__idx mono">04</p>
-          <h2 class="sec__title sr-only" id="vision-title">Vision 2030</h2>
-          <p class="sec__note mono">Vision 2030</p>
-        </header>
-        <p class="statement">To be a <em>global leader</em> in sustainable fashion.</p>
-        <div class="band__cols">
-          <p>We aim to set new benchmarks in environmental stewardship, innovation, and social responsibility, revolutionizing the way garments are produced.</p>
-          <p>Looking ahead, Three Stars Group is focused on expanded manufacturing capacity and automation, deeper integration of renewable energy, broader adoption of recycled and organic materials, expansion into new global markets, and continued investment in technology, people, and compliance.</p>
+        <div class="vals">
+          <div class="vals__bar mono" aria-hidden="true"><span>Value</span><span>What it means</span><span>On record</span></div>
+          <ol class="vals__list">
+            <li class="val">
+              <p class="val__no mono">V/01</p>
+              <h3 class="val__title">Sustainability</h3>
+              <p class="val__copy">We reduce our environmental footprint with eco-friendly practices and sustainable materials and energy. Solar panels cover 25–30% of our energy needs from Q1 2027, with a target of 70–80% by the end of 2029.</p>
+              <ul class="val__proof">
+                <li>All waste recycled through local partners</li>
+                <li>GRS and OCS for recycled and organic content</li>
+                <li>Higg Index for environmental performance</li>
+              </ul>
+            </li>
+            <li class="val">
+              <p class="val__no mono">V/02</p>
+              <h3 class="val__title">Innovation</h3>
+              <p class="val__copy">We keep investing in manufacturing technology, process automation and production engineering, so efficiency and quality hold across high-volume, multi-category programs.</p>
+              <ul class="val__proof">
+                <li>6 automated cutting machines, incl. Gerber Paragon</li>
+                <li>6 automatic screen printers, 65,000+ pieces a day</li>
+                <li>4 multi-head embroidery machines</li>
+              </ul>
+            </li>
+            <li class="val">
+              <p class="val__no mono">V/03</p>
+              <h3 class="val__title">Ethical practices</h3>
+              <p class="val__copy">Fair labor practices and the well-being of our employees and communities. We support the communities around our factories through food programs and healthcare partnerships.</p>
+              <ul class="val__proof">
+                <li>BSCI, SEDEX, WRAP Gold and Better Work</li>
+                <li>Food and essentials for families near our factories</li>
+                <li>Cancer-Free Community Initiative with a local cancer hospital</li>
+              </ul>
+            </li>
+            <li class="val">
+              <p class="val__no mono">V/04</p>
+              <h3 class="val__title">Customer satisfaction</h3>
+              <p class="val__copy">Your requirements lead at every stage, from sampling and development through bulk production, quality assurance and on-time delivery, with clear communication and a dedicated account manager.</p>
+              <ul class="val__proof">
+                <li>ISO 9001 quality management</li>
+                <li>8 buyer approvals, incl. Inditex, Walmart and Disney</li>
+                <li><a class="val__link" href="/certifications">All certifications <span aria-hidden="true">→</span></a></li>
+              </ul>
+            </li>
+          </ol>
         </div>
       </div>
     </section>
 
+    <!-- 04 VISION + MISSION: where the group is going, and the four commitments that get it there -->
+    <section class="sec sec--ink vis" aria-labelledby="vision-title">
+      <div class="wrap">
+        <header class="sec__head vis__head">
+          <p class="sec__idx mono">04</p>
+          <p class="vis__k mono">Vision 2030</p>
+          <p class="sec__note mono">Where we are going</p>
+        </header>
+        <h2 class="vis__statement" id="vision-title">To be a <em>global leader</em> in sustainable fashion<span class="dot">.</span></h2>
+        <p class="vis__lead">We aim to set new benchmarks in environmental stewardship, innovation and social responsibility, and to change the way garments are produced.</p>
+
+        <div class="vis__block">
+          <h3 class="vis__h mono">Mission · four commitments</h3>
+          <ol class="mis">
+            <li class="mis__item">
+              <p class="mis__no mono">M/01</p>
+              <h4 class="mis__title">Promote sustainable fashion</h4>
+              <p class="mis__copy">Eco-friendly products made with recycled, sustainable yarns and materials.</p>
+            </li>
+            <li class="mis__item">
+              <p class="mis__no mono">M/02</p>
+              <h4 class="mis__title">Expand global presence</h4>
+              <p class="mis__copy">Strong partnerships and new opportunities across diverse international markets.</p>
+            </li>
+            <li class="mis__item">
+              <p class="mis__no mono">M/03</p>
+              <h4 class="mis__title">Adapt to market demands</h4>
+              <p class="mis__copy">Agile and responsive to consumer preferences, with products aligned to current trends.</p>
+            </li>
+            <li class="mis__item">
+              <p class="mis__no mono">M/04</p>
+              <h4 class="mis__title">Promote transparency</h4>
+              <p class="mis__copy">Transparency from sourcing to delivery, building trust with every customer.</p>
+            </li>
+          </ol>
+        </div>
+
+        <div class="vis__block vis__next">
+          <h3 class="vis__h mono">Looking ahead</h3>
+          <ul class="next">
+            <li>More manufacturing capacity and automation</li>
+            <li>Deeper use of renewable energy</li>
+            <li>More recycled and organic materials</li>
+            <li>New global markets</li>
+            <li>Continued investment in technology, people and compliance</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 LEADERSHIP: a register, no photos -->
     <section class="sec" aria-labelledby="team-title">
       <div class="wrap">
         <header class="sec__head">
           <p class="sec__idx mono">05</p>
-          <h2 class="sec__title" id="team-title">Experienced management, global partnerships.</h2>
+          <h2 class="sec__title" id="team-title">Who runs the group.</h2>
           <p class="sec__note mono">Leadership</p>
         </header>
-        <p class="sec__lead">Three Stars Group is led by an experienced management team with deep expertise in manufacturing, exports, and global brand partnerships.</p>
-        <ul class="cells cells--short">
-          <li class="cell">
-            <p class="cell__no mono">L/01</p>
-            <h3 class="cell__title">Zakir Hossain</h3>
-            <p class="cell__role mono">Founder &amp; Chairman</p>
-            <p class="cell__copy">Group leadership and vision. Founded the group in 2008 with a focus on quality, sustainability and global market reach.</p>
-          </li>
-          <li class="cell">
-            <p class="cell__no mono">L/02</p>
-            <h3 class="cell__title">Ziad Zakir</h3>
-            <p class="cell__role mono">Chief Executive Officer</p>
-            <p class="cell__copy">Strategy and business development: group-wide strategy, expansion plans and stakeholder relationships worldwide.</p>
-          </li>
-          <li class="cell">
-            <p class="cell__no mono">L/03</p>
-            <h3 class="cell__title">Ahmed Mahran</h3>
-            <p class="cell__role mono">General Manager</p>
-            <p class="cell__copy">Operations and manufacturing: end-to-end factory operations across all group facilities in Alexandria.</p>
-          </li>
-          <li class="cell">
-            <p class="cell__no mono">L/04</p>
-            <h3 class="cell__title">Tarek Gaber</h3>
-            <p class="cell__role mono">Chief Marketing Officer</p>
-            <p class="cell__copy">Marketing and global partnerships: brand positioning, client development and international market growth.</p>
-          </li>
-        </ul>
+        <p class="sec__lead">An experienced management team with deep expertise in manufacturing, exports and global brand partnerships.</p>
+        <div class="team">
+          <div class="team__bar mono" aria-hidden="true"><span>No.</span><span>Name</span><span>Title</span><span>Focus</span></div>
+          <ol class="team__list">
+            <li class="ldr">
+              <p class="ldr__no mono">L/01</p>
+              <h3 class="ldr__name">Zakir Hossain</h3>
+              <p class="ldr__role mono">Founder &amp; Chairman</p>
+              <p class="ldr__focus"><b>Group leadership and vision.</b> Founded the group in 2008 with a focus on quality, sustainability and global market reach.</p>
+            </li>
+            <li class="ldr">
+              <p class="ldr__no mono">L/02</p>
+              <h3 class="ldr__name">Ziad Zakir</h3>
+              <p class="ldr__role mono">Chief Executive Officer</p>
+              <p class="ldr__focus"><b>Strategy and business development.</b> Group-wide strategy, expansion plans and stakeholder relationships worldwide.</p>
+            </li>
+            <li class="ldr">
+              <p class="ldr__no mono">L/03</p>
+              <h3 class="ldr__name">Ahmed Mahran</h3>
+              <p class="ldr__role mono">General Manager</p>
+              <p class="ldr__focus"><b>Operations and manufacturing.</b> End-to-end factory operations across all group facilities in Alexandria.</p>
+            </li>
+            <li class="ldr">
+              <p class="ldr__no mono">L/04</p>
+              <h3 class="ldr__name">Tarek Gaber</h3>
+              <p class="ldr__role mono">Chief Marketing Officer</p>
+              <p class="ldr__focus"><b>Marketing and global partnerships.</b> Brand positioning, client development and international market growth.</p>
+            </li>
+          </ol>
+        </div>
       </div>
     </section>
 
@@ -222,8 +348,11 @@
       <div class="wrap cta__in">
         <p class="sec__idx mono">06</p>
         <h2 class="cta__title" id="cta-title">Explore a manufacturing partnership.</h2>
-        <p class="cta__lead">Discover how the group can support your production programs with certified facilities, scalable capacity, and competitive lead times.</p>
-        <div class="cta__actions"><a class="btn btn--ink btn--xl" href="/contact">Get in touch <span aria-hidden="true">→</span></a></div>
+        <p class="cta__lead">Certified facilities, capacity for 100,000 units a day and our own logistics arm. Tell us about your program.</p>
+        <div class="cta__actions">
+          <a class="btn btn--ink btn--xl" href="/contact">Get in touch <span aria-hidden="true">→</span></a>
+          <a class="btn btn--line btn--xl" href="/facilities">See the facilities <span aria-hidden="true">→</span></a>
+        </div>
         <svg class="cta__stars" viewBox="10.5 33.9 156.8 148.4" aria-hidden="true"><use href="#tsf-three" x="10.5" y="33.9" width="156.8" height="148.4"/><use class="cta__logo-stars" href="#three-stars" x="10.5" y="33.9" width="156.8" height="148.4"/></svg>
       </div>
     </section>
