@@ -27,7 +27,9 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=IBM+Plex+Mono:wght@400;500&display=swap">
   <link rel="stylesheet" href="assets/css/site.css">
   <link rel="stylesheet" href="assets/css/pages.css">
+  <link rel="stylesheet" href="assets/css/services.css">
   <script type="module" src="assets/js/site.js"></script>
+  <script type="module" src="assets/js/services.js"></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -67,7 +69,8 @@
   </header>
 
   <main id="main">
-    <section class="phero" aria-labelledby="page-title">
+    <!-- HERO: the whole service on one line (capability map); each station links to its detail row in 01 -->
+    <section class="phero svc-hero" aria-labelledby="page-title">
       <div class="wrap phero__in">
         <ul class="phero__meta mono">
           <li><span class="k">PG.</span> 02 · Services</li>
@@ -75,119 +78,209 @@
           <li><span class="k">PRT.</span> 65,000+ pieces / day</li>
           <li><span class="k">SEW.</span> 3,500 machines</li>
         </ul>
-        <h1 class="phero__title" id="page-title">Full-service manufacturing, from development to delivery<span class="dot">.</span></h1>
-        <p class="phero__lead">Cutting, sewing, printing, embroidery, finishing, quality assurance and product development, run by our own teams in the Alexandria Free Zone.</p>
+        <h1 class="phero__title" id="page-title">From first sample to shipped carton<span class="dot">.</span></h1>
+        <p class="phero__lead">We develop, source, cut, print, embroider, sew, inspect, pack and ship apparel for global brands. Our own production units in the Alexandria Free Zone, a China office for fabric and trims, and our own logistics arm.</p>
+        <dl class="svc-facts">
+          <div><dt class="mono">You send</dt><dd>A tech pack, sample or sketch</dd></div>
+          <div><dt class="mono">You get</dt><dd>Finished garments, packed to your spec and shipped by our own logistics arm</dd></div>
+        </dl>
+
+        <figure class="cmap" aria-labelledby="cmap-cap">
+          <div class="cmap__lanes mono" aria-hidden="true">
+            <span class="cmap__lane cmap__lane--alx">Alexandria Free Zone · 10 production units</span>
+            <span class="cmap__lane cmap__lane--gpl">Green Point Logistics</span>
+          </div>
+          <ol class="cmap__list">
+            <li style="--i:0"><a class="cmap__a" href="#op-01">
+              <span class="cmap__no mono">01</span>
+              <span class="cmap__box"><svg class="ic" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><use href="#ic-develop"/></svg></span>
+              <span class="cmap__name">Develop</span>
+              <span class="cmap__fig num">In-house</span>
+              <span class="cmap__unit mono">Design + sampling</span>
+            </a></li>
+            <li style="--i:1"><a class="cmap__a" href="#op-02">
+              <span class="cmap__no mono">02</span>
+              <span class="cmap__box"><svg class="ic" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><use href="#ic-source"/></svg></span>
+              <span class="cmap__name">Source</span>
+              <span class="cmap__fig num">500<b>+</b>&thinsp;t</span>
+              <span class="cmap__unit mono">Jersey in stock <span class="cmap__cn">+ China office</span></span>
+            </a></li>
+            <li style="--i:2"><a class="cmap__a" href="#op-03">
+              <span class="cmap__no mono">03</span>
+              <span class="cmap__box"><svg class="ic" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><use href="#ic-cut"/></svg></span>
+              <span class="cmap__name">Cut</span>
+              <span class="cmap__fig num">6</span>
+              <span class="cmap__unit mono">Automated cutters</span>
+            </a></li>
+            <li style="--i:3"><a class="cmap__a" href="#op-04">
+              <span class="cmap__no mono">04</span>
+              <span class="cmap__box"><svg class="ic" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><use href="#ic-print"/></svg></span>
+              <span class="cmap__name">Print</span>
+              <span class="cmap__fig num">65,000<b>+</b></span>
+              <span class="cmap__unit mono">Pieces a day</span>
+            </a></li>
+            <li style="--i:4"><a class="cmap__a" href="#op-05">
+              <span class="cmap__no mono">05</span>
+              <span class="cmap__box"><svg class="ic" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><use href="#ic-embroider"/></svg></span>
+              <span class="cmap__name">Embroider</span>
+              <span class="cmap__fig num">4</span>
+              <span class="cmap__unit mono">Multi-head machines</span>
+            </a></li>
+            <li style="--i:5"><a class="cmap__a" href="#op-06">
+              <span class="cmap__no mono">06</span>
+              <span class="cmap__box"><svg class="ic" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><use href="#ic-sew"/></svg></span>
+              <span class="cmap__name">Sew</span>
+              <span class="cmap__fig num">3,500</span>
+              <span class="cmap__unit mono">Sewing machines</span>
+            </a></li>
+            <li style="--i:6"><a class="cmap__a" href="#op-07">
+              <span class="cmap__no mono">07</span>
+              <span class="cmap__box"><svg class="ic" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><use href="#ic-inspect"/></svg></span>
+              <span class="cmap__name">Inspect</span>
+              <span class="cmap__fig num">AQL</span>
+              <span class="cmap__unit mono">In-line + final</span>
+            </a></li>
+            <li style="--i:7"><a class="cmap__a" href="#op-08">
+              <span class="cmap__no mono">08</span>
+              <span class="cmap__box"><svg class="ic" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><use href="#ic-pack"/></svg></span>
+              <span class="cmap__name">Pack</span>
+              <span class="cmap__fig num">100,000</span>
+              <span class="cmap__unit mono">Units a day</span>
+            </a></li>
+            <li style="--i:8"><a class="cmap__a" href="#op-09">
+              <span class="cmap__no mono">09</span>
+              <span class="cmap__box"><svg class="ic" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><use href="#ic-ship"/></svg></span>
+              <span class="cmap__name">Ship</span>
+              <span class="cmap__fig num">0%</span>
+              <span class="cmap__unit mono">Duty · US, EU, GCC</span>
+            </a></li>
+          </ol>
+          <figcaption class="cmap__io mono" id="cmap-cap"><span>In · your brief</span><span class="cmap__cap">Fig. 01 · Brief to delivery, one group</span><span>Out · packed + shipped</span></figcaption>
+        </figure>
       </div>
     </section>
 
-    <section class="sec" aria-labelledby="svc-title">
+    <!-- 01 THE NINE STEPS: one row per station, same order as the map -->
+    <section class="sec sec--flush" aria-labelledby="ops-title">
       <div class="wrap">
         <header class="sec__head">
           <p class="sec__idx mono">01</p>
-          <h2 class="sec__title" id="svc-title">Seven capabilities. One group.</h2>
+          <h2 class="sec__title" id="ops-title">Nine steps. One group.</h2>
           <p class="sec__note mono">Service sheet</p>
         </header>
-        <p class="sec__lead">Three Stars Group offers a complete range of garment manufacturing services. Our integrated facilities and experienced production teams ensure consistent output at high volumes while maintaining international quality and compliance standards.</p>
-        <ol class="svc">
-          <li class="svc__row">
-            <p class="svc__n" aria-hidden="true">01</p>
-            <div class="svc__main">
-              <h3 class="svc__title">Precision cutting</h3>
-              <p class="svc__desc">Our cutting department uses advanced CAD/CAM technology for precise, efficient cutting of fabrics. Every pattern is optimized for minimal waste while maintaining the highest quality standards.</p>
+        <p class="sec__lead">Every step is run by our own teams: production units in Alexandria, our China office and Green Point Logistics.</p>
+        <ol class="ops">
+          <li class="op" id="op-01">
+            <div class="op__id"><p class="op__n" aria-hidden="true">01</p><svg class="ic op__ic" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><use href="#ic-develop"/></svg></div>
+            <div class="op__main">
+              <p class="op__where mono">Alexandria · in-house team</p>
+              <h3 class="op__title">Develop + sample</h3>
+              <p class="op__desc">Our design and development team turns your concept or tech pack into samples, then into a spec ready for bulk.</p>
+              <p class="op__gain"><span class="mono">For you</span>One team takes your style from first sample to bulk production.</p>
             </div>
-            <ul class="svc__feats">
-              <li>Computer-aided design integration</li>
-              <li>Automated cutting systems</li>
-              <li>Pattern optimization</li>
-              <li>Multi-layer cutting capability</li>
-              <li>Quality inspection at every stage</li>
-            </ul>
+            <div class="op__fig"><p class="op__num op__num--word num">In-house</p><p class="op__unit mono">Design + sampling</p></div>
+            <ul class="op__inc"><li>In-house design and sampling</li><li>Custom specification development</li><li>Performance and sustainable fabrics</li></ul>
           </li>
-          <li class="svc__row">
-            <p class="svc__n" aria-hidden="true">02</p>
-            <div class="svc__main">
-              <h3 class="svc__title">Expert sewing</h3>
-              <p class="svc__desc">Our sewing operations run 3,500 machines across ten production units, including automatic sewing machines, staffed by trained operators delivering consistent quality across activewear, casualwear, uniforms, and underwear.</p>
+          <li class="op" id="op-02">
+            <div class="op__id"><p class="op__n" aria-hidden="true">02</p><svg class="ic op__ic" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><use href="#ic-source"/></svg></div>
+            <div class="op__main">
+              <p class="op__where mono">Alexandria stock + China office</p>
+              <h3 class="op__title">Source fabric + trims</h3>
+              <p class="op__desc">Knit programs start from our own stock. Our China office sources other fabrics and trims, wovens included, and runs QC on them.</p>
+              <p class="op__gain"><span class="mono">For you</span>Single-jersey orders from stock can turn in about 30 days.</p>
             </div>
-            <ul class="svc__feats">
-              <li>Modern sewing machinery</li>
-              <li>Trained production operators</li>
-              <li>Multiple product lines</li>
-              <li>Strict quality control</li>
-              <li>High-volume capacity</li>
-            </ul>
+            <div class="op__fig"><p class="op__num num">500<b>+</b><small>t</small></p><p class="op__unit mono">Cotton + CVC jersey in stock</p><p class="op__more mono">+ 500 t ready greige stock</p></div>
+            <ul class="op__inc"><li>Dedicated sourcing office in China</li><li>Fabric and trims sourcing, with QC</li><li>Organic cotton (OCS) and recycled yarns (GRS)</li></ul>
           </li>
-          <li class="svc__row">
-            <p class="svc__n" aria-hidden="true">03</p>
-            <div class="svc__main">
-              <h3 class="svc__title">Screen printing</h3>
-              <p class="svc__desc">With 6 advanced printing machines and a daily capacity of 65,000+ pieces, our printing facility delivers vibrant, durable prints that withstand repeated washing and wear.</p>
+          <li class="op" id="op-03">
+            <div class="op__id"><p class="op__n" aria-hidden="true">03</p><svg class="ic op__ic" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><use href="#ic-cut"/></svg></div>
+            <div class="op__main">
+              <p class="op__where mono">Alexandria · cutting room</p>
+              <h3 class="op__title">Cut</h3>
+              <p class="op__desc">Markers are optimized in CAD to minimize waste, then multi-layer lays are cut on automated cutters, including a Gerber Paragon.</p>
+              <p class="op__gain"><span class="mono">For you</span>Precise panels and less fabric waste on every lay.</p>
             </div>
-            <ul class="svc__feats">
-              <li>6 high-capacity machines</li>
-              <li>65,000+ pieces daily capacity</li>
-              <li>Multi-color printing</li>
-              <li>Water-based and plastisol inks</li>
-              <li>Special effects available</li>
-            </ul>
+            <div class="op__fig"><p class="op__num num">6</p><p class="op__unit mono">Automated cutting machines</p><span class="tally" style="--n:6" aria-hidden="true"></span></div>
+            <ul class="op__inc"><li>CAD/CAM marker making</li><li>Pattern optimization</li><li>Multi-layer cutting</li><li>Inspection at every stage</li></ul>
           </li>
-          <li class="svc__row">
-            <p class="svc__n" aria-hidden="true">04</p>
-            <div class="svc__main">
-              <h3 class="svc__title">Embroidery</h3>
-              <p class="svc__desc">Our computerized embroidery department creates intricate designs with precision and consistency. From logos to complex patterns, we deliver professional results every time.</p>
+          <li class="op" id="op-04">
+            <div class="op__id"><p class="op__n" aria-hidden="true">04</p><svg class="ic op__ic" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><use href="#ic-print"/></svg></div>
+            <div class="op__main">
+              <p class="op__where mono">Alexandria · printing facility</p>
+              <h3 class="op__title">Screen print</h3>
+              <p class="op__desc">Six automatic screen printers lay down multi-color prints in water-based and plastisol inks. Special effects available.</p>
+              <p class="op__gain"><span class="mono">For you</span>Prints made to hold up to repeated washing and wear.</p>
             </div>
-            <ul class="svc__feats">
-              <li>Computerized embroidery machines</li>
-              <li>Multi-head capability</li>
-              <li>Custom design digitization</li>
-              <li>Wide thread color selection</li>
-              <li>Consistent quality output</li>
-            </ul>
+            <div class="op__fig"><p class="op__num num">65,000<b>+</b></p><p class="op__unit mono">Printed pieces a day</p><span class="tally" style="--n:6" aria-hidden="true"></span><p class="op__more mono">6 automatic screen printers</p></div>
+            <ul class="op__inc"><li>Multi-color printing</li><li>Water-based and plastisol inks</li><li>Special effects</li></ul>
           </li>
-          <li class="svc__row">
-            <p class="svc__n" aria-hidden="true">05</p>
-            <div class="svc__main">
-              <h3 class="svc__title">Packing &amp; finishing</h3>
-              <p class="svc__desc">The final stage ensures every garment is finished, pressed, and packaged according to client specifications. We handle every aspect of preparation for shipping.</p>
+          <li class="op" id="op-05">
+            <div class="op__id"><p class="op__n" aria-hidden="true">05</p><svg class="ic op__ic" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><use href="#ic-embroider"/></svg></div>
+            <div class="op__main">
+              <p class="op__where mono">Alexandria · embroidery department</p>
+              <h3 class="op__title">Embroider</h3>
+              <p class="op__desc">Computerized multi-head machines stitch logos and complex patterns. We digitize your artwork.</p>
+              <p class="op__gain"><span class="mono">For you</span>The same result on the first piece and the last.</p>
             </div>
-            <ul class="svc__feats">
-              <li>Professional pressing</li>
-              <li>Quality final inspection</li>
-              <li>Custom packaging options</li>
-              <li>Labeling and tagging</li>
-              <li>Export-ready preparation</li>
-            </ul>
+            <div class="op__fig"><p class="op__num num">4</p><p class="op__unit mono">Multi-head embroidery machines</p><span class="tally" style="--n:4" aria-hidden="true"></span></div>
+            <ul class="op__inc"><li>Custom design digitization</li><li>Multi-head capability</li><li>Wide thread color selection</li></ul>
           </li>
-          <li class="svc__row">
-            <p class="svc__n" aria-hidden="true">06</p>
-            <div class="svc__main">
-              <h3 class="svc__title">Quality assurance</h3>
-              <p class="svc__desc">Our QA process ensures every garment meets international standards, with strict protocols maintained throughout the entire production chain.</p>
+          <li class="op" id="op-06">
+            <div class="op__id"><p class="op__n" aria-hidden="true">06</p><svg class="ic op__ic" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><use href="#ic-sew"/></svg></div>
+            <div class="op__main">
+              <p class="op__where mono">Alexandria · 10 production units</p>
+              <h3 class="op__title">Sew</h3>
+              <p class="op__desc">Trained operators and automatic sewing machines across ten production units. Egypt’s largest flat-seam inventory backs our athletic, underwear and swimwear programs.</p>
+              <p class="op__gain"><span class="mono">For you</span>Room for large programs, with capacity of 100,000 units a day.</p>
             </div>
-            <ul class="svc__feats">
-              <li>In-line quality checks</li>
-              <li>Final inspection protocols</li>
-              <li>AQL sampling standards</li>
-              <li>Customer specification compliance</li>
-              <li>Continuous improvement processes</li>
-            </ul>
+            <div class="op__fig">
+              <p class="op__num num">3,500</p><p class="op__unit mono">Sewing machines</p>
+              <span class="tally tally--sew" aria-hidden="true"><i style="--n:23"></i><i style="--n:12"></i></span>
+              <p class="op__key mono"><span><i class="sw"></i>2,300 Three Stars</span><span><i class="sw sw--red"></i>1,200 Golden Stars</span></p>
+            </div>
+            <ul class="op__inc"><li>Automatic sewing machines</li><li>Flat-seam for activewear, underwear and swim</li><li>Activewear, casualwear, uniforms, underwear</li></ul>
           </li>
-          <li class="svc__row">
-            <p class="svc__n" aria-hidden="true">07</p>
-            <div class="svc__main">
-              <h3 class="svc__title">Product development &amp; sourcing</h3>
-              <p class="svc__desc">From initial concept to bulk production, our in-house design and development team supports customers with sampling, customization, and global fabric sourcing.</p>
+          <li class="op" id="op-07">
+            <div class="op__id"><p class="op__n" aria-hidden="true">07</p><svg class="ic op__ic" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><use href="#ic-inspect"/></svg></div>
+            <div class="op__main">
+              <p class="op__where mono">Alexandria · on the line + at the end</p>
+              <h3 class="op__title">Inspect</h3>
+              <p class="op__desc">In-line checks during production, then a final inspection against your specification, under an ISO&nbsp;9001 quality system.</p>
+              <p class="op__gain"><span class="mono">For you</span>Every order is checked against your spec before it is packed.</p>
             </div>
-            <ul class="svc__feats">
-              <li>In-house design and sampling</li>
-              <li>Dedicated sourcing office in China</li>
-              <li>500+ tons cotton/CVC jersey stock</li>
-              <li>Performance &amp; sustainable fabrics</li>
-              <li>Custom specification development</li>
-            </ul>
+            <div class="op__fig"><p class="op__num num">AQL</p><p class="op__unit mono">Sampling standards</p><p class="op__more mono">ISO 9001 quality system</p></div>
+            <ul class="op__inc"><li>In-line quality checks</li><li>Final inspection</li><li>Customer specification compliance</li><li>Continuous improvement</li></ul>
+          </li>
+          <li class="op" id="op-08">
+            <div class="op__id"><p class="op__n" aria-hidden="true">08</p><svg class="ic op__ic" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><use href="#ic-pack"/></svg></div>
+            <div class="op__main">
+              <p class="op__where mono">Alexandria · finishing + warehouse</p>
+              <h3 class="op__title">Finish + pack</h3>
+              <p class="op__desc">Pressed, folded, labeled, tagged and poly-bagged to your specification. Flat-pack, garment-on-hanger or custom packing.</p>
+              <p class="op__gain"><span class="mono">For you</span>Packed to your retailer’s requirements, ready for export.</p>
+            </div>
+            <div class="op__fig"><p class="op__num num">100,000</p><p class="op__unit mono">Units a day, group capacity</p><p class="op__more mono">24/7 capability</p></div>
+            <ul class="op__inc"><li>Pressing and final inspection</li><li>Labeling and tagging</li><li>Flat-pack, GOH or custom packing</li><li>Warehousing for finished goods</li></ul>
+          </li>
+          <li class="op" id="op-09">
+            <div class="op__id"><p class="op__n" aria-hidden="true">09</p><svg class="ic op__ic" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><use href="#ic-ship"/></svg></div>
+            <div class="op__main">
+              <p class="op__where mono">Green Point Logistics · our logistics arm</p>
+              <h3 class="op__title">Ship</h3>
+              <p class="op__desc">Green Point Logistics runs customs and freight from Alexandria, by air, sea or land, to 40+ countries.</p>
+              <p class="op__gain"><span class="mono">For you</span>Duty-free entry and short transit keep your landed cost down.</p>
+            </div>
+            <div class="op__fig"><p class="op__num num">0%</p><p class="op__unit mono">Duty into the US, EU and GCC</p><p class="op__more mono">≈1 wk to most of Europe · ≈3 wk to major US ports</p></div>
+            <ul class="op__inc"><li>US: QIZ</li><li>EU: Euro 1</li><li>GCC: GAFTA, all six countries</li><li>Customs and freight within the group</li></ul>
           </li>
         </ol>
+
+        <ul class="floor" data-gallery>
+          <li><figure class="fig"><a href="assets/Cutting%20Area/2.jpg" data-caption="03 Cut · Automated cutter in the cutting room"><img src="assets/Cutting%20Area/2.jpg" width="900" height="600" loading="lazy" decoding="async" alt="An automated fabric cutter on a long table in the cutting room"></a><figcaption class="mono"><span>03 · Cut</span><span>Cutting room</span></figcaption></figure></li>
+          <li><figure class="fig"><a href="assets/Printing%20Facility/6.jpg" data-caption="04 Print · Automatic screen printer"><img src="assets/Printing%20Facility/6.jpg" width="900" height="600" loading="lazy" decoding="async" alt="An automatic carousel screen printer with yellow pallets in the printing facility"></a><figcaption class="mono"><span>04 · Print</span><span>Printing facility</span></figcaption></figure></li>
+          <li><figure class="fig"><a href="assets/Production/2.jpg" data-caption="06 Sew · Sewing lines"><img src="assets/Production/2.jpg" width="900" height="600" loading="lazy" decoding="async" alt="Long sewing lines with operators and garment bundles on the production floor"></a><figcaption class="mono"><span>06 · Sew</span><span>Sewing lines</span></figcaption></figure></li>
+          <li><figure class="fig"><a href="assets/Warehousing/7.jpg" data-caption="09 Ship · Export cartons on pallets"><img src="assets/Warehousing/7.jpg" width="900" height="600" loading="lazy" decoding="async" alt="Export cartons stacked on pallets in the finished-goods warehouse"></a><figcaption class="mono"><span>09 · Ship</span><span>Finished goods</span></figcaption></figure></li>
+        </ul>
         <div class="links">
           <a class="link-arrow mono" href="/#line">Follow one garment down the line <span aria-hidden="true">→</span></a>
           <a class="link-arrow mono" href="/facilities">See the facilities <span aria-hidden="true">→</span></a>
@@ -195,11 +288,113 @@
       </div>
     </section>
 
+    <!-- 02 WHAT WE MAKE: same portfolio as the homepage, all three ranges side by side -->
+    <section class="sec sec--flush" aria-labelledby="make-title">
+      <div class="wrap">
+        <header class="sec__head">
+          <p class="sec__idx mono">02</p>
+          <h2 class="sec__title" id="make-title">What we make.</h2>
+          <p class="sec__note mono">Knit + woven · men · ladies · kids</p>
+        </header>
+        <div class="make">
+          <div class="make__col">
+            <div class="make__head"><h3 class="make__title" id="make-men">Men</h3><p class="mono">R/01</p></div>
+            <ul class="make__rack" aria-hidden="true">
+              <li style="--n:0"><svg class="make__hanger" viewBox="0 0 64 20" focusable="false"><use href="#hanger"/></svg><svg class="make__g" viewBox="0 0 64 64" focusable="false"><use href="#st-hoodie"/></svg></li>
+              <li style="--n:1"><svg class="make__hanger" viewBox="0 0 64 20" focusable="false"><use href="#hanger"/></svg><svg class="make__g" viewBox="0 0 64 64" focusable="false"><use href="#st-polo"/></svg></li>
+              <li style="--n:2"><svg class="make__hanger" viewBox="0 0 64 20" focusable="false"><use href="#hanger"/></svg><svg class="make__g" viewBox="0 0 64 64" focusable="false"><use href="#st-pants"/></svg></li>
+            </ul>
+            <div class="make__cat"><h4>Activewear</h4><p>Pants and shorts, swim shorts, soft-shell and quilted jackets, hoodies, pullovers, rash guards, quarter-zips</p></div>
+            <div class="make__cat"><h4>Casualwear</h4><p>Pants and shorts, outerwear, T-shirts, khakis, polo shirts</p></div>
+            <div class="make__cat"><h4>Sportswear</h4><p>Polo shirts, athletic tops, performance tees, compression wear</p></div>
+          </div>
+          <div class="make__col">
+            <div class="make__head"><h3 class="make__title" id="make-ladies">Ladies</h3><p class="mono">R/02</p></div>
+            <ul class="make__rack" aria-hidden="true">
+              <li style="--n:3"><svg class="make__hanger" viewBox="0 0 64 20" focusable="false"><use href="#hanger"/></svg><svg class="make__g" viewBox="0 0 64 64" focusable="false"><use href="#st-leggings"/></svg></li>
+              <li style="--n:4"><svg class="make__hanger" viewBox="0 0 64 20" focusable="false"><use href="#hanger"/></svg><svg class="make__g" viewBox="0 0 64 64" focusable="false"><use href="#st-bra"/></svg></li>
+              <li style="--n:5"><svg class="make__hanger" viewBox="0 0 64 20" focusable="false"><use href="#hanger"/></svg><svg class="make__g" viewBox="0 0 64 64" focusable="false"><use href="#st-dress"/></svg></li>
+            </ul>
+            <div class="make__cat"><h4>Activewear</h4><p>Yoga pants, leggings, sports bras, hoodies, jackets, polos</p></div>
+            <div class="make__cat"><h4>Casualwear</h4><p>Pants, shorts, dresses, skirts, T-shirts, outerwear</p></div>
+            <div class="make__cat"><h4>Innerwear + sets</h4><p>Boxers, underwear, nightwear, sets, scrubs, PE and team uniforms</p></div>
+          </div>
+          <div class="make__col make__col--kids">
+            <div class="make__head"><h3 class="make__title" id="make-kids">Kids</h3><p class="mono">R/03</p></div>
+            <ul class="make__rack" aria-hidden="true">
+              <li style="--n:6"><svg class="make__hanger" viewBox="0 0 64 20" focusable="false"><use href="#hanger"/></svg><svg class="make__g" viewBox="0 0 64 64" focusable="false"><use href="#st-romper"/></svg></li>
+              <li style="--n:7"><svg class="make__hanger" viewBox="0 0 64 20" focusable="false"><use href="#hanger"/></svg><svg class="make__g" viewBox="0 0 64 64" focusable="false"><use href="#st-tee"/></svg></li>
+              <li style="--n:8"><svg class="make__hanger" viewBox="0 0 64 20" focusable="false"><use href="#hanger"/></svg><svg class="make__g" viewBox="0 0 64 64" focusable="false"><use href="#st-shorts"/></svg></li>
+            </ul>
+            <div class="make__cat"><h4>Newborn + toddler</h4><p>Rompers, sleepers, bodysuits, spring and fall sets</p></div>
+            <div class="make__cat"><h4>Activewear + swim</h4><p>Activewear, swimwear, tees, jackets</p></div>
+            <div class="make__cat"><h4>Uniforms + underwear</h4><p>School, PE and team uniforms, underwear sets</p></div>
+          </div>
+        </div>
+        <div class="fabs">
+          <p class="fabs__k mono">Fabrics</p>
+          <ul class="fabs__list">
+            <li><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><use href="#swatch" fill="url(#fab-jersey)"/></svg>Single jersey</li>
+            <li><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><use href="#swatch" fill="url(#fab-rib)"/></svg>Rib</li>
+            <li><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><use href="#swatch" fill="url(#fab-fleece)"/></svg>Fleece</li>
+            <li><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><use href="#swatch" fill="url(#fab-cotton)"/></svg>100% cotton <span class="mono">OCS</span></li>
+            <li><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><use href="#swatch" fill="url(#fab-blend)"/></svg>Cotton blends <span class="mono">CVC</span></li>
+            <li><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><use href="#swatch" fill="url(#fab-poly)"/></svg>Polyester</li>
+            <li><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><use href="#swatch" fill="url(#fab-recycled)"/></svg>Recycled yarns <span class="mono">GRS</span></li>
+            <li><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><use href="#swatch" fill="url(#fab-woven)"/></svg>Wovens <span class="mono">Via China office</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 HOW AN ORDER RUNS: five steps, then a timeline drawn to scale where a time is published -->
+    <section class="sec" aria-labelledby="run-title">
+      <div class="wrap">
+        <header class="sec__head">
+          <p class="sec__idx mono">03</p>
+          <h2 class="sec__title" id="run-title">How an order runs.</h2>
+          <p class="sec__note mono">Example · single jersey from stock</p>
+        </header>
+        <ol class="run">
+          <li style="--n:0"><p class="run__n mono">01 <span>You</span></p><h3 class="run__title">Send the brief</h3><p class="run__copy">Tech pack, sample or sketch, with quantities, target date and destination.</p></li>
+          <li style="--n:1"><p class="run__n mono">02 <span>You + us</span></p><h3 class="run__title">Sample + approve</h3><p class="run__copy">We develop and sample in-house. You approve fit, fabric and artwork.</p></li>
+          <li style="--n:2"><p class="run__n mono">03 <span>Us</span></p><h3 class="run__title">Produce</h3><p class="run__copy">Fabric from stock or via our China office. Cut, print or embroider, sew.</p></li>
+          <li style="--n:3"><p class="run__n mono">04 <span>Us</span></p><h3 class="run__title">Inspect + pack</h3><p class="run__copy">In-line checks and a final AQL inspection, then packing to your spec.</p></li>
+          <li style="--n:4"><p class="run__n mono">05 <span>Us</span></p><h3 class="run__title">Ship</h3><p class="run__copy">Green Point Logistics handles customs and freight. Duty-free into the US, EU and GCC.</p></li>
+        </ol>
+
+        <figure class="tl">
+          <div class="tl__chart" role="img" aria-label="Timeline for a single-jersey order from stock: sampling and approval first, then about 30 days to turn the order, then about 1 week to most of Europe or about 3 weeks to major US ports.">
+            <div class="tl__lane">
+              <p class="tl__k mono">To Europe</p>
+              <div class="tl__bar"><span class="tl__seg tl__seg--pre mono">Sampling</span><span class="tl__seg tl__seg--make mono">≈30 days</span><span class="tl__seg tl__seg--ship mono" style="--d:7"></span><span class="tl__out mono">≈1 wk</span></div>
+            </div>
+            <div class="tl__lane">
+              <p class="tl__k mono">To US ports</p>
+              <div class="tl__bar"><span class="tl__seg tl__seg--pre mono">Sampling</span><span class="tl__seg tl__seg--make mono">≈30 days</span><span class="tl__seg tl__seg--ship mono" style="--d:21">≈3 wk</span></div>
+            </div>
+            <div class="tl__lane tl__lane--axis">
+              <p class="tl__k mono">Weeks</p>
+              <div class="tl__bar tl__axis mono"><span class="tl__axis-pre">Not to scale</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span></div>
+            </div>
+          </div>
+          <figcaption class="tl__cap mono"><span><i class="sw sw--ink"></i>Order turn, single jersey from stock</span><span><i class="sw sw--red"></i>Transit with Green Point Logistics</span><span><i class="sw sw--pre"></i>Sampling + approval, not to scale</span></figcaption>
+        </figure>
+      </div>
+    </section>
+
     <section class="cta" aria-labelledby="cta-title">
       <div class="wrap cta__in">
-        <p class="sec__idx mono">02</p>
-        <h2 class="cta__title" id="cta-title">Need a tailored manufacturing solution?</h2>
-        <p class="cta__lead">We work with brands and sourcing teams to develop production solutions tailored to specific program requirements, volumes, and compliance needs.</p>
+        <p class="sec__idx mono">04</p>
+        <h2 class="cta__title" id="cta-title">Tell us what you need made.</h2>
+        <p class="cta__lead">We work with brands and sourcing teams on programs planned around your volumes, timelines and compliance needs.</p>
+        <p class="cta__k mono">Send with your inquiry</p>
+        <ul class="cta__send mono">
+          <li>Tech pack, sample or sketch</li>
+          <li>Quantity per style</li>
+          <li>Target delivery date</li>
+          <li>Destination market</li>
+        </ul>
         <div class="cta__actions"><a class="btn btn--ink btn--xl" href="/contact">Submit an Inquiry <span aria-hidden="true">→</span></a></div>
         <svg class="cta__stars" viewBox="10.5 33.9 156.8 148.4" aria-hidden="true"><use href="#tsf-three" x="10.5" y="33.9" width="156.8" height="148.4"/><use class="cta__logo-stars" href="#three-stars" x="10.5" y="33.9" width="156.8" height="148.4"/></svg>
       </div>
@@ -233,6 +428,134 @@
 
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
     <defs>
+      <!-- Step pictograms (48 × 48): strokes inherit from the <svg class="ic">; currentColor draws the red detail. -->
+      <symbol id="ic-develop" viewBox="0 0 48 48">
+        <path d="M10 5H31L39 13V43H10Z"/>
+        <path d="M31 5V13H39"/>
+        <path d="M18.5 17L22 15.5Q24.5 17.5 27 15.5L30.5 17L29 21L27.5 20.4V29H21.5V20.4L20 21Z"/>
+        <path stroke="currentColor" d="M16 36H33M16 33.5V38.5M33 33.5V38.5"/>
+      </symbol>
+      <symbol id="ic-source" viewBox="0 0 48 48">
+        <circle cx="16" cy="19" r="11"/>
+        <circle stroke="currentColor" cx="16" cy="19" r="3.5"/>
+        <path d="M16 30H43V38H25"/>
+        <circle cx="36.5" cy="13" r="5.5"/>
+        <path stroke="currentColor" d="M35 13H35.01M38 13H38.01" stroke-width="2.2"/>
+        <path d="M5 43H43"/>
+      </symbol>
+      <symbol id="ic-cut" viewBox="0 0 48 48">
+        <circle cx="11" cy="12" r="6"/>
+        <circle cx="11" cy="36" r="6"/>
+        <path d="M40 8L15.2 31.8M28 27.5L40 40M15.2 16.2L23 23.5"/>
+        <path stroke="currentColor" stroke-dasharray="2.5 3" d="M22 44H46"/>
+      </symbol>
+      <symbol id="ic-print" viewBox="0 0 48 48">
+        <path d="M5 13H43V37H5Z"/>
+        <path d="M10 18H38V32H10Z"/>
+        <path d="M28 20.5L29.5 23.6L32.9 24.1L30.5 26.5L31 29.9L28 28.3L25 29.9L25.5 26.5L23.1 24.1L26.5 23.6Z"/>
+        <path stroke="currentColor" stroke-width="3" d="M16 8V42"/>
+      </symbol>
+      <symbol id="ic-embroider" viewBox="0 0 48 48">
+        <circle cx="21" cy="29" r="14"/>
+        <circle cx="21" cy="29" r="10.5"/>
+        <path d="M38.5 4L27 23.5M36.6 6.2L38 7"/>
+        <path stroke="currentColor" d="M13.5 32L17 27L20.5 32L24 27L27.5 32"/>
+        <path stroke="currentColor" d="M38.5 4Q45 8 42.5 15"/>
+      </symbol>
+      <symbol id="ic-sew" viewBox="0 0 48 48">
+        <path d="M4 37H44V42H4Z"/>
+        <path d="M31.5 37V20H17V27H8.5V14.5Q8.5 11.5 11.5 11.5H37Q40 11.5 40 14.5V37"/>
+        <path d="M24 5.5V11.5"/>
+        <path stroke="currentColor" d="M12.5 27V34"/>
+        <circle cx="42.5" cy="22" r="3.5"/>
+      </symbol>
+      <symbol id="ic-inspect" viewBox="0 0 48 48">
+        <circle cx="20" cy="20" r="13"/>
+        <path d="M29.5 29.5L42 42"/>
+        <path stroke="currentColor" d="M14 20.5L18.5 25L27 16"/>
+      </symbol>
+      <symbol id="ic-pack" viewBox="0 0 48 48">
+        <path d="M6 16L24 8L42 16V36L24 44L6 36Z"/>
+        <path d="M6 16L24 24L42 16M24 24V44"/>
+        <path stroke="currentColor" d="M15 12L33 20V27"/>
+      </symbol>
+      <symbol id="ic-ship" viewBox="0 0 48 48">
+        <path d="M4 30H44L38 39H10Z"/>
+        <path d="M9 22H19V30H9ZM19 22H29V30H19ZM14 14H24V22H14Z"/>
+        <path stroke="currentColor" d="M29 22H39V30H29Z"/>
+        <path d="M4 44.5Q8 42 12 44.5T20 44.5T28 44.5T36 44.5T44 44.5"/>
+      </symbol>
+      <!-- Product pictograms and the rack hanger (same drawings as the homepage portfolio). -->
+      <symbol id="st-tee" viewBox="0 0 64 64">
+        <path d="M23 9Q32 16 41 9L54 15.5L49.5 28L43.5 25.5V55H20.5V25.5L14.5 28L10 15.5Z"/>
+        <path fill="none" d="M24.5 9.8Q32 17.5 39.5 9.8"/>
+        <path fill="none" stroke="currentColor" stroke-dasharray="2 2.2" d="M21.5 51.5H42.5"/>
+      </symbol>
+      <symbol id="st-polo" viewBox="0 0 64 64">
+        <path d="M24 9L10 15.5L14.5 28L20.5 25.5V55H43.5V25.5L49.5 28L54 15.5L40 9Q32 12.5 24 9Z"/>
+        <path fill="none" d="M32 15V31.5"/>
+        <path d="M24 9L31.4 15L29.6 21.5L21.8 14.6ZM40 9L32.6 15L34.4 21.5L42.2 14.6Z"/>
+        <circle cx="32" cy="24.5" r="1.3" fill="currentColor" stroke="none"/>
+        <circle cx="32" cy="29" r="1.3" fill="currentColor" stroke="none"/>
+      </symbol>
+      <symbol id="st-hoodie" viewBox="0 0 64 64">
+        <path d="M21 17Q19 3.5 32 3.5Q45 3.5 43 17Z"/>
+        <path d="M22 15L13 19Q9.5 21 9 25L6.5 50L13.5 51.5L17.5 30L19.5 29V56H44.5V29L46.5 30L50.5 51.5L57.5 50L55 25Q54.5 21 51 19L42 15Q32 21 22 15Z"/>
+        <path style="fill:var(--ink)" d="M25.5 15.5Q32 7.5 38.5 15.5Q32 19.5 25.5 15.5Z"/>
+        <path fill="none" d="M23 41H41L44 51H20Z"/>
+        <path fill="none" stroke="currentColor" d="M29.5 19.2V27M34.5 19.2V27"/>
+      </symbol>
+      <symbol id="st-leggings" viewBox="0 0 64 64">
+        <path d="M18 6H46L46.4 12H17.6Z"/>
+        <path d="M17.6 12L19.5 58H28L32 25L36 58H44.5L46.4 12Z"/>
+        <path fill="none" d="M32 12V25"/>
+        <path fill="none" stroke="currentColor" stroke-dasharray="2 2.2" d="M19 9H45M21.4 16L23.2 55M42.6 16L40.8 55"/>
+      </symbol>
+      <symbol id="st-bra" viewBox="0 0 64 64">
+        <path d="M17 9Q21 8.5 23.5 17Q27 26 32 26Q37 26 40.5 17Q43 8.5 47 9L51 36Q32 41 13 36Z"/>
+        <path d="M13 36Q32 41 51 36L51.5 44Q32 49 12.5 44Z"/>
+        <path fill="none" d="M20.5 10.5Q24 20 26 26M43.5 10.5Q40 20 38 26"/>
+        <path fill="none" stroke="currentColor" stroke-dasharray="2 2.2" d="M14 40.2Q32 45 50 40.2"/>
+      </symbol>
+      <symbol id="st-pants" viewBox="0 0 64 64">
+        <path d="M17 6H47V11.5H17Z"/>
+        <path d="M17 11.5L15 58H29L32 24L35 58H49L47 11.5Z"/>
+        <path fill="none" d="M35.5 11.5V18Q35.5 21.5 32 22.5M18.2 11.5Q23.5 13 24.5 18.5M45.8 11.5Q40.5 13 39.5 18.5"/>
+        <path fill="none" stroke="currentColor" stroke-dasharray="2 2.2" d="M15.6 54.5H28.4M35.6 54.5H48.4"/>
+      </symbol>
+      <symbol id="st-dress" viewBox="0 0 64 64">
+        <path fill="none" d="M25 4.5V13.5M39 4.5V13.5"/>
+        <path d="M23 13Q32 18.5 41 13L41.5 29L52 58H12L22.5 29Z"/>
+        <path fill="none" d="M28.5 31.5L24.5 57M35.5 31.5L39.5 57"/>
+        <path fill="none" stroke="currentColor" stroke-dasharray="2 2.2" d="M22.8 29Q32 32 41.2 29"/>
+      </symbol>
+      <symbol id="st-shorts" viewBox="0 0 64 64">
+        <path d="M14 15H50V21.5H14Z"/>
+        <path d="M14 21.5L11.5 50L29.5 52L32 33L34.5 52L52.5 50L50 21.5Z"/>
+        <path fill="none" stroke="currentColor" d="M29.5 18.2L27 25.5M34.5 18.2L37 25.5"/>
+        <path fill="none" stroke="currentColor" stroke-dasharray="2 2.2" d="M15.8 26L13.8 47.5M48.2 26L50.2 47.5"/>
+      </symbol>
+      <symbol id="st-romper" viewBox="0 0 64 64">
+        <path d="M23 9Q32 15 41 9L51 15L47 25L42 23V44Q42 50.5 36 53.5V57H28V53.5Q22 50.5 22 44V23L17 25L13 15Z"/>
+        <path fill="none" d="M24.5 9.8Q32 17 39.5 9.8"/>
+        <circle cx="29.5" cy="55" r="1.2" fill="currentColor" stroke="none"/>
+        <circle cx="34.5" cy="55" r="1.2" fill="currentColor" stroke="none"/>
+        <path fill="none" stroke="currentColor" stroke-dasharray="2 2.2" d="M22.8 44Q32 47.5 41.2 44"/>
+      </symbol>
+      <symbol id="hanger" viewBox="0 0 64 20">
+        <path fill="none" d="M28.5 4.2A3.6 3.6 0 1 1 32 7.8V12M17 12H47"/>
+        <path fill="none" stroke="currentColor" d="M19.5 12V18M44.5 12V18"/>
+      </symbol>
+      <!-- Fabric swatches: one pinked outline, one texture per fabric (same as the homepage). -->
+      <path id="swatch" d="M0 0L3.12 2.6L6.25 0L9.38 2.6L12.5 0L15.62 2.6L18.75 0L21.88 2.6L25 0L28.12 2.6L31.25 0L34.38 2.6L37.5 0L40.62 2.6L43.75 0L46.88 2.6L50 0L53.12 2.6L56.25 0L59.38 2.6L62.5 0L65.62 2.6L68.75 0L71.88 2.6L75 0L78.12 2.6L81.25 0L84.38 2.6L87.5 0L90.62 2.6L93.75 0L96.88 2.6L100 0L97.4 3.12L100 6.25L97.4 9.38L100 12.5L97.4 15.62L100 18.75L97.4 21.88L100 25L97.4 28.12L100 31.25L97.4 34.38L100 37.5L97.4 40.62L100 43.75L97.4 46.88L100 50L97.4 53.12L100 56.25L97.4 59.38L100 62.5L97.4 65.62L100 68.75L97.4 71.88L100 75L97.4 78.12L100 81.25L97.4 84.38L100 87.5L97.4 90.62L100 93.75L97.4 96.88L100 100L96.88 97.4L93.75 100L90.62 97.4L87.5 100L84.38 97.4L81.25 100L78.12 97.4L75 100L71.88 97.4L68.75 100L65.62 97.4L62.5 100L59.38 97.4L56.25 100L53.12 97.4L50 100L46.88 97.4L43.75 100L40.62 97.4L37.5 100L34.38 97.4L31.25 100L28.12 97.4L25 100L21.88 97.4L18.75 100L15.62 97.4L12.5 100L9.38 97.4L6.25 100L3.12 97.4L0 100L2.6 96.88L0 93.75L2.6 90.62L0 87.5L2.6 84.38L0 81.25L2.6 78.12L0 75L2.6 71.88L0 68.75L2.6 65.62L0 62.5L2.6 59.38L0 56.25L2.6 53.12L0 50L2.6 46.88L0 43.75L2.6 40.62L0 37.5L2.6 34.38L0 31.25L2.6 28.12L0 25L2.6 21.88L0 18.75L2.6 15.62L0 12.5L2.6 9.38L0 6.25L2.6 3.12Z"/>
+      <pattern id="fab-jersey" width="8" height="7" patternUnits="userSpaceOnUse"><rect width="8" height="7" fill="#FAF9F5"/><path fill="none" stroke="#111" stroke-width=".8" stroke-linecap="round" d="M1 .6L4 6.2L7 .6"/></pattern>
+      <pattern id="fab-rib" width="12" height="7" patternUnits="userSpaceOnUse"><rect width="12" height="7" fill="#FAF9F5"/><rect x="8.6" width="3.4" height="7" fill="#111" fill-opacity=".16"/><path fill="none" stroke="#111" stroke-width=".8" stroke-linecap="round" d="M1 .6L4 6.2L7 .6"/></pattern>
+      <pattern id="fab-fleece" width="12" height="12" patternUnits="userSpaceOnUse"><rect width="12" height="12" fill="#FAF9F5"/><path fill="none" stroke="#111" stroke-width=".8" stroke-linecap="round" d="M1.5 3.2q1.6-1.8 3.2 0M7 8.6q1.6 1.8 3.2 0M.8 9.6q1.2-1.6 2.6-.3M7.8 2.2q1.3 1.3 2.8.1"/><circle cx="5.6" cy="6" r=".6" fill="#111"/><circle cx="11" cy="11.2" r=".6" fill="#111"/><circle cx="3.2" cy="11.4" r=".5" fill="#111"/></pattern>
+      <pattern id="fab-cotton" width="16" height="6" patternUnits="userSpaceOnUse"><rect width="16" height="6" fill="#FAF9F5"/><path fill="none" stroke="#111" stroke-width=".8" stroke-linecap="round" d="M.6 1.5h4.4M7 1.5h1.8M11 1.5h4.4M2.2 4.5h2.6M6.6 4.5h5.6M14 4.5h1.6"/></pattern>
+      <pattern id="fab-blend" width="10" height="10" patternUnits="userSpaceOnUse"><rect width="10" height="10" fill="#FAF9F5"/><g fill="#111"><circle cx="1.6" cy="1.8" r=".75"/><circle cx="6.4" cy="3.2" r=".75"/><circle cx="3.6" cy="6.8" r=".75"/><circle cx="8.6" cy="8.4" r=".75"/></g><g fill="#E52222"><circle cx="4.4" cy="1" r=".7"/><circle cx="9" cy="5.2" r=".7"/><circle cx="1" cy="5" r=".7"/><circle cx="6.2" cy="9.2" r=".7"/></g></pattern>
+      <pattern id="fab-poly" width="8" height="14" patternUnits="userSpaceOnUse"><rect width="8" height="14" fill="#FAF9F5"/><circle fill="none" stroke="#111" stroke-width=".8" stroke-linecap="round" cx="4" cy="3.5" r="2"/><circle fill="none" stroke="#111" stroke-width=".8" stroke-linecap="round" cx="0" cy="10.5" r="2"/><circle fill="none" stroke="#111" stroke-width=".8" stroke-linecap="round" cx="8" cy="10.5" r="2"/></pattern>
+      <pattern id="fab-recycled" width="10" height="10" patternUnits="userSpaceOnUse"><rect width="10" height="10" fill="#FAF9F5"/><path fill="none" stroke="#111" stroke-width=".8" stroke-linecap="round" d="M1 2.2l2.2 1.4M3 8l1.6 1.4M7.6 7.4l1.6-1.2"/><path fill="none" stroke="#E52222" stroke-width=".8" stroke-linecap="round" d="M6 1.4l2 1.2M1.2 5.6l1.8-1.4M5.4 6.2l.4 2"/></pattern>
+      <pattern id="fab-woven" width="12" height="12" patternUnits="userSpaceOnUse"><rect width="12" height="12" fill="#FAF9F5"/><path fill="none" stroke="#111" stroke-width=".8" stroke-linecap="round" d="M0.7 1.5h4.6M0.7 3h4.6M0.7 4.5h4.6M6.7 7.5h4.6M6.7 9h4.6M6.7 10.5h4.6M7.5 0.7v4.6M9 0.7v4.6M10.5 0.7v4.6M1.5 6.7v4.6M3 6.7v4.6M4.5 6.7v4.6"/></pattern>
       <symbol id="three-stars" viewBox="10.5 33.9 156.8 148.4">
         <path pathLength="1" style="--k:0;fill:currentColor;fill-rule:evenodd;fill-opacity:clamp(0,(var(--sd,1) - 0.72) * 3.6,1);stroke:currentColor;stroke-width:var(--star-stroke,0);stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:calc(1 - clamp(0,var(--sd,1) * 1.8 - var(--k) * 0.4,1))" d="M27.3 40.3C26.7 41.1 23.5 47.9 23.6 48.1C23.8 48.2 24.1 47.9 26 45.1C27.6 42.7 27.6 42.7 28 46.7C28.3 50.6 28.4 50.7 30.2 49.9C31.4 49.3 31.7 49.2 33.7 49.1C37.4 48.9 37.7 48.9 37.9 49C38.3 49.4 38.1 49.5 35.2 52C33.5 53.4 32.1 54.8 31.8 55.3C31.6 55.7 31.7 56 32.9 58.7C34.4 62.2 34.6 63.3 33.8 63.3C32.4 63.3 29.3 61.3 28.2 59.7C26.8 57.7 25.2 57.2 25.8 59.1C26.7 61.6 34.8 67.8 36.5 67.2C37.6 66.8 37.5 66.1 34.6 59.1C33.2 55.9 33.1 55.5 33.3 55.1C33.4 54.9 35 53.6 36.6 52.2C42.5 47.5 43.1 46.4 39.8 46.8C38.6 46.9 37.8 47 34 47.8C30.5 48.5 31.1 49 29.6 44.3C28.4 40.6 28.4 40.5 28.1 40.3C27.8 40 27.6 40 27.3 40.3ZM22.4 49.7C22.4 49.8 14.8 51 13.7 51.2C12.8 51.3 12 51.8 12 52.4C12 52.9 12.2 53 15.9 54.7C18.4 55.9 18.9 56.2 19 56.5C19 56.7 18.2 58.8 16.9 61.8C14.4 67.9 14.2 68.4 15.3 68.4C15.6 68.4 15.7 68.3 16 68C19.9 63.6 21.1 62.7 23.4 62C25.4 61.4 26.1 60.6 25.2 59.7C24.6 59.1 22.6 59.9 19.9 61.9C18 63.2 18 63.1 19.7 59.3C21.5 55.3 21.5 55.2 19.8 54.7C17.8 54 15.8 53.1 15.8 52.8C15.8 52.6 16.4 52.4 19 51.9C20.2 51.6 22.6 50.6 22.8 50.2C23 49.9 22.6 49.5 22.4 49.7Z"/>
         <path pathLength="1" style="--k:1;fill:currentColor;fill-rule:evenodd;fill-opacity:clamp(0,(var(--sd,1) - 0.72) * 3.6,1);stroke:currentColor;stroke-width:var(--star-stroke,0);stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:calc(1 - clamp(0,var(--sd,1) * 1.8 - var(--k) * 0.4,1))" d="M54.9 64.7C53.7 65.2 46 74.5 44.1 77.7C43.3 79 43.1 79.1 42.1 78.4C41.7 78.1 39.9 76.8 37.9 75.5C35.9 74.2 33.9 72.7 33.3 72.3C29.9 69.8 28.9 69.8 28.9 72C28.9 72.7 28.9 72.9 29.5 75.7C29.7 76.6 30.2 79.4 30.6 81.9C31.7 87.4 31.8 87.8 32.4 87.8C32.9 87.8 32.9 87.8 32.5 83.3C31.8 75.5 31.8 75.2 32.1 75.2C32.2 75.2 38.5 81.4 40.2 83.3C41.2 84.5 42.6 83.8 42.9 81.9C43 81 42.8 81.3 48.1 76C54 70 53.9 70.1 53.2 73.9C53.1 74.3 53 75 52.9 75.4C52.8 75.8 52.7 76.5 52.6 77C52.5 77.4 52.4 77.9 52.4 78C52.4 78.2 52.3 78.6 52.3 78.9C52.2 79.2 52 79.9 51.9 80.4C51.9 80.9 51.7 81.6 51.7 81.8C51.6 82 51.5 82.6 51.5 83.1C51.4 83.6 51.2 84.5 51.1 85.3C50.6 87.7 50 87.1 57 91.2C63.7 95.2 63.6 95.1 62.6 95.8C60.7 97.1 58.3 97.4 52.8 96.9C48.3 96.6 47.3 96.5 46.6 96.7C45.5 97.1 45.3 97.6 46.1 98.4C47 99.2 48 99.5 51.7 100.1C52.8 100.3 53.8 100.4 53.8 100.4C53.8 100.5 54.7 100.5 55.8 100.6C67.6 101.3 73.7 98.2 68 94.2C65.8 92.7 56.5 87.9 54.4 87.1C52.4 86.4 52.4 86.5 53.2 82.7C53.3 82.3 53.5 81.1 53.7 80.2C53.9 79.3 54.1 78.2 54.2 77.8C54.3 77.4 54.4 76.8 54.4 76.6C54.4 76.4 54.6 75.4 54.8 74.4C55 73.5 55.3 72.1 55.5 71.3C55.7 70.6 55.9 69.4 56 68.8C56.8 65.4 56.3 64 54.9 64.7ZM32.6 89.1C32.2 89.2 30.4 91.4 26.1 96.9C25.7 97.5 24.7 98.7 24 99.5C21.5 102.5 21.3 102.9 21.3 103.9C21.3 105.6 22.9 105.8 26.8 104.4C28 103.9 30.2 103.2 31.3 103C31.8 102.8 32.7 102.6 33.2 102.4C34.4 102 35 101.9 35.1 102.2C35.5 103.1 38.4 112.8 39.2 116.4C40.6 122.3 41.2 123.6 42.5 123.3C43 123.1 43.4 120.5 43.7 114.7C43.8 112.7 43.9 112.4 44.2 111C44.9 108.5 44.9 108.5 46.6 105.6C48.4 102.5 48.6 101.9 48.3 101C47.7 99.6 46.3 99.9 45.1 101.8C43.2 104.7 43.2 104.7 42.3 107.6C42.3 107.8 42.1 108.5 41.9 109.1C41.7 109.8 41.6 110.5 41.5 111.8C41.2 115 41 114.6 38.8 106.6C38.7 106 38.5 105.2 38.4 104.9C38.3 104.7 38.2 104.2 38.1 103.9C38 103.6 37.9 103 37.7 102.7C37.6 102.3 37.5 101.9 37.5 101.7C37.5 101.6 37.5 101.4 37.4 101.3C37.3 101.2 37.2 100.7 37 100.2C36.6 98.6 36.4 98.6 34.4 99.2C33.6 99.5 32.4 100 31.8 100.3C30.2 101 26.9 101.9 26.5 101.6C26.2 101.3 26.7 100.5 28.8 97.7C29.1 97.3 29.5 96.7 29.7 96.4C29.9 96 30.3 95.5 30.6 95.2C30.9 94.8 31.1 94.4 31.2 94.3C31.2 94.2 31.5 93.9 31.7 93.6C31.9 93.4 32.1 93.1 32.1 93.1C32.1 93 32.2 92.8 32.4 92.6C32.7 92 33.6 90.1 33.7 89.6C33.8 89 33.3 88.8 32.6 89.1Z"/>

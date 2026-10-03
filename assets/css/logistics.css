@@ -1,0 +1,412 @@
+/* Logistics page: hero market board, Green Point Logistics block, in-house checklist, door-to-door line.
+   The route globe keeps its site.css styles; reveal classes on .d2d and .checks come from logistics.js. */
+
+/* ---------- Hero: title, lead and the market board share the first screen ---------- */
+.lhero .phero__in { padding-bottom: 48px; }
+.lhero .phero__title { grid-column: 1 / 8; margin-top: clamp(28px, 5vh, 64px); font-size: clamp(52px, 6.8vw, 112px); }
+.lhero .phero__lead { grid-column: 8 / 13; align-self: end; margin-top: 0; font-size: 19px; }
+
+/* ---------- Market board: one row per duty-free market ---------- */
+/* --c1 and --u reproduce the row's nested 3fr | (3fr 2fr 4fr) grid, so header and footer cells line up with it. */
+.board {
+  --c1: calc((100% - var(--gut)) * 0.25);
+  --u: calc(((100% - var(--gut)) * 0.75 - 2 * var(--gut)) / 9);
+  position: relative;
+  grid-column: 1 / -1;
+  margin-top: clamp(32px, 5vh, 56px);
+  background: var(--paper);
+}
+.board__bar {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0 10px;
+  border-top: 3px solid var(--ink);
+}
+.board__title { color: var(--red-ink); }
+.board__from { color: var(--ink-2); }
+.board__cols {
+  display: grid;
+  grid-template-columns: var(--c1) calc(var(--u) * 3) calc(var(--u) * 2) 1fr;
+  column-gap: var(--gut);
+  padding: 8px 0;
+  border-block: 1px solid var(--ink);
+  color: var(--ink-2);
+  font-size: 10.5px;
+}
+.board__row {
+  display: grid;
+  grid-template-columns: var(--c1) minmax(0, 1fr);
+  column-gap: var(--gut);
+  align-items: center;
+  min-height: 104px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.board__row:last-child { border-bottom-color: var(--ink); }
+.board__mkt { display: flex; align-items: baseline; gap: 14px; }
+.board__code {
+  min-width: 1.75em;
+  font-size: clamp(48px, 5.2vw, 84px);
+  font-weight: 800;
+  font-stretch: 72%;
+  line-height: 0.8;
+  letter-spacing: -0.045em;
+}
+.board__name { font-size: clamp(17px, 1.4vw, 21px); font-weight: 700; font-stretch: 88%; line-height: 1.05; letter-spacing: -0.01em; }
+
+.board__cells {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr) minmax(0, 4fr);
+  column-gap: var(--gut);
+  align-items: center;
+}
+/* Column headers label the cells on wide screens; each cell carries its own label on phones. */
+.board__cells dt {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.board__agr dd { display: flex; flex-direction: column; gap: 6px; }
+.board__agr b { font-size: clamp(26px, 2.4vw, 38px); font-weight: 800; font-stretch: 78%; line-height: 0.9; letter-spacing: -0.02em; }
+.board__agr .mono, .board__to, .board__states { color: var(--ink-2); font-size: 10.5px; }
+
+.board__stamp {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 9px 13px 8px;
+  border: 3px solid currentColor;
+  outline: 1px solid currentColor;
+  outline-offset: -7px;
+  color: var(--red-ink);
+  transform: rotate(var(--r, 0deg));
+  -webkit-mask: var(--stamp-noise) 0 0 / 160px;
+  mask: var(--stamp-noise) 0 0 / 160px;
+}
+.board__stamp b { font-size: clamp(26px, 2.4vw, 40px); font-weight: 800; font-stretch: 78%; line-height: 0.9; letter-spacing: -0.02em; }
+.board__stamp small { font: 500 10px/1 var(--f-mono); letter-spacing: 0.18em; text-transform: uppercase; }
+
+.board__time dd { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: baseline; gap: 8px 12px; }
+.board__wk { font-size: clamp(36px, 3.4vw, 56px); }
+.board__wk small { margin-left: 4px; font: 500 13px var(--f-mono); letter-spacing: 0.04em; color: var(--ink-2); }
+.board__states { grid-column: 1 / -1; line-height: 1.5; }
+
+/* Week ruler, 0–4 weeks; the red bar is drawn to scale (--wk weeks). */
+.wk { position: relative; grid-column: 1 / -1; display: block; height: 30px; margin-right: 12px; }
+.wk::before {
+  content: "";
+  position: absolute;
+  inset: 4px 0 auto;
+  height: 9px;
+  border-right: 1px solid var(--ink);
+  background:
+    linear-gradient(var(--ink), var(--ink)) 0 100% / 100% 1px no-repeat,
+    repeating-linear-gradient(to right, var(--ink) 0 1px, transparent 1px 25%);
+}
+.wk__bar {
+  position: absolute;
+  top: 4px;
+  left: 0;
+  width: calc(var(--wk) / 4 * 100%);
+  height: 9px;
+  background: var(--red);
+  transform-origin: 0 50%;
+}
+.wk i { position: absolute; top: 18px; font: 500 10px/1 var(--f-mono); font-style: normal; color: var(--ink-2); white-space: nowrap; transform: translateX(-50%); }
+.wk i:nth-of-type(1) { left: 0; transform: none; }
+.wk i:nth-of-type(2) { left: 25%; }
+.wk i:nth-of-type(3) { left: 50%; }
+.wk i:nth-of-type(4) { left: 75%; }
+.wk i:nth-of-type(5) { left: 100%; }
+
+.board__foot {
+  display: grid;
+  grid-template-columns: var(--c1) calc(var(--u) * 5 + var(--gut)) 1fr;
+  column-gap: var(--gut);
+  padding-top: 12px;
+}
+.board__foot > div { display: flex; flex-direction: column; gap: 6px; }
+.board__foot dt { color: var(--ink-2); font-size: 10.5px; }
+.board__foot dd { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; font-size: 17px; font-weight: 600; line-height: 1.3; }
+.board__foot dd .mono { color: var(--ink-2); font-size: 10.5px; }
+.board__modes { align-items: center !important; column-gap: 20px !important; }
+.board__modes span { display: inline-flex; align-items: baseline; gap: 8px; }
+.board__modes .mode { align-self: center; }
+.mode { width: 26px; height: 26px; fill: none; stroke: var(--ink); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.board__gpl {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 2px;
+  border-bottom: 2px solid var(--red);
+  font-weight: 700;
+  text-decoration: none;
+}
+.board__gpl:hover { color: var(--red-ink); }
+
+/* The board prints itself on load: bars run out to scale, then the duty stamps land. */
+@media (prefers-reduced-motion: no-preference) {
+  .wk__bar { animation: wk-grow 0.9s var(--ease-out) both; animation-delay: calc(0.3s + var(--n, 0) * 0.12s); }
+  .board__stamp { animation: stamp-in 0.42s cubic-bezier(0.3, 1.5, 0.5, 1) both; animation-delay: calc(0.55s + var(--n, 0) * 0.16s); }
+}
+@keyframes wk-grow { from { transform: scaleX(0); } }
+
+/* ---------- 01 Green Point Logistics: the group tree and what GPL runs ---------- */
+.gpl {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  column-gap: var(--gut);
+  row-gap: 48px;
+  align-items: start;
+}
+.org { grid-column: 1 / 6; }
+.gpl__main { grid-column: 7 / 13; }
+.gpl__nums { margin-top: 36px; }
+.gpl__nums .nums__cell { min-height: 168px; }
+.gpl__nums .num { font-size: clamp(52px, 5vw, 84px); }
+
+.org__root {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--ink);
+  background: var(--paper-hi);
+}
+.org__root img { width: 44px; height: auto; mix-blend-mode: multiply; }
+.org__name { font-size: 22px; font-weight: 800; font-stretch: 80%; line-height: 0.95; letter-spacing: 0; text-transform: uppercase; }
+.org__est { margin-left: auto; color: var(--ink-2); font-size: 10.5px; text-align: right; }
+/* The tree trunk drops from the centre of the group mark (16px padding + half the 44px mark + 1px border). */
+.org__list { margin-left: 39px; }
+.org__list li {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 58px;
+  padding-left: 36px;
+  font-size: 20px;
+  font-weight: 700;
+  font-stretch: 88%;
+  letter-spacing: -0.01em;
+}
+.org__list li::before { content: ""; position: absolute; top: 0; bottom: 0; left: 0; border-left: 1px solid var(--ink); }
+.org__list li:last-child::before { bottom: 50%; }
+.org__list li::after { content: ""; position: absolute; top: 50%; left: 0; width: 28px; border-top: 1px solid var(--ink); }
+.org__list .mono { color: var(--ink-2); font-size: 11px; }
+.org__list .org__gpl { padding-block: 10px 0; }
+.org__list li.org__gpl::before { bottom: calc(50% - 5px); }
+.org__list .org__gpl::after { top: calc(50% + 5px); width: 36px; border-top: 2px solid var(--red); }
+.org__box {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 18px;
+  padding: 16px 18px;
+  border: 2px solid var(--red);
+  background: var(--paper-hi);
+}
+.org__box .mono { color: var(--red-ink); }
+.org__box img { width: auto; height: 84px; }
+.org__tag { flex-basis: 100%; color: var(--red-ink) !important; }
+
+/* In-house checklist: task, detail, owner, ticked like a shipping checklist. */
+.scope { margin-top: 80px; }
+.scope__bar { display: flex; justify-content: space-between; gap: 16px; padding: 14px 0 12px; border-top: 1px solid var(--ink); }
+.scope__title { color: var(--red-ink); font-size: 12px; font-weight: 500; }
+.scope__key { color: var(--ink-2); }
+.check {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gut);
+  align-items: baseline;
+  padding: 16px 0 18px;
+  border-top: 1px solid var(--rule);
+}
+.check:last-child { border-bottom: 1px solid var(--ink); }
+.check__no { grid-column: 1; color: var(--ink-2); font-size: 11px; }
+.check__title { grid-column: 2 / 6; font-size: clamp(20px, 1.7vw, 26px); font-weight: 750; font-stretch: 88%; line-height: 1.05; letter-spacing: -0.02em; }
+.check__copy { grid-column: 6 / 11; font-size: 16px; line-height: 1.45; color: var(--ink-2); text-wrap: pretty; }
+.check__who { grid-column: 11 / 13; justify-self: end; display: inline-flex; align-items: center; gap: 10px; color: var(--red-ink); white-space: nowrap; }
+.check__box {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  padding: 1px;
+  border: 1.5px solid var(--ink);
+  overflow: visible;
+  fill: none;
+  stroke: var(--red);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.checks.is-armed:not(.is-in) .check__box path { stroke-dasharray: 1; stroke-dashoffset: 1; }
+.checks.is-in .check__box path { stroke-dashoffset: 0; transition: stroke-dashoffset 0.35s var(--ease-out) calc(0.1s + var(--n, 0) * 0.09s); }
+
+/* ---------- 02 Door to door: three phases, six stops on one line ---------- */
+/* Phases share the header and stop rows (subgrid), so the line runs level across all three. */
+.d2d { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-template-rows: auto auto; column-gap: var(--gut); }
+.d2d__phase { grid-row: span 2; display: grid; grid-template-columns: subgrid; grid-template-rows: subgrid; }
+.d2d__phase--ship { grid-column: span 4; }
+.d2d__ph {
+  position: relative;
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px 0 28px;
+  border-top: 1px solid var(--ink);
+}
+/* Dimension-line end ticks mark where each phase starts and stops. */
+.d2d__ph::before, .d2d__ph::after { content: ""; position: absolute; top: -7px; height: 13px; border-left: 1px solid var(--ink); }
+.d2d__ph::before { left: 0; }
+.d2d__ph::after { right: 0; }
+.d2d__phn { font-size: clamp(56px, 5vw, 84px); font-weight: 800; font-stretch: 72%; line-height: 0.82; letter-spacing: -0.04em; color: var(--red); }
+.d2d__phname { margin-top: 6px; font-size: clamp(20px, 1.7vw, 26px); font-weight: 750; font-stretch: 88%; line-height: 1.02; letter-spacing: -0.02em; text-wrap: balance; }
+.d2d__who { color: var(--ink-2); }
+.d2d__phase--ship .d2d__who { color: var(--red-ink); }
+
+.d2d__stops { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; }
+.d2d__stop { --line: var(--ink); position: relative; display: flex; flex-direction: column; gap: 12px; padding-top: 46px; }
+.d2d__phase--ship .d2d__stop { --line: var(--red); }
+/* Each stop draws its stretch of the line across the gutter to the next stop. */
+.d2d__stop::before {
+  content: "";
+  position: absolute;
+  top: 13px;
+  left: 0;
+  right: calc(-1 * var(--gut));
+  height: 3px;
+  background: var(--line);
+  transform-origin: 0 50%;
+}
+/* The last stretch ends in an arrowhead at the destination. */
+.d2d__phase--ship .d2d__stop:last-child::before {
+  top: 9px;
+  right: 0;
+  height: 11px;
+  clip-path: polygon(0 4px, calc(100% - 12px) 4px, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, calc(100% - 12px) 7px, 0 7px);
+}
+.d2d__stop::after {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 0;
+  width: 17px;
+  height: 17px;
+  border: 3px solid var(--line);
+  border-radius: 50%;
+  background: var(--paper);
+}
+.d2d__phase--ship .d2d__stop:last-child::after { background: var(--red); }
+.d2d__icon {
+  width: 52px;
+  height: 52px;
+  overflow: visible;
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.d2d__icon .r { stroke: var(--red); }
+.d2d__icon .dot { fill: var(--red); stroke: none; }
+.d2d__no { color: var(--ink-2); font-size: 11px; }
+.d2d__title { font-size: clamp(20px, 1.6vw, 24px); font-weight: 750; font-stretch: 88%; line-height: 1.05; letter-spacing: -0.02em; }
+.d2d__copy { font-size: 15.5px; line-height: 1.45; text-wrap: pretty; }
+.d2d__eta { display: block; margin-top: 8px; color: var(--red-ink); }
+
+.d2d.is-armed:not(.is-in) .d2d__stop::before { transform: scaleX(0); }
+.d2d.is-armed:not(.is-in) .d2d__stop::after { transform: scale(0); }
+.d2d.is-armed:not(.is-in) .d2d__stop > * { opacity: 0; transform: translateY(10px); }
+.d2d.is-in .d2d__stop::before { transform: none; transition: transform 0.3s linear calc(var(--n, 0) * 0.22s); }
+.d2d.is-in .d2d__stop::after { transform: none; transition: transform 0.3s cubic-bezier(0.3, 1.5, 0.5, 1) calc(var(--n, 0) * 0.22s); }
+.d2d.is-in .d2d__stop > * { opacity: 1; transform: none; transition: opacity 0.5s, transform 0.5s var(--ease-out); transition-delay: calc(0.1s + var(--n, 0) * 0.22s); }
+
+/* ---------- 03 Route map ---------- */
+.routes__side > .lroutes__k { color: var(--red-ink); font-size: 12px; }
+
+/* ---------- Tablet ---------- */
+@media (max-width: 1180px) {
+  .board__foot { grid-template-columns: var(--c1) minmax(0, 1fr) minmax(0, 1fr); }
+  .d2d__copy { font-size: 15px; }
+}
+/* The globe takes the full width on tablets so its pin labels have room; the notes sit underneath. */
+@media (min-width: 900px) and (max-width: 1180px) {
+  .routes__map { grid-column: 1 / -1; }
+  .routes__side { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gut); align-items: start; }
+  .routes__side > .lroutes__k { grid-column: 1 / 3; padding-top: 4px; }
+  .routes__side > p:not(.lroutes__k) { grid-column: 3 / 8; }
+  .routes__side > .mini { grid-column: 9 / 13; }
+}
+
+/* ---------- Phone ---------- */
+@media (max-width: 899px) {
+  .lhero .phero__title { grid-column: 1 / -1; font-size: clamp(44px, 12.6vw, 64px); }
+  .lhero .phero__lead { grid-column: 1 / -1; margin-top: 24px; font-size: 18px; }
+
+  .board__cols, .board__from { display: none; }
+  .board__row { position: relative; grid-template-columns: minmax(0, 1fr); row-gap: 14px; min-height: 0; padding: 16px 0 18px; }
+  .board__code { min-width: 0; font-size: 56px; }
+  .board__name { font-size: 18px; }
+  .board__cells { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+  .board__cells dt { position: static; width: auto; height: auto; overflow: visible; clip: auto; margin-bottom: 8px; color: var(--ink-2); font-size: 10px; }
+  .board__duty { position: absolute; top: 16px; right: 0; }
+  .board__duty dt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .board__stamp { gap: 2px; padding: 6px 9px 6px; border-width: 2px; outline-offset: -5px; }
+  .board__stamp b { font-size: 26px; }
+  .board__stamp small { font-size: 8.5px; letter-spacing: 0.14em; }
+  .board__agr b { font-size: 28px; }
+  .board__wk { font-size: 40px; }
+  .board__time dd { grid-template-columns: auto; }
+  .wk { margin-right: 6px; }
+
+  .board__foot { grid-template-columns: minmax(0, 1fr); padding-top: 0; }
+  .board__foot > div { flex-direction: row; align-items: baseline; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--rule); }
+  .board__foot dt { flex: none; width: 84px; }
+  .board__foot dd { font-size: 16px; }
+  .board__modes { column-gap: 14px !important; }
+  .board__gpl { min-height: 40px; }
+
+  .org, .gpl__main { grid-column: 1 / -1; }
+  .org__name { font-size: 19px; }
+  .org__list li { font-size: 18px; min-height: 52px; padding-left: 28px; }
+  .org__list li::after { width: 20px; }
+  .org__list .org__gpl::after { width: 28px; }
+  .org__box { padding: 12px 14px; }
+  .org__box img { height: 64px; }
+  .gpl__nums .nums__cell { min-height: 0; }
+  .gpl__nums .num { font-size: 56px; }
+
+  .scope { margin-top: 56px; }
+  .scope__key { display: none; }
+  .check { grid-template-columns: 44px minmax(0, 1fr); row-gap: 6px; padding: 14px 0 16px; }
+  .check__no { grid-column: 1; }
+  .check__title { grid-column: 2; font-size: 21px; }
+  .check__copy { grid-column: 2; font-size: 15px; }
+  .check__who { grid-column: 2; justify-self: start; margin-top: 4px; }
+
+  .d2d { grid-template-columns: minmax(0, 1fr); row-gap: 8px; }
+  .d2d__phase, .d2d__phase--ship { display: block; grid-column: auto; }
+  .d2d__ph { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 14px; align-items: end; padding: 16px 0 22px; }
+  .d2d__ph::after { display: none; }
+  .d2d__phn { grid-row: span 2; font-size: 64px; }
+  .d2d__phname { margin-top: 0; font-size: 22px; }
+  .d2d__stops { display: block; }
+  .d2d__stop { display: grid; grid-template-columns: 44px minmax(0, 1fr); column-gap: 14px; row-gap: 6px; align-content: start; padding: 0 0 28px 40px; }
+  .d2d__stop::before { top: 0; bottom: 0; left: 7px; right: auto; width: 3px; height: auto; transform-origin: 50% 0; }
+  .d2d__phase--ship .d2d__stop:last-child::before { bottom: auto; height: 12px; clip-path: none; }
+  .d2d__stop::after { top: 0; }
+  .d2d__icon { grid-row: span 3; width: 44px; height: 44px; }
+  .d2d__no, .d2d__title, .d2d__copy { grid-column: 2; }
+  .d2d__title { font-size: 21px; }
+  .d2d__copy { font-size: 15px; }
+  .d2d.is-armed:not(.is-in) .d2d__stop::before { transform: scaleY(0); }
+}

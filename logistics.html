@@ -27,7 +27,9 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=IBM+Plex+Mono:wght@400;500&display=swap">
   <link rel="stylesheet" href="assets/css/site.css">
   <link rel="stylesheet" href="assets/css/pages.css">
+  <link rel="stylesheet" href="assets/css/logistics.css">
   <script type="module" src="assets/js/site.js"></script>
+  <script type="module" src="assets/js/logistics.js"></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -67,7 +69,7 @@
   </header>
 
   <main id="main">
-    <section class="phero" aria-labelledby="page-title">
+    <section class="phero lhero" aria-labelledby="page-title">
       <div class="wrap phero__in">
         <ul class="phero__meta mono">
           <li><span class="k">PG.</span> 05 · Logistics</li>
@@ -75,30 +77,83 @@
           <li><span class="k">MOD.</span> Air · sea · land</li>
           <li><span class="k">MKT.</span> Duty-free to US · EU · GCC</li>
         </ul>
-        <h1 class="phero__title" id="page-title">Integrated supply chain and logistics<span class="dot">.</span></h1>
-        <p class="phero__lead">From production floor to destination port: fully integrated manufacturing and logistics operations that eliminate handoff risk, protect lead times, and simplify vendor management.</p>
+        <h1 class="phero__title" id="page-title">Alexandria to your port<span class="dot">.</span></h1>
+        <p class="phero__lead">We make it and we ship it. Green Point Logistics, our own logistics arm, takes every order from the production floor to the destination port.</p>
+
+        <div class="board" role="group" aria-labelledby="board-title">
+          <div class="board__bar">
+            <h2 class="board__title mono" id="board-title">Duty-free markets</h2>
+            <p class="board__from mono">From Alexandria, Egypt</p>
+          </div>
+          <div class="board__cols mono" aria-hidden="true">
+            <span>Market</span><span>Trade agreement</span><span>Import duty</span><span>Transit · weeks, to scale</span>
+          </div>
+          <ul class="board__rows">
+            <li class="board__row" style="--n:0">
+              <p class="board__mkt"><span class="board__code" aria-hidden="true">US</span><span class="board__name">United States</span></p>
+              <dl class="board__cells">
+                <div class="board__agr"><dt class="mono">Agreement</dt><dd><b>QIZ</b><span class="mono">Qualifying Industrial Zones</span></dd></div>
+                <div class="board__duty"><dt class="mono">Import duty</dt><dd><span class="board__stamp" style="--r:-6deg"><b>0%</b><small>Duty</small></span></dd></div>
+                <div class="board__time"><dt class="mono">Transit</dt><dd><span class="board__wk num">≈3<small>wk</small></span><span class="board__to mono">To major US ports</span><span class="wk" style="--wk:3" aria-hidden="true"><span class="wk__bar"></span><i>0</i><i>1</i><i>2</i><i>3</i><i>4</i></span></dd></div>
+              </dl>
+            </li>
+            <li class="board__row" style="--n:1">
+              <p class="board__mkt"><span class="board__code" aria-hidden="true">EU</span><span class="board__name">European Union</span></p>
+              <dl class="board__cells">
+                <div class="board__agr"><dt class="mono">Agreement</dt><dd><b>Euro 1</b><span class="mono">Euro-Mediterranean Partnership</span></dd></div>
+                <div class="board__duty"><dt class="mono">Import duty</dt><dd><span class="board__stamp" style="--r:4deg"><b>0%</b><small>Duty</small></span></dd></div>
+                <div class="board__time"><dt class="mono">Transit</dt><dd><span class="board__wk num">≈1<small>wk</small></span><span class="board__to mono">To most of Europe</span><span class="wk" style="--wk:1" aria-hidden="true"><span class="wk__bar"></span><i>0</i><i>1</i><i>2</i><i>3</i><i>4</i></span></dd></div>
+              </dl>
+            </li>
+            <li class="board__row" style="--n:2">
+              <p class="board__mkt"><span class="board__code" aria-hidden="true">GCC</span><span class="board__name">Gulf states</span></p>
+              <dl class="board__cells">
+                <div class="board__agr"><dt class="mono">Agreement</dt><dd><b>GAFTA</b><span class="mono">Greater Arab Free Trade Area</span></dd></div>
+                <div class="board__duty"><dt class="mono">Import duty</dt><dd><span class="board__stamp" style="--r:-3deg"><b>0%</b><small>Duty</small></span></dd></div>
+                <div class="board__time"><dt class="mono">Coverage</dt><dd><span class="board__wk num">6<small>states</small></span><span class="board__to mono">All six GCC countries</span><span class="board__states mono">Saudi Arabia · UAE · Kuwait · Qatar · Bahrain · Oman</span></dd></div>
+              </dl>
+            </li>
+          </ul>
+          <dl class="board__foot">
+            <div><dt class="mono">Departs</dt><dd>Alexandria, Egypt<span class="mono">Free zone · port</span></dd></div>
+            <div>
+              <dt class="mono">Modes</dt>
+              <dd class="board__modes">
+                <span><svg class="mode" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 12h19M13 12 8.5 4.5h2.2L18 12l-7.3 7.5H8.5L13 12M5.5 12 3.5 8.5M5.5 12l-2 3.5"/></svg>Air</span>
+                <span><svg class="mode" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2.5 14.5h19l-3 5h-13zM6.5 14.5v-4h11v4M10 10.5V6.5h4v4"/></svg>Sea</span>
+                <span><svg class="mode" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M2 6.5h12v10H2zM14 9.5h4l3.5 3.5v3.5H14"/><circle cx="6" cy="17.5" r="2"/><circle cx="17.5" cy="17.5" r="2"/></svg>Land</span>
+              </dd>
+            </div>
+            <div><dt class="mono">Handled by</dt><dd><a class="board__gpl" href="#gpl">Green Point Logistics <span aria-hidden="true">↓</span></a><span class="mono">Our logistics arm</span></dd></div>
+          </dl>
+        </div>
       </div>
     </section>
 
-    <section class="sec" aria-labelledby="gpl-title">
+    <section class="sec sec--flush" id="gpl" aria-labelledby="gpl-title">
       <div class="wrap">
         <header class="sec__head">
           <p class="sec__idx mono">01</p>
-          <h2 class="sec__title" id="gpl-title">Green Point Logistics: in-house supply chain operations.</h2>
-          <p class="sec__note mono">Our logistics arm</p>
+          <h2 class="sec__title" id="gpl-title">Green Point Logistics: our own logistics arm.</h2>
+          <p class="sec__note mono">Group member 04 · GPL</p>
         </header>
-        <div class="split">
-          <div class="split__text prose">
-            <p>Green Point Logistics (GPL) is the dedicated logistics subsidiary of Three Stars Group, providing fully integrated supply chain management from production floor to destination port. As an in-house operation, GPL eliminates the gaps between manufacturing and delivery, giving our partners a single point of accountability across the entire fulfillment cycle.</p>
-            <p>From order consolidation and export documentation through freight forwarding and final-mile coordination, every touchpoint is managed internally, ensuring consistency, visibility, and on-time delivery.</p>
-          </div>
-          <div class="split__fig">
-            <div class="pair">
-              <img src="assets/Brands/tsf-mark.png" width="170" height="160" loading="lazy" alt="Three Stars Group logo">
-              <span aria-hidden="true">+</span>
-              <img src="assets/Greenpoint/logo.webp" width="942" height="432" loading="lazy" alt="Green Point Logistics">
+        <div class="gpl">
+          <figure class="org">
+            <p class="org__root"><img src="assets/Brands/tsf-mark.png" width="170" height="160" loading="lazy" alt=""><span class="org__name">Three Stars Group</span><span class="org__est mono">Est. 2008 · Alexandria</span></p>
+            <ol class="org__list">
+              <li><span class="mono">01</span>Three Stars Fashion</li>
+              <li><span class="mono">02</span>Three Stars Apparels</li>
+              <li><span class="mono">03</span>Golden Stars Textile</li>
+              <li class="org__gpl"><span class="org__box"><span class="mono">04</span><img src="assets/Greenpoint/logo.webp" width="942" height="432" loading="lazy" alt="Green Point Logistics"><span class="org__tag mono">Our logistics arm</span></span></li>
+            </ol>
+            <figcaption class="sr-only">Three Stars Group has four member companies: Three Stars Fashion, Three Stars Apparels, Golden Stars Textile and Green Point Logistics, the group’s logistics arm.</figcaption>
+          </figure>
+          <div class="gpl__main">
+            <div class="prose">
+              <p>Green Point Logistics (GPL) is the dedicated logistics subsidiary of Three Stars Group. It runs every step from our production floor to your destination port, so you deal with one group and one point of accountability.</p>
+              <p>Order consolidation, export documentation, freight forwarding and final-mile coordination are managed internally. Fewer handoffs, clear visibility, protected lead times.</p>
             </div>
-            <dl class="nums nums--3 nums--short">
+            <dl class="nums nums--3 nums--short gpl__nums">
               <div class="nums__cell">
                 <dt class="mono">Countries served</dt>
                 <dd><span class="num">40<b>+</b></span></dd>
@@ -114,63 +169,118 @@
             </dl>
           </div>
         </div>
+
+        <div class="scope">
+          <div class="scope__bar">
+            <h3 class="scope__title mono">Handled in-house</h3>
+            <p class="scope__key mono" aria-hidden="true">Task · detail · owner</p>
+          </div>
+          <ol class="checks">
+            <li class="check" style="--n:0">
+              <span class="check__no mono">L/01</span>
+              <h4 class="check__title">Warehousing</h4>
+              <p class="check__copy">Raw materials and finished goods. Specialized storage on request.</p>
+              <p class="check__who mono"><svg class="check__box" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path pathLength="1" d="M4.5 10.5 8.5 14.5 15.5 5.5"/></svg>GPL · in-house</p>
+            </li>
+            <li class="check" style="--n:1">
+              <span class="check__no mono">L/02</span>
+              <h4 class="check__title">Packing formats</h4>
+              <p class="check__copy">Garment-on-hanger (GOH), flat-pack or custom packing to retailer requirements.</p>
+              <p class="check__who mono"><svg class="check__box" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path pathLength="1" d="M4.5 10.5 8.5 14.5 15.5 5.5"/></svg>GPL · in-house</p>
+            </li>
+            <li class="check" style="--n:2">
+              <span class="check__no mono">L/03</span>
+              <h4 class="check__title">Order consolidation</h4>
+              <p class="check__copy">Your order brought together and made ready for export.</p>
+              <p class="check__who mono"><svg class="check__box" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path pathLength="1" d="M4.5 10.5 8.5 14.5 15.5 5.5"/></svg>GPL · in-house</p>
+            </li>
+            <li class="check" style="--n:3">
+              <span class="check__no mono">L/04</span>
+              <h4 class="check__title">Export documentation</h4>
+              <p class="check__copy">Export paperwork prepared by our own team.</p>
+              <p class="check__who mono"><svg class="check__box" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path pathLength="1" d="M4.5 10.5 8.5 14.5 15.5 5.5"/></svg>GPL · in-house</p>
+            </li>
+            <li class="check" style="--n:4">
+              <span class="check__no mono">L/05</span>
+              <h4 class="check__title">Customs clearance</h4>
+              <p class="check__copy">Specialized Egyptian customs expertise for compliant shipments with minimal delays.</p>
+              <p class="check__who mono"><svg class="check__box" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path pathLength="1" d="M4.5 10.5 8.5 14.5 15.5 5.5"/></svg>GPL · in-house</p>
+            </li>
+            <li class="check" style="--n:5">
+              <span class="check__no mono">L/06</span>
+              <h4 class="check__title">Freight forwarding</h4>
+              <p class="check__copy">Air, sea and land, with routes planned across continents.</p>
+              <p class="check__who mono"><svg class="check__box" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path pathLength="1" d="M4.5 10.5 8.5 14.5 15.5 5.5"/></svg>GPL · in-house</p>
+            </li>
+            <li class="check" style="--n:6">
+              <span class="check__no mono">L/07</span>
+              <h4 class="check__title">Final-mile coordination</h4>
+              <p class="check__copy">Delivery coordinated through to the final destination.</p>
+              <p class="check__who mono"><svg class="check__box" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path pathLength="1" d="M4.5 10.5 8.5 14.5 15.5 5.5"/></svg>GPL · in-house</p>
+            </li>
+          </ol>
+        </div>
       </div>
     </section>
 
-    <section class="sec" aria-labelledby="caps-title">
+    <section class="sec sec--flush" aria-labelledby="d2d-title">
       <div class="wrap">
         <header class="sec__head">
           <p class="sec__idx mono">02</p>
-          <h2 class="sec__title" id="caps-title">Comprehensive logistics solutions.</h2>
-          <p class="sec__note mono">Capabilities</p>
+          <h2 class="sec__title" id="d2d-title">From production unit to your port, in three steps.</h2>
+          <p class="sec__note mono">Door to door · one group</p>
         </header>
-        <ul class="cells">
-          <li class="cell">
-            <p class="cell__no mono">C/01</p>
-            <h3 class="cell__title">Global freight</h3>
-            <p class="cell__copy">Air, sea, and land transportation with optimized routes across continents for maximum efficiency.</p>
+        <ol class="d2d">
+          <li class="d2d__phase d2d__phase--make">
+            <p class="d2d__ph"><span class="d2d__phn" aria-hidden="true">1</span><span class="d2d__phname">Precision manufacturing</span><span class="d2d__who mono">Three Stars Group</span></p>
+            <ol class="d2d__stops">
+              <li class="d2d__stop" style="--n:0">
+                <svg class="d2d__icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M2 42h44M6 42V24l9 5v-5l9 5v-5l9 5V10h7v32"/><path class="r" d="M11 36h4M19 36h4M27 36h4"/></svg>
+                <p class="d2d__no mono">D/01</p>
+                <h3 class="d2d__title">Production unit</h3>
+                <p class="d2d__copy">High-volume production across 10 production units with 3,500 sewing machines and trained operators.</p>
+              </li>
+            </ol>
           </li>
-          <li class="cell">
-            <p class="cell__no mono">C/02</p>
-            <h3 class="cell__title">Expert customs clearance</h3>
-            <p class="cell__copy">Specialized Egyptian customs expertise ensuring smooth, compliant shipments with minimal delays.</p>
+          <li class="d2d__phase d2d__phase--check">
+            <p class="d2d__ph"><span class="d2d__phn" aria-hidden="true">2</span><span class="d2d__phname">Rigorous quality control</span><span class="d2d__who mono">Three Stars Group</span></p>
+            <ol class="d2d__stops">
+              <li class="d2d__stop" style="--n:1">
+                <svg class="d2d__icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M13 8 5 13l3 7 4-2v20h16V18l4 2 3-7-8-5c-1 3-3.5 5-7 5s-6-2-7-5z"/><circle class="r" cx="33" cy="31" r="7"/><path class="r" d="m38 36 6 6"/></svg>
+                <p class="d2d__no mono">D/02</p>
+                <h3 class="d2d__title">Inspection</h3>
+                <p class="d2d__copy">Multi-stage inspection, so every garment meets international quality standards.</p>
+              </li>
+            </ol>
           </li>
-          <li class="cell">
-            <p class="cell__no mono">C/03</p>
-            <h3 class="cell__title">Warehousing &amp; storage</h3>
-            <p class="cell__copy">Dedicated warehousing for raw materials and finished goods, with specialized storage solutions available on request.</p>
-          </li>
-          <li class="cell">
-            <p class="cell__no mono">C/04</p>
-            <h3 class="cell__title">Specialized shipping</h3>
-            <p class="cell__copy">Flexible shipping configurations including garment-on-hanger (GOH), flat-pack, and custom packing to meet retailer requirements.</p>
-          </li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="sec" aria-labelledby="steps-title">
-      <div class="wrap">
-        <header class="sec__head">
-          <p class="sec__idx mono">03</p>
-          <h2 class="sec__title" id="steps-title">Your 1-2-3 process.</h2>
-          <p class="sec__note mono">The journey</p>
-        </header>
-        <ol class="steps">
-          <li class="step" style="--fill:0.33">
-            <p class="step__n" aria-hidden="true">1</p>
-            <h3 class="step__title">Precision manufacturing</h3>
-            <p class="step__copy">High-volume production across our ten production units with 3,500 sewing machines and trained production operators.</p>
-          </li>
-          <li class="step" style="--fill:0.66">
-            <p class="step__n" aria-hidden="true">2</p>
-            <h3 class="step__title">Rigorous quality control</h3>
-            <p class="step__copy">Multi-stage inspection processes ensuring every garment meets international quality standards.</p>
-          </li>
-          <li class="step">
-            <p class="step__n" aria-hidden="true">3</p>
-            <h3 class="step__title">Priority global delivery</h3>
-            <p class="step__copy">Fast-tracked logistics with real-time tracking and optimized shipping routes worldwide.</p>
+          <li class="d2d__phase d2d__phase--ship">
+            <p class="d2d__ph"><span class="d2d__phn" aria-hidden="true">3</span><span class="d2d__phname">Priority global delivery</span><span class="d2d__who mono">Green Point Logistics</span></p>
+            <ol class="d2d__stops">
+              <li class="d2d__stop" style="--n:2">
+                <svg class="d2d__icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="m8 16 16-8 16 8v18l-16 8-16-8zM8 16l16 8 16-8M24 24v18"/><path class="r" d="m16 12 16 8v6"/></svg>
+                <p class="d2d__no mono">D/03</p>
+                <h3 class="d2d__title">Warehouse + packing</h3>
+                <p class="d2d__copy">Finished goods stored and packed flat, on hanger (GOH) or to your retailer’s spec.</p>
+              </li>
+              <li class="d2d__stop" style="--n:3">
+                <svg class="d2d__icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M10 5h18l8 8v30H10zM28 5v8h8M15 19h16M15 24h16M15 29h8"/><circle class="r" cx="31" cy="36" r="6"/><path class="r" d="m28.5 36 2 2 3-4"/></svg>
+                <p class="d2d__no mono">D/04</p>
+                <h3 class="d2d__title">Documents + customs</h3>
+                <p class="d2d__copy">Order consolidation, export documentation and Egyptian customs clearance.</p>
+              </li>
+              <li class="d2d__stop" style="--n:4">
+                <svg class="d2d__icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M4 30h40l-5 9H9zM12 30v-7h8v7M20 30v-7h8v7"/><path class="r" d="M28 30V19h8v11"/><path d="M4 44c3 0 3-2 6-2s3 2 6 2 3-2 6-2 3 2 6 2 3-2 6-2 3 2 6 2"/></svg>
+                <p class="d2d__no mono">D/05</p>
+                <h3 class="d2d__title">Freight</h3>
+                <p class="d2d__copy">Air, sea or land from Alexandria, with real-time tracking. <span class="d2d__eta mono">EU ≈1 wk · US ≈3 wk</span></p>
+              </li>
+              <li class="d2d__stop" style="--n:5">
+                <svg class="d2d__icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M24 42S13 31 13 22a11 11 0 0 1 22 0c0 9-11 20-11 20zM8 44h32"/><circle class="r dot" cx="24" cy="22" r="4"/></svg>
+                <p class="d2d__no mono">D/06</p>
+                <h3 class="d2d__title">Your port</h3>
+                <p class="d2d__copy">Final-mile coordination to the destination port. Duty-free into the US, EU and GCC.</p>
+              </li>
+            </ol>
           </li>
         </ol>
       </div>
@@ -179,9 +289,9 @@
     <section class="sec routes" aria-labelledby="routes-title">
       <div class="wrap">
         <header class="sec__head">
-          <p class="sec__idx mono">04</p>
+          <p class="sec__idx mono">03</p>
           <h2 class="sec__title" id="routes-title">Alexandria to the US, EU and GCC. Duty-free.</h2>
-          <p class="sec__note mono">Route diagram · not to scale</p>
+          <p class="sec__note mono">Route map · not to scale</p>
         </header>
         <div class="routes__grid">
           <figure class="routes__map globe" data-globe>
@@ -214,6 +324,7 @@
             <figcaption class="sr-only">Export routes from Alexandria, Egypt: duty-free to the European Union under Euro 1, about one week by freight; duty-free to the United States under QIZ, about three weeks to major ports; duty-free to the six Gulf Cooperation Council states under GAFTA.</figcaption>
           </figure>
           <div class="routes__side">
+            <p class="lroutes__k mono">Why duty-free</p>
             <p>Egypt has duty-free access to the United States under the Qualifying Industrial Zones (QIZ) agreement, to the European Union under the Euro-Mediterranean Partnership (Euro 1), and to the Gulf Cooperation Council states under the Greater Arab Free Trade Area (GAFTA).</p>
             <dl class="mini">
               <div><dt class="mono">Freight to Europe</dt><dd class="num">≈1<small>wk</small></dd></div>
@@ -226,9 +337,9 @@
 
     <section class="cta" aria-labelledby="cta-title">
       <div class="wrap cta__in">
-        <p class="sec__idx mono">05</p>
-        <h2 class="cta__title" id="cta-title">Explore our logistics capabilities.</h2>
-        <p class="cta__lead">Visit Green Point Logistics to learn more about our logistics solutions, or send us your program details.</p>
+        <p class="sec__idx mono">04</p>
+        <h2 class="cta__title" id="cta-title">Ship your next program from Alexandria.</h2>
+        <p class="cta__lead">Send us your program details, or visit the Green Point Logistics website.</p>
         <div class="cta__actions">
           <a class="btn btn--ink btn--xl" href="https://gpl.com.eg/" target="_blank" rel="noopener noreferrer">Visit Green Point Logistics <span aria-hidden="true">↗</span></a>
           <a class="btn btn--line btn--xl" href="/contact">Submit an Inquiry <span aria-hidden="true">→</span></a>
