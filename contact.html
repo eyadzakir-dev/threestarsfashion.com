@@ -29,6 +29,7 @@
   <link rel="stylesheet" href="assets/css/contact.css">
   <script type="module" src="assets/js/site.js"></script>
   <script type="module" src="assets/js/contact.js"></script>
+  <script type="module" src="assets/js/inquiry-form.js"></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -85,7 +86,7 @@
               <span class="reach__no mono">C/01 · Best for quotes</span>
               <svg class="reach__ico" viewBox="0 0 40 40" aria-hidden="true" focusable="false"><path d="M9 5h22v30H9z"/><path d="M14 12h12M14 18h12M14 24h5"/><path class="acc" d="M21 27l3.5 3.5L32 23"/></svg>
               <span class="reach__title">Submit an inquiry</span>
-              <span class="reach__sub">Style, quantity, print or embroidery, tech pack upload</span>
+              <span class="reach__sub">Style, quantity, market, tech pack upload</span>
               <span class="reach__go" aria-hidden="true">↓</span>
             </a>
           </li>
@@ -144,7 +145,7 @@
         <header class="sec__head">
           <p class="sec__idx mono">01</p>
           <h2 class="sec__title" id="inquiry-title">Send an inquiry.</h2>
-          <p class="sec__note mono">Form · TSF-INQ-01</p>
+          <p class="sec__note mono">Quotes · tech packs</p>
         </header>
         <div class="inq">
           <div class="inq__brief">
@@ -156,8 +157,8 @@
               <li style="--i:3"><span class="brief__no mono">Q/04</span><b>Print or embroidery</b><span class="brief__ex">Technique, placement and number of colours</span></li>
               <li style="--i:4"><span class="brief__no mono">Q/05</span><b>Target delivery date</b><span class="brief__ex">Ex-factory or in-store date</span></li>
               <li style="--i:5"><span class="brief__no mono">Q/06</span><b>Compliance requirements</b><span class="brief__ex">Certificates or buyer codes your program needs</span></li>
-              <li style="--i:6"><span class="brief__no mono">Q/07</span><b>Destination market</b><span class="brief__ex">Duty-free into the US (QIZ), EU (Euro 1) and GCC</span></li>
-              <li style="--i:7"><span class="brief__no mono">Q/08</span><b>Tech pack or style image</b><span class="brief__ex">Upload in the form, max 10&nbsp;MB per file</span></li>
+              <li style="--i:6"><span class="brief__no mono">Q/07</span><b>Destination market</b><span class="brief__ex">US, Europe, GCC / Middle East or domestic</span></li>
+              <li style="--i:7"><span class="brief__no mono">Q/08</span><b>Tech pack or style image</b><span class="brief__ex">Upload in the form: PDF, AI, ZIP, PNG or JPG, up to 25&nbsp;MB in total</span></li>
             </ol>
             <p class="inq__tip">Paste the list into the form's brief, or send it by email.</p>
             <div class="inq__acts">
@@ -166,9 +167,110 @@
             </div>
           </div>
           <div class="inq__form">
-            <p class="inq__form-head mono"><span>Form · TSF-INQ-01</span><span>Secure form by Tally</span></p>
-            <iframe data-tally-src="https://tally.so/embed/9qvgVp?alignLeft=1&amp;hideTitle=1&amp;transparentBackground=1&amp;dynamicHeight=1" loading="lazy" height="600" title="Submit an inquiry"></iframe>
-            <noscript><p class="inq__fallback">The inquiry form needs JavaScript. Email us at <a href="mailto:info@tsf.com.eg">info@tsf.com.eg</a> instead.</p></noscript>
+            <form class="iform" data-inquiry-form data-endpoint="https://staging.threestarsfashion.com/api/website/inquiries" method="post" enctype="multipart/form-data" novalidate aria-labelledby="inquiry-title">
+              <p class="iform__bar mono"><span>New inquiry</span><span aria-hidden="true"><span class="iform__req">*</span> Required</span></p>
+              <noscript><p class="inq__fallback">The inquiry form needs JavaScript. Email us at <a href="mailto:info@tsf.com.eg">info@tsf.com.eg</a> instead.</p></noscript>
+
+              <fieldset class="iform__set">
+                <legend class="iform__legend"><span class="iform__no mono" aria-hidden="true">01</span><span class="iform__title">Contact info</span><span class="iform__tag mono">Name and email required</span></legend>
+                <div class="iform__grid">
+                  <div class="iform__field">
+                    <label class="iform__label" for="iform-name">Full name <span class="iform__req" aria-hidden="true">*</span></label>
+                    <input class="iform__input" id="iform-name" name="name" type="text" autocomplete="name" required maxlength="120" placeholder="John Doe" aria-describedby="iform-name-err">
+                    <p class="iform__err" id="iform-name-err"></p>
+                  </div>
+                  <div class="iform__field">
+                    <label class="iform__label" for="iform-email">Business email <span class="iform__req" aria-hidden="true">*</span></label>
+                    <input class="iform__input" id="iform-email" name="email" type="email" autocomplete="email" required maxlength="254" placeholder="buyer@brand.com" aria-describedby="iform-email-err">
+                    <p class="iform__err" id="iform-email-err"></p>
+                  </div>
+                  <div class="iform__field">
+                    <label class="iform__label" for="iform-company">Company / brand name <span class="iform__opt mono">Optional</span></label>
+                    <input class="iform__input" id="iform-company" name="company" type="text" autocomplete="organization" maxlength="160" placeholder="Alpine Apparel">
+                  </div>
+                  <div class="iform__field">
+                    <label class="iform__label" for="iform-phone">Phone / WhatsApp <span class="iform__opt mono">Optional</span></label>
+                    <input class="iform__input" id="iform-phone" name="phone" type="tel" autocomplete="tel" maxlength="40" placeholder="+1 (555) 000-0000">
+                  </div>
+                </div>
+              </fieldset>
+
+              <fieldset class="iform__set">
+                <legend class="iform__legend"><span class="iform__no mono" aria-hidden="true">02</span><span class="iform__title">Project overview</span><span class="iform__tag mono">All optional</span></legend>
+                <div class="iform__grid">
+                  <div class="iform__field iform__field--full">
+                    <label class="iform__label" for="iform-product">Product / style type</label>
+                    <input class="iform__input" id="iform-product" name="product" type="text" maxlength="160" placeholder="e.g. Fleece hoodie, polo shirt">
+                  </div>
+                  <div class="iform__field">
+                    <label class="iform__label" for="iform-quantity">Estimated quantity <span class="sr-only">in pieces</span></label>
+                    <span class="iform__unit">
+                      <input class="iform__input" id="iform-quantity" name="quantity" type="number" min="1" max="10000000" step="1" inputmode="numeric" placeholder="e.g. 3000" aria-describedby="iform-quantity-err">
+                      <span class="iform__unit-tag mono" aria-hidden="true">pcs</span>
+                    </span>
+                    <p class="iform__err" id="iform-quantity-err"></p>
+                  </div>
+                  <div class="iform__field">
+                    <label class="iform__label" for="iform-market">Destination market</label>
+                    <select class="iform__input iform__select" id="iform-market" name="market">
+                      <option value="" selected>Select a market</option>
+                      <option value="us">US</option>
+                      <option value="eu">Europe</option>
+                      <option value="gcc">GCC / Middle East</option>
+                      <option value="domestic">Domestic</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                  <div class="iform__field iform__field--full" data-market-other hidden>
+                    <label class="iform__label" for="iform-market-other">Other market <span class="iform__opt mono">Optional</span></label>
+                    <input class="iform__input" id="iform-market-other" name="market_other" type="text" maxlength="120" placeholder="e.g. Canada, Australia" disabled>
+                  </div>
+                </div>
+              </fieldset>
+
+              <fieldset class="iform__set">
+                <legend class="iform__legend"><span class="iform__no mono" aria-hidden="true">03</span><span class="iform__title">Brief and attachments</span><span class="iform__tag mono">All optional</span></legend>
+                <div class="iform__grid">
+                  <div class="iform__field iform__field--full">
+                    <p class="iform__label" id="iform-files-label">Tech pack, sketches or files</p>
+                    <label class="iform__drop" data-dropzone>
+                      <input class="sr-only" id="iform-files" name="files" type="file" multiple accept=".pdf,.ai,.zip,.png,.jpg,.jpeg" aria-labelledby="iform-files-label" aria-describedby="iform-files-hint iform-files-err" data-file-picker>
+                      <svg class="iform__ico" viewBox="0 0 40 40" aria-hidden="true" focusable="false"><path d="M9 5h15l7 7v23H9z"/><path d="M24 5v7h7"/><path class="acc" d="M20 30V18M15 23l5-5 5 5"/></svg>
+                      <span class="iform__drop-main">Drag and drop tech packs, sketches or files</span>
+                      <span class="iform__drop-sub">or <span class="iform__drop-link">browse</span> your files</span>
+                      <span class="iform__drop-hint mono" id="iform-files-hint">PDF · AI · ZIP · PNG · JPG — up to 25&nbsp;MB in total, 10 files</span>
+                    </label>
+                    <p class="iform__err" id="iform-files-err" aria-live="polite" data-file-error></p>
+                    <ul class="iform__files" data-file-list></ul>
+                    <p class="sr-only" aria-live="polite" data-file-live></p>
+                  </div>
+                  <div class="iform__field iform__field--full">
+                    <label class="iform__label" for="iform-message">Project brief / message</label>
+                    <textarea class="iform__input iform__textarea" id="iform-message" name="message" rows="6" maxlength="4000" placeholder="Any specific fabrics, weights, deadlines or compliance needs"></textarea>
+                  </div>
+                </div>
+              </fieldset>
+
+              <div class="iform__hp" aria-hidden="true"><label>Website <input name="website" type="text" tabindex="-1" autocomplete="off"></label></div>
+              <input type="hidden" name="origin" value="tsf-website">
+
+              <div class="iform__foot">
+                <button class="btn btn--red btn--lg iform__submit" type="submit" data-inquiry-submit><span data-submit-label>Submit inquiry</span> <span aria-hidden="true">→</span></button>
+                <p class="iform__note">We use these details only to answer your inquiry. <a href="/privacy-policy">Privacy policy</a></p>
+                <p class="iform__status" role="status" aria-live="polite" data-inquiry-status></p>
+              </div>
+            </form>
+
+            <div class="iform__done" data-inquiry-done hidden>
+              <p class="iform__bar mono"><span data-done-label>Inquiry received</span></p>
+              <div class="iform__done-body">
+                <svg class="iform__ico iform__done-ico" viewBox="0 0 40 40" aria-hidden="true" focusable="false"><path d="M9 5h22v30H9z"/><path d="M14 12h12M14 18h12M14 24h5"/><path class="acc" d="M21 27l3.5 3.5L32 23"/></svg>
+                <h3 class="iform__done-h" tabindex="-1" data-done-title>Thank you.</h3>
+                <p class="iform__done-reply" data-done-reply></p>
+                <p class="iform__done-sent mono" data-done-sent hidden></p>
+                <button class="btn btn--line" type="button" data-inquiry-again>Send another inquiry <span aria-hidden="true">+</span></button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -245,6 +347,5 @@
       </symbol>
     </defs>
   </svg>
-  <script>var d=document,w="https://tally.so/widgets/embed.js",v=function(){"undefined"!=typeof Tally?Tally.loadEmbeds():d.querySelectorAll("iframe[data-tally-src]:not([src])").forEach((function(e){e.src=e.dataset.tallySrc}))};if("undefined"!=typeof Tally)v();else if(d.querySelector('script[src="'+w+'"]')==null){var s=d.createElement("script");s.src=w,s.onload=v,s.onerror=v,d.body.appendChild(s);}</script>
 </body>
 </html>
