@@ -73,22 +73,22 @@
 }
 .org__root img { width: 44px; height: auto; mix-blend-mode: multiply; }
 .org__name { font-size: 22px; font-weight: 800; font-stretch: 80%; line-height: 0.95; text-transform: uppercase; }
-.org__est { margin-left: auto; color: var(--ink-2); font-size: 10.5px; text-align: right; }
+.org__est { margin-inline-start: auto; color: var(--ink-2); font-size: 10.5px; text-align: end; }
 /* The trunk drops from the centre of the group mark (16px padding + half the 44px mark + 1px border). */
-.org__list { margin-left: 39px; }
+.org__list { margin-inline-start: 39px; }
 .org__list li {
   position: relative;
   display: flex;
   align-items: center;
   gap: 14px;
   min-height: 58px;
-  padding-left: 36px;
+  padding-inline-start: 36px;
   font-size: 20px;
   font-weight: 700;
   font-stretch: 88%;
   letter-spacing: -0.01em;
 }
-.org__list li::before { content: ""; position: absolute; top: 0; bottom: 0; left: 0; border-left: 1px solid var(--ink); }
+.org__list li::before { content: ""; position: absolute; top: 0; bottom: 0; left: 0; border-inline-start: 1px solid var(--ink); }
 .org__list li:last-child::before { bottom: 50%; }
 .org__list li::after { content: ""; position: absolute; top: 50%; left: 0; width: 28px; border-top: 1px solid var(--ink); }
 .org__list .mono { color: var(--ink-2); font-size: 11px; }
@@ -159,7 +159,7 @@
   right: 0;
   top: 3px;
   height: 12px;
-  border-right: 1px solid var(--ink);
+  border-inline-end: 1px solid var(--ink);
   background:
     linear-gradient(to right, var(--ink) 1px, transparent 1px) 0 0 / calc(100% / 22) 6px repeat-x,
     linear-gradient(to right, var(--ink) 1px, transparent 1px) 0 0 / calc(100% / 11) 12px repeat-x;
@@ -198,12 +198,12 @@
 .tl__events { position: absolute; top: 0; left: 0; right: 0; height: var(--plot-h); }
 .tl__ev { position: absolute; }
 .tl__ev--found { left: 20px; bottom: 26px; }
-.tl__ev--now { right: calc(100% - 19 / 22 * (100% - var(--ya)) + 16px); bottom: 6px; text-align: right; }
-.tl__ev--goal { right: calc(100% - 21 / 22 * (100% - var(--ya)) + 16px); bottom: calc(0.3 * var(--h) + 64px); padding: 4px 0 4px 12px; background: var(--paper); text-align: right; }
+.tl__ev--now { right: calc(100% - 19 / 22 * (100% - var(--ya)) + 16px); bottom: 6px; text-align: end; }
+.tl__ev--goal { right: calc(100% - 21 / 22 * (100% - var(--ya)) + 16px); bottom: calc(0.3 * var(--h) + 64px); padding: 4px 0 4px 12px; background: var(--paper); text-align: end; }
 .tl__when { color: var(--red-ink); }
 .tl__key { display: none; }
 .tl__big { margin-top: 6px; font-size: clamp(44px, 4.4vw, 72px); }
-.tl__big small { margin-left: 0.04em; font-size: 0.5em; letter-spacing: 0; color: var(--ink-2); }
+.tl__big small { margin-inline-start: 0.04em; font-size: 0.5em; letter-spacing: 0; color: var(--ink-2); }
 .tl__what { margin-top: 8px; font-size: clamp(18px, 1.5vw, 22px); font-weight: 700; font-stretch: 88%; line-height: 1.1; letter-spacing: -0.01em; }
 .tl__note { margin-top: 4px; font-size: 15px; line-height: 1.4; color: var(--ink-2); }
 .tl__cap { color: var(--ink-2); font-size: 10.5px; }
@@ -236,7 +236,7 @@
   flex: none;
   width: 10px;
   height: 5px;
-  border-left: 2px solid var(--red);
+  border-inline-start: 2px solid var(--red);
   border-bottom: 2px solid var(--red);
   transform: translateY(-3px) rotate(-45deg);
 }
@@ -307,7 +307,7 @@
   .who__prose { font-size: 17px; }
   .who__fig { margin-top: 32px; }
   .org__name { font-size: 19px; }
-  .org__list li { font-size: 18px; min-height: 52px; padding-left: 28px; }
+  .org__list li { font-size: 18px; min-height: 52px; padding-inline-start: 28px; }
   .org__list li::after { width: 20px; }
   .org__list .org__gpl::after { width: 28px; }
   .org__box { padding: 12px 14px; }
@@ -331,7 +331,7 @@
     align-items: center;
     padding: 12px 0 14px;
     border-bottom: 1px solid var(--rule);
-    text-align: left;
+    text-align: start;
   }
   .tl__when { display: flex; align-items: center; gap: 10px; grid-column: 1; }
   .tl__key { display: block; flex: none; width: 14px; height: 14px; }
@@ -354,7 +354,7 @@
   .val__proof li { font-size: 14.5px; }
   .val__link { min-height: 40px; }
 
-  .vis__k { grid-column: 3 / 5; grid-row: 1; text-align: right; font-size: 12px; }
+  .vis__k { grid-column: 3 / 5; grid-row: 1; text-align: end; font-size: 12px; }
   .vis__head .sec__note { display: none; }
   .vis__statement { font-size: clamp(44px, 12.4vw, 64px); }
   .vis__lead { margin-top: 24px; font-size: 18px; }

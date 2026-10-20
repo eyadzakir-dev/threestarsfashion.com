@@ -61,7 +61,7 @@
 .panel__copy { margin-top: 12px; font-size: 15px; line-height: 1.45; text-wrap: pretty; }
 .panel__cue { margin-top: 16px; color: var(--red-ink); }
 .panel__cue span { display: inline-block; }
-.panel__note { margin-top: 12px; padding-left: 10px; border-left: 2px solid var(--red); color: var(--ink-2); font-size: 11px; }
+.panel__note { margin-top: 12px; padding-inline-start: 10px; border-inline-start: 2px solid var(--red); color: var(--ink-2); font-size: 11px; }
 
 /* Photo strip: four squares, the rest of the set one tap away in the lightbox (site.js). */
 .panel__gallery { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-top: 14px; }
@@ -224,7 +224,7 @@
   align-items: center;
   gap: 8px;
   height: 100%;
-  padding-right: 10px;
+  padding-inline-end: 10px;
   overflow: hidden;
   color: var(--ink-2);
   letter-spacing: 0.06em;
@@ -317,11 +317,11 @@
 
 /* Desktop: panels line up with the page grid and stop above the bottom rail when their chapter ends. */
 @media (min-width: 900px) {
-  .has-3d .scale__ch { padding-left: max(var(--pad), calc((100vw - 1440px) / 2 + var(--pad))); padding-bottom: calc(var(--rail-h) + 20px); }
+  .has-3d .scale__ch { padding-inline-start: max(var(--pad), calc((100vw - 1440px) / 2 + var(--pad))); padding-bottom: calc(var(--rail-h) + 20px); }
 }
 @media (max-width: 1180px) {
   .scale__rl { display: none; }
-  .scale__rail a { justify-content: center; padding-right: 0; }
+  .scale__rail a { justify-content: center; padding-inline-end: 0; }
   .scale__rail a::before, .scale__rail a::after { left: 4px; right: 4px; }
 }
 

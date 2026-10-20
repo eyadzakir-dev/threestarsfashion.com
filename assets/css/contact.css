@@ -29,11 +29,11 @@
   padding: 16px 20px 18px;
   background: var(--paper-hi);
 }
-.reach__no { color: var(--red-ink); padding-right: 52px; }
+.reach__no { color: var(--red-ink); padding-inline-end: 52px; }
 .reach__ico {
   position: absolute;
   top: 14px;
-  right: 16px;
+  inset-inline-end: 16px;
   width: 40px;
   height: 40px;
   fill: none;
@@ -45,7 +45,7 @@
 }
 .reach__ico .acc { stroke: var(--red); }
 .reach__ico .acc--fill { fill: var(--red); stroke: none; }
-.reach__ico--in { width: 30px; height: 30px; top: 18px; right: 20px; fill: currentColor; stroke: none; }
+.reach__ico--in { width: 30px; height: 30px; top: 18px; inset-inline-end: 20px; fill: currentColor; stroke: none; }
 
 .reach__val,
 .reach__tel span:first-child {
@@ -141,10 +141,10 @@
   line-height: 0.92;
   letter-spacing: -0.035em;
 }
-.reach__sub { max-width: 24em; padding-right: 56px; font-size: 15px; line-height: 1.35; }
+.reach__sub { max-width: 24em; padding-inline-end: 56px; font-size: 15px; line-height: 1.35; }
 .reach__go {
   position: absolute;
-  right: 18px;
+  inset-inline-end: 18px;
   bottom: 12px;
   font-size: 40px;
   font-weight: 300;
@@ -167,7 +167,7 @@
 .clock__top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 14px 16px; margin-bottom: 26px; }
 .clock__cell { display: flex; flex-direction: column; gap: 8px; }
 .clock__cell .mono { color: var(--ink-2); }
-.clock__cell--now { text-align: right; align-items: flex-end; }
+.clock__cell--now { text-align: end; align-items: flex-end; }
 .clock__big {
   font-size: clamp(34px, 3.2vw, 50px);
   font-weight: 800;
@@ -207,7 +207,7 @@
   bottom: -5px;
   width: 2px;
   height: 24px;
-  margin-left: -1px;
+  margin-inline-start: -1px;
   background: var(--ink);
 }
 .ruler__now::after {
@@ -292,7 +292,7 @@
 .iform__set + .iform__set { border-top: 1px solid var(--ink); }
 /* Floated so the legend lays out as a normal full-width grid box. */
 .iform__legend {
-  float: left;
+  float: inline-start;
   width: 100%;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
@@ -305,7 +305,7 @@
 .iform__legend + * { clear: both; }
 .iform__no { color: var(--red-ink); }
 .iform__title { font-size: 20px; font-weight: 700; font-stretch: 90%; line-height: 1.2; letter-spacing: -0.01em; }
-.iform__tag { color: var(--ink-2); text-align: right; }
+.iform__tag { color: var(--ink-2); text-align: end; }
 
 .iform__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px 20px; }
 .iform__field { min-width: 0; }
@@ -324,7 +324,7 @@
   font-weight: 600;
   line-height: 1.3;
 }
-.iform__opt { margin-left: auto; font-size: 11px; font-weight: 500; color: var(--ink-2); }
+.iform__opt { margin-inline-start: auto; font-size: 11px; font-weight: 500; color: var(--ink-2); }
 
 .iform__input {
   display: block;
@@ -345,19 +345,22 @@
 .iform__input[aria-invalid="true"] { border-color: var(--red-ink); box-shadow: inset 0 0 0 1px var(--red-ink); }
 
 .iform__unit { position: relative; display: block; }
-.iform__unit .iform__input { padding-right: 56px; appearance: textfield; -moz-appearance: textfield; }
+.iform__unit .iform__input { padding-inline-end: 56px; appearance: textfield; -moz-appearance: textfield; }
 .iform__unit .iform__input::-webkit-inner-spin-button,
 .iform__unit .iform__input::-webkit-outer-spin-button { margin: 0; -webkit-appearance: none; }
-.iform__unit-tag { position: absolute; top: 50%; right: 14px; color: var(--ink-2); transform: translateY(-50%); pointer-events: none; }
+.iform__unit-tag { position: absolute; top: 50%; inset-inline-end: 14px; color: var(--ink-2); transform: translateY(-50%); pointer-events: none; }
 
 .iform__select {
-  padding-right: 44px;
+  padding-inline-end: 44px;
   background: var(--paper) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 9'%3E%3Cpath d='M1 1.5l6 6 6-6' fill='none' stroke='%23111' stroke-width='1.8'/%3E%3C/svg%3E") no-repeat right 16px center / 14px 9px;
   appearance: none;
   cursor: pointer;
 }
 .iform__select:has(option[value=""]:checked) { color: var(--ink-2); }
 .iform__select option { color: var(--ink); }
+[dir="rtl"] .iform__select { background-position: left 16px center; }
+/* The time rulers are a clock face: they read left to right in both languages. */
+.ruler, .ruler__scale { direction: ltr; }
 .iform__textarea { min-height: 168px; resize: vertical; line-height: 1.5; }
 
 .iform__err { margin-top: 6px; font-size: 14px; font-weight: 500; line-height: 1.35; color: var(--red-ink); }
@@ -438,7 +441,7 @@
 .iform__status a { text-decoration: underline; text-underline-offset: 3px; }
 
 .iform__done-body { position: relative; padding: 40px 24px 32px; }
-.iform__done-ico { position: absolute; top: 20px; right: 20px; width: 48px; height: 48px; }
+.iform__done-ico { position: absolute; top: 20px; inset-inline-end: 20px; width: 48px; height: 48px; }
 .iform__done-h {
   max-width: calc(100% - 64px);
   font-size: clamp(38px, 3.6vw, 56px);
@@ -505,7 +508,7 @@
   content: "";
   position: absolute;
   top: -11px;
-  left: -11px;
+  inset-inline-start: -11px;
   width: 22px;
   height: 22px;
   background:
@@ -530,31 +533,31 @@
   .reach { grid-row: auto; grid-template-columns: 1fr; margin-top: 32px; }
   .reach__item { min-height: 0; gap: 6px; padding: 14px 16px 12px; }
   .reach__item--main { padding: 0; }
-  .reach__ico { top: 12px; right: 14px; width: 32px; height: 32px; }
-  .reach__ico--in { width: 24px; height: 24px; top: 16px; right: 18px; }
+  .reach__ico { top: 12px; inset-inline-end: 14px; width: 32px; height: 32px; }
+  .reach__ico--in { width: 24px; height: 24px; top: 16px; inset-inline-end: 18px; }
   .reach__val { margin-top: 18px; }
   .reach__tel:first-of-type { margin-top: 14px; }
   .reach__link { min-height: 168px; padding: 14px 16px 16px; }
   .reach__title { font-size: clamp(36px, 10.4vw, 46px); }
   .clock { grid-column: 1 / -1; grid-row: auto; margin-top: 12px; padding: 14px 16px 12px; }
   .clock__big { font-size: clamp(30px, 8.6vw, 40px); }
-  .clock__cell--now { text-align: left; align-items: flex-start; }
+  .clock__cell--now { text-align: start; align-items: flex-start; }
 
   .inq__brief, .inq__form { grid-column: 1 / -1; }
   .brief b { font-size: 18px; }
   .inq__acts .btn { flex: 1 1 auto; }
   .iform__set { padding: 18px 16px 24px; }
   .iform__legend { grid-template-columns: auto minmax(0, 1fr); column-gap: 10px; row-gap: 2px; margin-bottom: 18px; }
-  .iform__tag { grid-column: 2; text-align: left; }
+  .iform__tag { grid-column: 2; text-align: start; }
   .iform__drop { padding: 16px; column-gap: 14px; }
   .iform__pill { grid-template-columns: 40px minmax(0, 1fr) auto 44px; column-gap: 8px; }
   .iform__foot { grid-template-columns: minmax(0, 1fr); row-gap: 14px; padding: 20px 16px; }
   .iform__submit { width: 100%; min-width: 0; }
   .iform__done-body { padding: 32px 16px 24px; }
-  .iform__done-ico { top: 16px; right: 16px; width: 40px; height: 40px; }
+  .iform__done-ico { top: 16px; inset-inline-end: 16px; width: 40px; height: 40px; }
   .iform__done .btn { width: 100%; }
 
   .visit__info, .visit__map { grid-column: 1 / -1; }
-  .visit__map::before { left: auto; right: -6px; top: -11px; }
+  .visit__map::before { inset-inline-start: auto; inset-inline-end: -6px; top: -11px; }
   .visit__map iframe { height: 360px; }
 }

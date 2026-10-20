@@ -37,7 +37,7 @@
   color: var(--ink-2);
 }
 .hero__meta li { grid-column: span 3; }
-.hero__meta .k { color: var(--red-ink); margin-right: 6px; }
+.hero__meta .k { color: var(--red-ink); margin-inline-end: 6px; }
 
 .hero__title {
   grid-column: 1 / -1;
@@ -58,7 +58,7 @@
 .hero__big {
   display: block;
   margin-top: clamp(18px, 3vh, 36px);
-  margin-left: -0.05em;
+  margin-inline-start: -0.05em;
   font-size: clamp(84px, 14.6vw, 228px);
   font-weight: 800;
   font-stretch: 75%;
@@ -86,7 +86,7 @@
   border-top: 1px solid var(--ink);
 }
 .hero__lead { grid-column: 1 / 6; font-size: 18px; line-height: 1.45; max-width: 36em; }
-.hero__ctas { grid-column: 6 / 13; display: flex; gap: 12px; flex-wrap: wrap; padding-left: var(--gut); }
+.hero__ctas { grid-column: 6 / 13; display: flex; gap: 12px; flex-wrap: wrap; padding-inline-start: var(--gut); }
 
 /* The three-star mark: the starting point of the homepage star journey. */
 .hero__mark {
@@ -103,7 +103,7 @@
 .hero__stars { display: block; width: 100%; height: auto; overflow: visible; color: var(--red); }
 /* Where the "3" is drawn, the large star keeps the logo's open outline. */
 .hero__stars, .line .print, .line .carton, .line .stencil { --heal: 0; }
-.hero__mark figcaption { margin-top: 12px; color: var(--ink-2); text-align: right; }
+.hero__mark figcaption { margin-top: 12px; color: var(--ink-2); text-align: end; }
 
 @media (prefers-reduced-motion: no-preference) {
   .ch {
@@ -145,10 +145,10 @@
     margin: 28px 0 0;
   }
   .hero__stars { width: clamp(150px, 42vw, 280px); }
-  .hero__mark figcaption { margin: 0; text-align: left; }
+  .hero__mark figcaption { margin: 0; text-align: start; }
   .hero__foot { grid-row: 4; }
   .hero__lead, .hero__ctas { grid-column: 1 / -1; }
-  .hero__ctas { padding-left: 0; margin-top: 24px; }
+  .hero__ctas { padding-inline-start: 0; margin-top: 24px; }
   .hero__ctas .btn { width: 100%; }
 }
 
@@ -395,8 +395,8 @@
   border-top: 1px solid var(--ink);
   font-size: 11px;
 }
-.tblock > div { padding: 7px 10px 8px; border-left: 1px solid var(--ink); min-width: 0; }
-.tblock > div:first-child { border-left: 0; }
+.tblock > div { padding: 7px 10px 8px; border-inline-start: 1px solid var(--ink); min-width: 0; }
+.tblock > div:first-child { border-inline-start: 0; }
 .tblock dt { color: var(--ink-2); font-size: 9.5px; }
 .tblock dd { color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .roll-digits, .roll-words {
@@ -568,7 +568,7 @@
   background:
     repeating-linear-gradient(to right, var(--ink) 0 1px, transparent 1px calc(100% / var(--stations))) 0 0 / 100% 100%,
     linear-gradient(var(--rule), var(--rule)) 0 50% / 100% 1px no-repeat;
-  border-right: 1px solid var(--ink);
+  border-inline-end: 1px solid var(--ink);
 }
 .belt-bar__meter i {
   position: absolute;
@@ -672,7 +672,7 @@
   .stage { border-inline: 0; }
   .tblock { grid-template-columns: 0.8fr 1.4fr 1fr; font-size: 10px; }
   .tblock > div:first-child { display: none; }
-  .tblock > div:nth-child(2) { border-left: 0; }
+  .tblock > div:nth-child(2) { border-inline-start: 0; }
   .station { padding: 36px var(--pad) 40px; border-bottom: 1px solid var(--rule); }
   .station__n { font-size: 72px; }
   .station__fig { margin-top: 26px; }

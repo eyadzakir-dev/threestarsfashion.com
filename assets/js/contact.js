@@ -1,7 +1,7 @@
-// Contact page: Alexandria working-hours clock with a local-time ruler, copy buttons, checklist reveal.
+// Contact page: Egypt-time working-hours clock with a local-time ruler, copy buttons, checklist reveal.
 
 const CAIRO_TZ = "Africa/Cairo";
-const WORK_START_MIN = 7 * 60;
+const WORK_START_MIN = 8 * 60;
 const WORK_END_MIN = 17 * 60;
 const DAY_MIN = 24 * 60;
 const MS_PER_MIN = 60000;
@@ -82,7 +82,7 @@ function setLocalText(el, range) {
 function renderLocal(ui, cairoMin, shift) {
   ui.localRuler.hidden = shift === 0;
   if (shift === 0) {
-    ui.localText.textContent = "Your clock is already on Alexandria time.";
+    ui.localText.textContent = "Your clock is already on Egypt time.";
     return;
   }
   const start = wrapDay(WORK_START_MIN + shift);

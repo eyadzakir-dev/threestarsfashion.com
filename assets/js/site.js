@@ -1,24 +1,24 @@
-// Shared behaviour for every page: header clock, mobile menu, one-shot reveals, image lightbox.
+// Shared behaviour for every page: language switch, mobile menu, one-shot reveals, image lightbox.
 
 const REDUCED_MOTION = matchMedia("(prefers-reduced-motion: reduce)");
 const DESKTOP_NAV = matchMedia("(min-width: 1181px)");
-const CLOCK_TICK_MS = 15000;
 const REVEAL_THRESHOLD = 0.3;
 const GLOBE_PRELOAD_MARGIN = "150% 0px";
 
-const cairoTime = new Intl.DateTimeFormat("en-GB", {
-  timeZone: "Africa/Cairo",
-  hour: "2-digit",
-  minute: "2-digit",
-  hourCycle: "h23",
-});
-
-function initHeaderClock() {
-  const clock = document.querySelector("[data-cairo-clock]");
-  if (!clock) return;
-  const render = () => { clock.textContent = cairoTime.format(new Date()); };
-  render();
-  setInterval(render, CLOCK_TICK_MS);
+// The header language switch: remember the choice so the page-load redirect follows it, and keep the section anchor.
+function initLangSwitch() {
+  document.querySelectorAll("[data-lang-switch]").forEach((link) => {
+    link.addEventListener("click", (event) => {
+      try {
+        localStorage.setItem("tsf-lang", link.dataset.langSwitch);
+      } catch (error) {
+        console.warn("Language choice not saved.", error);
+      }
+      if (!location.hash) return;
+      event.preventDefault();
+      location.href = link.getAttribute("href") + location.hash;
+    });
+  });
 }
 
 function initMenu() {
@@ -142,7 +142,7 @@ function initLightbox() {
   ui.dialog.addEventListener("close", () => state.trigger?.focus());
 }
 
-initHeaderClock();
+initLangSwitch();
 initMenu();
 initReveal(".stamps, .routes, .cta__stars, .figs, .fabrics, .ship, .adv, .rack, .hangtags, .solar");
 initLightbox();

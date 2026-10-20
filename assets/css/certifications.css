@@ -30,7 +30,7 @@
 .toc__appr a { border-top: 1px solid var(--ink); margin-top: -1px; }
 .toc__no { color: var(--red-ink); font-size: 10.5px; }
 .toc__name { font-size: 16px; font-weight: 600; line-height: 1.2; }
-.toc__n { font-size: 26px; font-weight: 800; font-stretch: 80%; line-height: 1; letter-spacing: -0.02em; text-align: right; }
+.toc__n { font-size: 26px; font-weight: 800; font-stretch: 80%; line-height: 1; letter-spacing: -0.02em; text-align: end; }
 
 /* Isotype marks: one stamp per standard, one tag per approval; red fill = scan on this page. */
 .toc__marks { display: flex; gap: 5px; }
@@ -132,7 +132,7 @@
 .entry + .entry { border-top: 1px solid var(--rule); }
 .entry__id { grid-column: 1 / 4; display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
 .entry__no { color: var(--ink-2); font-size: 11px; }
-.entry__stamp { min-width: 0; margin-left: 4px; }
+.entry__stamp { min-width: 0; margin-inline-start: 4px; }
 .entry__stamp b { font-size: clamp(24px, 2.1vw, 32px); }
 .entry__text { grid-column: 4 / 8; padding-top: 29px; }
 .entry__means { max-width: 30em; font-size: 19px; line-height: 1.4; text-wrap: pretty; }
@@ -230,7 +230,7 @@ a.proof:focus-visible { outline-offset: 4px; }
   left: 50%;
   width: 1px;
   height: calc(var(--s, 24px) + 17px);
-  margin-left: -0.5px;
+  margin-inline-start: -0.5px;
   background: var(--ink);
 }
 .tag__body {
@@ -254,7 +254,7 @@ a.proof:focus-visible { outline-offset: 4px; }
   left: 50%;
   width: 10px;
   height: 10px;
-  margin-left: -5px;
+  margin-inline-start: -5px;
   border-radius: 50%;
   background: var(--paper);
   box-shadow: inset 0 0 0 1px var(--ink);

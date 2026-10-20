@@ -20,6 +20,23 @@
   --stamp-noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2.2 1.75'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
+/* Mirrors horizontal nudges (arrow hovers) in right-to-left pages. */
+:root { --dir: 1; }
+[dir="rtl"] { --dir: -1; }
+
+/* ---------- Arabic: Archivo for Latin and digits, IBM Plex Sans Arabic for Arabic script ---------- */
+:root:lang(ar) {
+  --f-sans: "Archivo", "IBM Plex Sans Arabic", Tahoma, sans-serif;
+  --f-mono: "IBM Plex Mono", "IBM Plex Sans Arabic", ui-monospace, monospace;
+}
+/* Tracking breaks Arabic letter joining; uppercase and condensed widths don't apply to it. */
+:lang(ar) { letter-spacing: 0 !important; }
+.mono:lang(ar) { text-transform: none; font-size: 13px; font-weight: 500; }
+html:lang(ar) body { line-height: 1.7; }
+html:lang(ar) :is(h1, h2, h3, h4) { line-height: 1.25; }
+/* Phone numbers, emails and codes read left to right inside Arabic text. */
+[dir="rtl"] :is(a[href^="tel:"], a[href^="mailto:"]) { unicode-bidi: isolate; }
+
 @media (max-width: 899px) {
   :root { --hdr-h: 56px; --pad: 20px; --gut: 12px; --cols: 4; }
 }
@@ -171,7 +188,7 @@ button { font: inherit; color: inherit; }
   align-items: center;
   gap: 10px;
   text-decoration: none;
-  margin-right: auto;
+  margin-inline-end: auto;
 }
 .hdr__brand img { width: 34px; height: 32px; mix-blend-mode: multiply; }
 .hdr__word {
@@ -192,21 +209,25 @@ button { font: inherit; color: inherit; }
   transition: background-size 0.25s var(--ease-out);
 }
 .hdr__nav a:hover, .hdr__nav a[aria-current="page"] { background-size: 100% 2px; }
-.hdr__clock { color: var(--ink-2); white-space: nowrap; }
-.hdr__clock span { color: var(--red-ink); }
 .hdr__cta { padding: 12px 16px; font-size: 14px; }
-/* LinkedIn sits tight against the inquiry button, so it pulls back part of the header gap. */
-.hdr__social {
+/* Careers, the language switch and LinkedIn sit as one tight group of outlined boxes before the inquiry button. */
+.hdr__careers, .hdr__lang, .hdr__social {
   display: grid;
   place-items: center;
   flex: none;
-  width: 42px;
   height: 42px;
-  margin-right: -16px;
   border: 2px solid var(--ink);
   color: var(--ink);
+  text-decoration: none;
+  white-space: nowrap;
   transition: background-color 0.2s, color 0.2s;
 }
+.hdr__careers { padding-inline: 14px; font-size: 14px; font-weight: 600; }
+.hdr__careers:hover, .hdr__careers[aria-current="page"] { background: var(--ink); color: var(--paper); }
+.hdr__lang { min-width: 42px; padding-inline: 10px; font-size: 14px; font-weight: 600; margin-inline-start: -20px; }
+.hdr__lang:lang(ar) { font-family: "IBM Plex Sans Arabic", "Geeza Pro", Tahoma, sans-serif; font-size: 15px; }
+.hdr__lang:hover { background: var(--ink); color: var(--paper); }
+.hdr__social { width: 42px; margin-inline: -20px -16px; }
 .hdr__social svg { width: 18px; height: 18px; fill: currentColor; }
 .hdr__social:hover { background: var(--ink); color: var(--paper); }
 
@@ -251,13 +272,17 @@ button { font: inherit; color: inherit; }
 .menu__panel .btn { margin-top: 24px; justify-content: space-between; }
 
 @media (max-width: 1180px) {
-  .hdr__nav, .hdr__clock { display: none; }
+  .hdr__nav { display: none; }
   .menu { display: block; }
   .hdr__in { gap: 12px; }
-  .hdr__social { margin-right: 0; }
+  .hdr__lang { margin-inline-start: 0; }
+  .hdr__social { margin-inline: 0; }
+}
+@media (max-width: 760px) {
+  .hdr__careers { display: none; }
 }
 @media (max-width: 520px) {
-  .hdr__cta { display: none; }
+  .hdr__cta, .hdr__social { display: none; }
 }
 
 /* ---------- Section scaffolding ---------- */
@@ -288,10 +313,10 @@ main { display: block; }
   letter-spacing: -0.035em;
   text-wrap: balance;
 }
-.sec__note { grid-column: 10 / 13; text-align: right; color: var(--ink-2); padding-top: 6px; }
+.sec__note { grid-column: 10 / 13; text-align: end; color: var(--ink-2); padding-top: 6px; }
 .sec__lead {
   max-width: 34em;
-  margin-left: calc((100% + var(--gut)) / 12);
+  margin-inline-start: calc((100% + var(--gut)) / 12);
   font-size: 22px;
   line-height: 1.35;
   color: var(--ink-2);
@@ -306,7 +331,7 @@ main { display: block; }
   .sec__idx { grid-column: 1 / 3; }
   .sec__note { grid-column: 3 / 5; }
   .sec__title { grid-column: 1 / -1; grid-row: 2; font-size: clamp(34px, 9.6vw, 44px); }
-  .sec__lead { margin-left: 0; font-size: 19px; }
+  .sec__lead { margin-inline-start: 0; font-size: 19px; }
   .sec__head + .sec__lead { margin-top: -12px; margin-bottom: 40px; }
 }
 /* Back-to-back homepage sections keep one gap between them (the next section's top padding). */
@@ -326,11 +351,11 @@ main { display: block; }
   justify-content: space-between;
   gap: 48px;
   padding: 18px 20px 22px;
-  border-left: 1px solid var(--rule);
+  border-inline-start: 1px solid var(--rule);
   min-height: 300px;
 }
 .nums--short .nums__cell { min-height: 200px; }
-.nums__cell:first-child { border-left: 0; padding-left: 0; }
+.nums__cell:first-child { border-inline-start: 0; padding-inline-start: 0; }
 .nums__cell dt { color: var(--ink-2); }
 .nums__cell dd { display: flex; flex-direction: column; gap: 14px; }
 .nums__cell .num { font-size: clamp(56px, 6.2vw, 104px); }
@@ -344,7 +369,7 @@ main { display: block; }
     gap: 6px 16px;
     min-height: 0;
     padding: 16px 0 20px;
-    border-left: 0;
+    border-inline-start: 0;
     border-bottom: 1px solid var(--rule);
   }
   .nums__cell dt { width: 100%; }
@@ -358,7 +383,7 @@ main { display: block; }
 .spec__table th {
   width: 33%;
   padding: 26px var(--gut) 26px 0;
-  text-align: left;
+  text-align: start;
   vertical-align: top;
   color: var(--red-ink);
 }
@@ -387,7 +412,7 @@ main { display: block; }
   background: var(--paper);
   padding: 36px 16px 20px;
 }
-.stamp-c__no { position: absolute; top: 12px; left: 14px; color: var(--ink-2); font-size: 11px; }
+.stamp-c__no { position: absolute; top: 12px; inset-inline-start: 14px; color: var(--ink-2); font-size: 11px; }
 .stamp-c__doc {
   position: absolute;
   top: 34px;
@@ -461,7 +486,7 @@ main { display: block; }
   padding: 28px 12%;
   transition: background-color 0.25s;
 }
-.logos li .mono { position: absolute; top: 10px; left: 12px; font-size: 10.5px; color: var(--ink-2); }
+.logos li .mono { position: absolute; top: 10px; inset-inline-start: 12px; font-size: 10.5px; color: var(--ink-2); }
 /* --k (inline, per logo) scales compact marks up and wide wordmarks down to a similar optical weight. */
 .logos img {
   width: auto;
@@ -481,7 +506,7 @@ main { display: block; }
 @media (max-width: 899px) {
   .logos { --logo-h: clamp(22px, 5.6vw, 36px); grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .logos li { padding: 15px 8% 7px; }
-  .logos li .mono { top: 5px; left: 6px; font-size: 8.5px; }
+  .logos li .mono { top: 5px; inset-inline-start: 6px; font-size: 8.5px; }
 }
 
 /* ---------- Export routes ---------- */
@@ -576,11 +601,11 @@ main { display: block; }
 
 .mini { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--ink); }
 .mini > div { padding: 14px 0 16px; border-bottom: 1px solid var(--rule); }
-.mini > div:nth-child(odd) { padding-right: 12px; border-right: 1px solid var(--rule); }
-.mini > div:nth-child(even) { padding-left: 14px; }
+.mini > div:nth-child(odd) { padding-inline-end: 12px; border-inline-end: 1px solid var(--rule); }
+.mini > div:nth-child(even) { padding-inline-start: 14px; }
 .mini dt { color: var(--ink-2); font-size: 11px; }
 .mini dd { font-size: 54px; margin-top: 10px; }
-.mini small { font: 500 14px var(--f-mono); letter-spacing: 0.04em; margin-left: 4px; color: var(--ink-2); }
+.mini small { font: 500 14px var(--f-mono); letter-spacing: 0.04em; margin-inline-start: 4px; color: var(--ink-2); }
 
 /* ---------- Figure: photo with a registration mark ---------- */
 .fig { position: relative; }
@@ -632,7 +657,7 @@ main { display: block; }
 .cta .btn:focus-visible { outline-color: #fff; }
 .cta .btn--line { border-color: #fff; color: #fff; }
 .cta .btn--line:hover { background: #fff; color: var(--ink); }
-.cta__stars { position: absolute; right: var(--pad); bottom: 60px; width: min(30vw, 380px); color: #fff; opacity: 0.95; pointer-events: none; --star-stroke: 1.4; --heal: 0; }
+.cta__stars { position: absolute; inset-inline-end: var(--pad); bottom: 60px; width: min(30vw, 380px); color: #fff; opacity: 0.95; pointer-events: none; --star-stroke: 1.4; --heal: 0; }
 .cta__stars.is-armed { --sd: 0; }
 .cta__stars.is-in { animation: star-draw 2.2s var(--ease-out) 0.1s both; }
 @media (max-width: 899px) {

@@ -111,7 +111,7 @@ function initCopyLink() {
     try {
       await navigator.clipboard.writeText(location.origin + location.pathname);
       button.classList.add("is-done");
-      button.textContent = "Link copied ✓";
+      button.textContent = document.documentElement.lang === "ar" ? "تم نسخ الرابط ✓" : "Link copied ✓";
       setTimeout(() => {
         button.classList.remove("is-done");
         button.textContent = label;

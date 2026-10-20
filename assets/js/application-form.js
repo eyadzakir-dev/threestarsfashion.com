@@ -12,10 +12,62 @@ const REQUEST_TIMEOUT_MS = 120000;
 const PREVIEW_DELAY_MS = 1100;
 const PREVIEW_HOST_PATTERN = /^(localhost|127\.0\.0\.1|\[::1\]|.+\.local|192\.168\.\d+\.\d+|10\.\d+\.\d+\.\d+)$/;
 const CONTACT_EMAIL = "info@tsf.com.eg";
-const SUBMIT_LABEL = "Submit application";
-const SENDING_LABEL = "Sending…";
-const DONE_LABEL = "Application received";
-const INVALID_SUMMARY = "Check the highlighted fields.";
+const IS_AR = document.documentElement.lang === "ar";
+
+// Visitor-facing text in the page's language. Data sent to the intake (role slugs, field names) stays in English.
+const T = IS_AR ? {
+  submit: "أرسل الطلب",
+  sending: "جارٍ الإرسال…",
+  done: "تم استلام طلبك",
+  invalid: "راجع الحقول المحددة.",
+  nameMissing: "اكتب اسمك بالكامل.",
+  emailMissing: "اكتب بريدك الإلكتروني.",
+  emailBad: "اكتب بريدًا إلكترونيًا صحيحًا، مثل name@example.com.",
+  phoneMissing: "اكتب رقم هاتفك.",
+  phoneBad: "اكتب رقم هاتف صحيحًا، مثل 01000000000.",
+  fileType: (name) => `الملف ${name} ليس ملف PDF أو Word.`,
+  fileEmpty: (name) => `الملف ${name} فارغ.`,
+  fileBig: (name) => `الملف ${name} أكبر من ${MAX_CV_MB} ميجابايت.`,
+  oneFile: " يمكن إرفاق ملف واحد فقط، لذلك احتفظنا بالملف الأول.",
+  remove: (name) => `إزالة ${name}`,
+  cv: "CV",
+  attached: (name, size) => `تم إرفاق ${name}، ${size}.`,
+  removed: (name) => `تمت إزالة ${name}. لا توجد سيرة ذاتية مرفقة.`,
+  failure: ["تعذّر إرسال طلبك. حاول مرة أخرى، أو أرسل سيرتك الذاتية إلى ", "."],
+  subject: (role) => `طلب توظيف: ${role}`,
+  general: "طلب عام",
+  cvAttached: "السيرة الذاتية مرفقة",
+  noCv: "بدون سيرة ذاتية",
+  thanks: (name) => `شكرًا، ${name}.`,
+  reply: ["سنتواصل معك على ", " أو هاتفيًا إذا كان ملفك مناسبًا."],
+  sent: "أُرسل",
+} : {
+  submit: "Submit application",
+  sending: "Sending…",
+  done: "Application received",
+  invalid: "Check the highlighted fields.",
+  nameMissing: "Enter your full name.",
+  emailMissing: "Enter your email address.",
+  emailBad: "Enter a valid email address, like name@example.com.",
+  phoneMissing: "Enter your phone number.",
+  phoneBad: "Enter a valid phone number, like +20 100 000 0000.",
+  fileType: (name) => `${name} isn't a PDF or Word file.`,
+  fileEmpty: (name) => `${name} is empty.`,
+  fileBig: (name) => `${name} is larger than ${MAX_CV_MB} MB.`,
+  oneFile: " Only one file can be attached, so we kept the first.",
+  remove: (name) => `Remove ${name}`,
+  cv: "CV",
+  attached: (name, size) => `${name} attached, ${size}.`,
+  removed: (name) => `Removed ${name}. No CV attached.`,
+  failure: ["We couldn't send your application. Try again, or email your CV to ", "."],
+  subject: (role) => `Job application: ${role}`,
+  general: "General application",
+  cvAttached: "CV attached",
+  noCv: "No CV",
+  thanks: (name) => `Thank you, ${name}.`,
+  reply: ["We'll be in touch at ", " or by phone if your profile fits."],
+  sent: "Sent",
+};
 const EMAIL_DOMAIN_PATTERN = /@[^@\s]+\.[^@\s.]+$/;
 const REVEAL_THRESHOLD = 0.15;
 const REDUCED_MOTION = matchMedia("(prefers-reduced-motion: reduce)");
@@ -30,22 +82,22 @@ function createText(tag, className, text) {
 /* ---------- Validation ---------- */
 
 function getNameError(field) {
-  return field.value.trim() ? "" : "Enter your full name.";
+  return field.value.trim() ? "" : T.nameMissing;
 }
 
 function getEmailError(field) {
   const value = field.value.trim();
-  if (!value) return "Enter your email address.";
-  if (!field.checkValidity() || !EMAIL_DOMAIN_PATTERN.test(value)) return "Enter a valid email address, like name@example.com.";
+  if (!value) return T.emailMissing;
+  if (!field.checkValidity() || !EMAIL_DOMAIN_PATTERN.test(value)) return T.emailBad;
   return "";
 }
 
 function getPhoneError(field) {
   const value = field.value.trim();
-  if (!value) return "Enter your phone number.";
+  if (!value) return T.phoneMissing;
   const digits = value.replace(/\D/g, "").length;
   const isClean = /^\+?[\d\s().-]+$/.test(value);
-  if (!isClean || digits < PHONE_MIN_DIGITS || digits > PHONE_MAX_DIGITS) return "Enter a valid phone number, like +20 100 000 0000.";
+  if (!isClean || digits < PHONE_MIN_DIGITS || digits > PHONE_MAX_DIGITS) return T.phoneBad;
   return "";
 }
 
@@ -93,9 +145,9 @@ function formatSize(bytes) {
 
 function getFileError(file) {
   const { name } = file;
-  if (!ALLOWED_EXTENSIONS.has(getExtension(name))) return `${name} isn't a PDF or Word file.`;
-  if (file.size === 0) return `${name} is empty.`;
-  if (file.size > MAX_CV_BYTES) return `${name} is larger than ${MAX_CV_MB} MB.`;
+  if (!ALLOWED_EXTENSIONS.has(getExtension(name))) return T.fileType(name);
+  if (file.size === 0) return T.fileEmpty(name);
+  if (file.size > MAX_CV_BYTES) return T.fileBig(name);
   return "";
 }
 
@@ -112,21 +164,21 @@ function renderCv(ctx) {
   name.title = ctx.cv.name;
   remove.type = "button";
   remove.dataset.removeCv = "";
-  remove.setAttribute("aria-label", `Remove ${ctx.cv.name}`);
-  row.append(createText("span", "iform__pill-no mono", "CV"), name, createText("span", "iform__pill-size mono", formatSize(ctx.cv.size)), remove);
+  remove.setAttribute("aria-label", T.remove(ctx.cv.name));
+  row.append(createText("span", "iform__pill-no mono", T.cv), name, createText("span", "iform__pill-size mono", formatSize(ctx.cv.size)), remove);
   fileList.replaceChildren(row);
 }
 
 function setCv(ctx, files) {
   const [file] = files;
   if (!file) return;
-  const extra = files.length > 1 ? " Only one file can be attached, so we kept the first." : "";
+  const extra = files.length > 1 ? T.oneFile : "";
   const error = getFileError(file);
   ctx.ui.fileError.textContent = error ? `${error}${extra}` : extra.trim();
   if (error) return;
   ctx.cv = file;
   renderCv(ctx);
-  ctx.ui.fileLive.textContent = `${file.name} attached, ${formatSize(file.size)}.`;
+  ctx.ui.fileLive.textContent = T.attached(file.name, formatSize(file.size));
 }
 
 function removeCv(ctx) {
@@ -134,7 +186,7 @@ function removeCv(ctx) {
   ctx.cv = null;
   ctx.ui.fileError.textContent = "";
   renderCv(ctx);
-  ctx.ui.fileLive.textContent = `Removed ${name}. No CV attached.`;
+  ctx.ui.fileLive.textContent = T.removed(name);
   ctx.ui.picker.focus();
 }
 
@@ -234,15 +286,15 @@ function setSending(ctx, isSending) {
   const { form, submit, submitLabel } = ctx.ui;
   ctx.isSending = isSending;
   submit.disabled = isSending;
-  submitLabel.textContent = isSending ? SENDING_LABEL : SUBMIT_LABEL;
+  submitLabel.textContent = isSending ? T.sending : T.submit;
   if (isSending) form.setAttribute("aria-busy", "true");
   else form.removeAttribute("aria-busy");
 }
 
 function showFailure(ui) {
   const link = createText("a", "", CONTACT_EMAIL);
-  link.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(`Job application: ${getRoleLabel(ui)}`)}`;
-  setStatus(ui, ["We couldn't send your application. Try again, or email your CV to ", link, "."], true);
+  link.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(T.subject(getRoleLabel(ui)))}`;
+  setStatus(ui, [T.failure[0], link, T.failure[1]], true);
   ui.submit.focus();
 }
 
@@ -253,16 +305,16 @@ const getFirstName = (name) => name.trim().split(/\s+/)[0];
 function getRoleLabel(ui) {
   const { role } = ui.fields;
   if (role.tagName === "SELECT") return role.selectedOptions[0].textContent.replace(/^R\/\d+ · /, "").trim();
-  return ui.form.dataset.roleTitle || "General application";
+  return ui.form.dataset.roleTitle || T.general;
 }
 
 function fillDone(ctx, reference) {
   const { done, fields } = ctx.ui;
-  const parts = [getRoleLabel(ctx.ui), ctx.cv ? "CV attached" : "No CV"];
-  done.label.textContent = reference ? `${DONE_LABEL} · ${reference}` : DONE_LABEL;
-  done.title.textContent = `Thank you, ${getFirstName(fields.name.value)}.`;
-  done.reply.replaceChildren("We'll be in touch at ", createText("b", "", fields.email.value.trim()), " or by phone if your profile fits.");
-  done.sent.replaceChildren(createText("span", "k", "Sent"), ` · ${parts.join(" · ")}`);
+  const parts = [getRoleLabel(ctx.ui), ctx.cv ? T.cvAttached : T.noCv];
+  done.label.textContent = reference ? `${T.done} · ${reference}` : T.done;
+  done.title.textContent = T.thanks(getFirstName(fields.name.value));
+  done.reply.replaceChildren(T.reply[0], createText("b", "", fields.email.value.trim()), T.reply[1]);
+  done.sent.replaceChildren(createText("span", "k", T.sent), ` · ${parts.join(" · ")}`);
 }
 
 function showSuccess(ctx, reference) {
@@ -314,7 +366,7 @@ function handleSubmit(event, ctx) {
   setStatus(ctx.ui, [], false);
   const invalid = ctx.ui.validated.filter((field) => !validateField(field));
   if (invalid.length) {
-    setStatus(ctx.ui, [INVALID_SUMMARY], true);
+    setStatus(ctx.ui, [T.invalid], true);
     focusField(invalid[0]);
     return;
   }

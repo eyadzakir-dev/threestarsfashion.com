@@ -27,7 +27,7 @@
   color: var(--ink-2);
 }
 .phero__meta li { grid-column: span 3; }
-.phero__meta .k { color: var(--red-ink); margin-right: 6px; }
+.phero__meta .k { color: var(--red-ink); margin-inline-end: 6px; }
 .phero__title {
   position: relative;
   grid-column: 1 / 12;
@@ -85,7 +85,7 @@
   line-height: 1.1;
   letter-spacing: -0.02em;
 }
-.prose ul { padding-left: 1.2em; list-style: square; }
+.prose ul { padding-inline-start: 1.2em; list-style: square; }
 .prose li + li { margin-top: 0.4em; }
 .prose li::marker { color: var(--red); }
 .prose__stamp { color: var(--ink-2); }
@@ -292,7 +292,7 @@
 }
 
 /* ---------- FAQ ---------- */
-.faq-wrap { max-width: 1100px; margin-left: calc((100% + var(--gut)) / 12); }
+.faq-wrap { max-width: 1100px; margin-inline-start: calc((100% + var(--gut)) / 12); }
 .faq { border-top: 1px solid var(--ink); counter-reset: q; }
 .faq__item { border-bottom: 1px solid var(--rule); }
 .faq__q {
@@ -317,7 +317,7 @@
 .faq__a { padding: 0 calc(32px + var(--gut)) 28px calc(56px + var(--gut)); }
 .faq__a p { max-width: 44em; font-size: 17px; line-height: 1.6; }
 @media (max-width: 899px) {
-  .faq-wrap { margin-left: 0; }
+  .faq-wrap { margin-inline-start: 0; }
   .faq__q { grid-template-columns: 32px minmax(0, 1fr) 20px; gap: 12px; padding: 20px 0; font-size: 20px; }
   .faq__a { padding: 0 0 24px calc(32px + 12px); }
   .faq__a p { font-size: 16px; }

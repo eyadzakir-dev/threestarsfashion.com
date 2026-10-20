@@ -89,17 +89,17 @@
   gap: 14px;
   padding: 18px 22px 20px;
   border: 0;
-  border-left: 1px solid var(--ink);
+  border-inline-start: 1px solid var(--ink);
   background: transparent;
   color: var(--ink-2);
   font: 800 clamp(30px, 3.6vw, 56px)/1 var(--f-sans);
   font-stretch: 80%;
   letter-spacing: -0.035em;
-  text-align: left;
+  text-align: start;
   cursor: pointer;
   transition: background-color 0.25s, color 0.25s;
 }
-.port__tab:first-child { border-left: 0; }
+.port__tab:first-child { border-inline-start: 0; }
 .port__tab .mono { color: var(--red-ink); letter-spacing: 0.06em; }
 .port__tab:hover { color: var(--ink); background: var(--paper-hi); }
 .port__tab[aria-selected="true"] { background: var(--ink); color: var(--paper); }
@@ -244,7 +244,7 @@
   left: 50%;
   width: 1px;
   height: calc(var(--s, 24px) + 17px);
-  margin-left: -0.5px;
+  margin-inline-start: -0.5px;
   background: var(--ink);
 }
 .hangtag__body {
@@ -268,7 +268,7 @@
   left: 50%;
   width: 10px;
   height: 10px;
-  margin-left: -5px;
+  margin-inline-start: -5px;
   border-radius: 50%;
   background: var(--paper);
   box-shadow: inset 0 0 0 1px var(--ink);
@@ -316,7 +316,7 @@
 /* ---------- 12 Responsibility (ink band) ---------- */
 .esg__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--gut); }
 .esg__col { padding-top: 16px; border-top: 1px solid rgb(243 241 236 / 0.3); }
-.esg__col + .esg__col { padding-left: var(--gut); border-left: 1px solid rgb(243 241 236 / 0.16); }
+.esg__col + .esg__col { padding-inline-start: var(--gut); border-inline-start: 1px solid rgb(243 241 236 / 0.16); }
 .esg__k { display: flex; align-items: center; gap: 12px; color: rgb(243 241 236 / 0.7); }
 .esg__letter {
   display: grid;
@@ -405,7 +405,7 @@
 
 @media (max-width: 899px) {
   .esg__grid { grid-template-columns: 1fr; gap: 40px; }
-  .esg__col + .esg__col { padding-left: 0; border-left: 0; }
+  .esg__col + .esg__col { padding-inline-start: 0; border-inline-start: 0; }
   .esg__item { grid-template-columns: 40px minmax(0, 1fr); column-gap: 14px; padding: 24px 0; }
   .esg__icon { width: 36px; height: 36px; }
   .esg__copy { font-size: 15px; }

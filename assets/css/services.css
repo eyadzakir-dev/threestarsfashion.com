@@ -80,9 +80,9 @@
 /* Input dot and output arrow at the two ends of the belt. */
 .cmap__list::before, .cmap__list::after { content: ""; position: absolute; z-index: 1; top: calc(var(--belt-y) - 4px); }
 .cmap__list::before { left: -5px; width: 10px; height: 10px; border-radius: 50%; background: var(--red); }
-.cmap__list::after { right: -2px; border: 5px solid transparent; border-left: 8px solid var(--red); border-right-width: 0; }
+.cmap__list::after { right: -2px; border: 5px solid transparent; border-inline-start: 8px solid var(--red); border-right-width: 0; }
 .cmap__list > li { position: relative; }
-.cmap__list > li + li { border-left: 1px solid var(--rule); }
+.cmap__list > li + li { border-inline-start: 1px solid var(--rule); }
 .cmap__list > li::before {
   content: "";
   position: absolute;
@@ -100,7 +100,7 @@
   top: calc(var(--belt-y) - 4px);
   right: -4px;
   border: 5px solid transparent;
-  border-left: 7px solid var(--ink);
+  border-inline-start: 7px solid var(--ink);
   border-right-width: 0;
 }
 .cmap__a {
@@ -196,7 +196,7 @@
 .op__fig { grid-column: 7 / 10; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding-top: 2px; }
 .op__num { font-size: clamp(52px, 5.4vw, 88px); }
 .op__num--word { font-size: clamp(40px, 4vw, 64px); }
-.op__num small { margin-left: 0.04em; font-size: 0.42em; letter-spacing: 0; color: var(--ink-2); }
+.op__num small { margin-inline-start: 0.04em; font-size: 0.42em; letter-spacing: 0; color: var(--ink-2); }
 .op__unit { color: var(--ink-2); }
 .op__more { color: var(--ink); font-size: 11px; }
 .op__key { display: flex; flex-wrap: wrap; gap: 4px 14px; color: var(--ink-2); font-size: 10.5px; }
@@ -335,18 +335,18 @@
   transform-origin: 0 50%;
 }
 .tl__seg--pre {
-  margin-right: 8px;
+  margin-inline-end: 8px;
   border: 1px dashed var(--ink-2);
   background: repeating-linear-gradient(135deg, rgb(17 17 17 / 0.09) 0 2px, transparent 2px 7px);
 }
 .tl__seg--make { grid-column: span 30; background: var(--ink); color: var(--paper); }
 .tl__seg--ship { grid-column: span var(--d); background: var(--red); color: #fff; }
-.tl__out { grid-column: span 12; display: flex; align-items: center; padding-left: 10px; color: var(--red-ink); font-size: 11px; white-space: nowrap; }
+.tl__out { grid-column: span 12; display: flex; align-items: center; padding-inline-start: 10px; color: var(--red-ink); font-size: 11px; white-space: nowrap; }
 .tl__lane--axis { border-bottom: 0; padding-top: 0; }
 .tl__axis { height: auto; color: var(--ink-2); font-size: 10px; }
-.tl__axis > span { grid-column: span 7; padding: 8px 0 0 6px; border-left: 1px solid var(--ink); }
-.tl__axis > span:last-child { border-right: 1px solid var(--ink); }
-.tl__axis > .tl__axis-pre { grid-column: 1; padding-left: 0; border-left: 0; }
+.tl__axis > span { grid-column: span 7; padding: 8px 0 0 6px; border-inline-start: 1px solid var(--ink); }
+.tl__axis > span:last-child { border-inline-end: 1px solid var(--ink); }
+.tl__axis > .tl__axis-pre { grid-column: 1; padding-inline-start: 0; border-inline-start: 0; }
 .tl__cap { display: flex; flex-wrap: wrap; gap: 8px 28px; margin-top: 14px; color: var(--ink-2); font-size: 11px; }
 .tl__cap span { display: inline-flex; align-items: center; gap: 8px; }
 
@@ -383,7 +383,7 @@
   .cmap__lanes { display: none; }
   .cmap__list { grid-template-columns: 1fr; border-bottom: 0; }
   .cmap__list::before, .cmap__list::after { display: none; }
-  .cmap__list > li + li { border-left: 0; }
+  .cmap__list > li + li { border-inline-start: 0; }
   .cmap__list > li::before { top: 0; bottom: 0; left: calc(var(--box) / 2 - 1px); right: auto; width: 2px; height: auto; transform-origin: 50% 0; }
   .cmap__list > li:not(:last-child)::after { top: auto; bottom: -4px; right: auto; left: calc(var(--box) / 2 - 5px); border: 5px solid transparent; border-top: 7px solid var(--ink); border-bottom-width: 0; }
   .cmap__a {
@@ -399,7 +399,7 @@
   .cmap__no { grid-area: no; height: auto; font-size: 10px; }
   .cmap__box { grid-area: box; margin-top: 0; }
   .cmap__name { grid-area: name; margin-top: 2px; font-size: 21px; }
-  .cmap__fig { grid-area: fig; padding-top: 0; font-size: 28px; text-align: right; }
+  .cmap__fig { grid-area: fig; padding-top: 0; font-size: 28px; text-align: end; }
   .cmap__unit { grid-area: unit; margin-top: 4px; font-size: 10px; }
   .cmap__cn { display: inline; margin: 0; }
   .cmap__io { justify-content: flex-start; }
@@ -447,9 +447,9 @@
   .tl__lane { grid-template-columns: minmax(0, 1fr); row-gap: 8px; }
   .tl__bar { --pre: 22%; height: 40px; }
   .tl__seg { padding: 0 6px; font-size: 9.5px; letter-spacing: 0.03em; }
-  .tl__seg--pre { margin-right: 4px; }
-  .tl__out { padding-left: 6px; font-size: 9.5px; }
-  .tl__axis > span { padding-left: 3px; font-size: 9.5px; }
+  .tl__seg--pre { margin-inline-end: 4px; }
+  .tl__out { padding-inline-start: 6px; font-size: 9.5px; }
+  .tl__axis > span { padding-inline-start: 3px; font-size: 9.5px; }
   .tl__cap { flex-direction: column; font-size: 10px; }
 
   .cta__send { grid-column: 1 / -1; }

@@ -93,17 +93,17 @@
 
 .board__time dd { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: baseline; gap: 8px 12px; }
 .board__wk { font-size: clamp(36px, 3.4vw, 56px); }
-.board__wk small { margin-left: 4px; font: 500 13px var(--f-mono); letter-spacing: 0.04em; color: var(--ink-2); }
+.board__wk small { margin-inline-start: 4px; font: 500 13px var(--f-mono); letter-spacing: 0.04em; color: var(--ink-2); }
 .board__states { grid-column: 1 / -1; line-height: 1.5; }
 
 /* Week ruler, 0–4 weeks; the red bar is drawn to scale (--wk weeks). */
-.wk { position: relative; grid-column: 1 / -1; display: block; height: 30px; margin-right: 12px; }
+.wk { position: relative; grid-column: 1 / -1; display: block; height: 30px; margin-inline-end: 12px; }
 .wk::before {
   content: "";
   position: absolute;
   inset: 4px 0 auto;
   height: 9px;
-  border-right: 1px solid var(--ink);
+  border-inline-end: 1px solid var(--ink);
   background:
     linear-gradient(var(--ink), var(--ink)) 0 100% / 100% 1px no-repeat,
     repeating-linear-gradient(to right, var(--ink) 0 1px, transparent 1px 25%);
@@ -180,22 +180,22 @@
 }
 .org__root img { width: 44px; height: auto; mix-blend-mode: multiply; }
 .org__name { font-size: 22px; font-weight: 800; font-stretch: 80%; line-height: 0.95; letter-spacing: 0; text-transform: uppercase; }
-.org__est { margin-left: auto; color: var(--ink-2); font-size: 10.5px; text-align: right; }
+.org__est { margin-inline-start: auto; color: var(--ink-2); font-size: 10.5px; text-align: end; }
 /* The tree trunk drops from the centre of the group mark (16px padding + half the 44px mark + 1px border). */
-.org__list { margin-left: 39px; }
+.org__list { margin-inline-start: 39px; }
 .org__list li {
   position: relative;
   display: flex;
   align-items: center;
   gap: 14px;
   min-height: 58px;
-  padding-left: 36px;
+  padding-inline-start: 36px;
   font-size: 20px;
   font-weight: 700;
   font-stretch: 88%;
   letter-spacing: -0.01em;
 }
-.org__list li::before { content: ""; position: absolute; top: 0; bottom: 0; left: 0; border-left: 1px solid var(--ink); }
+.org__list li::before { content: ""; position: absolute; top: 0; bottom: 0; left: 0; border-inline-start: 1px solid var(--ink); }
 .org__list li:last-child::before { bottom: 50%; }
 .org__list li::after { content: ""; position: absolute; top: 50%; left: 0; width: 28px; border-top: 1px solid var(--ink); }
 .org__list .mono { color: var(--ink-2); font-size: 11px; }
@@ -265,7 +265,7 @@
   border-top: 1px solid var(--ink);
 }
 /* Dimension-line end ticks mark where each phase starts and stops. */
-.d2d__ph::before, .d2d__ph::after { content: ""; position: absolute; top: -7px; height: 13px; border-left: 1px solid var(--ink); }
+.d2d__ph::before, .d2d__ph::after { content: ""; position: absolute; top: -7px; height: 13px; border-inline-start: 1px solid var(--ink); }
 .d2d__ph::before { left: 0; }
 .d2d__ph::after { right: 0; }
 .d2d__phn { font-size: clamp(56px, 5vw, 84px); font-weight: 800; font-stretch: 72%; line-height: 0.82; letter-spacing: -0.04em; color: var(--red); }
@@ -366,7 +366,7 @@
   .board__agr b { font-size: 28px; }
   .board__wk { font-size: 40px; }
   .board__time dd { grid-template-columns: auto; }
-  .wk { margin-right: 6px; }
+  .wk { margin-inline-end: 6px; }
 
   .board__foot { grid-template-columns: minmax(0, 1fr); padding-top: 0; }
   .board__foot > div { flex-direction: row; align-items: baseline; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--rule); }
@@ -377,7 +377,7 @@
 
   .org, .gpl__main { grid-column: 1 / -1; }
   .org__name { font-size: 19px; }
-  .org__list li { font-size: 18px; min-height: 52px; padding-left: 28px; }
+  .org__list li { font-size: 18px; min-height: 52px; padding-inline-start: 28px; }
   .org__list li::after { width: 20px; }
   .org__list .org__gpl::after { width: 28px; }
   .org__box { padding: 12px 14px; }
