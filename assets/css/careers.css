@@ -1,0 +1,347 @@
+/* Careers: hub (company summary, apply card, role list, general application) and role pages
+   (overview / application tabs). Loads after contact.css, which supplies .reach, .inq, .brief and .iform. */
+
+[lang="ar"] { font-family: "IBM Plex Sans Arabic", var(--f-sans); letter-spacing: 0; }
+[lang="ar"].mono, [lang="ar"] .mono { font-family: "IBM Plex Sans Arabic", var(--f-mono); text-transform: none; }
+
+/* ---------- Hub hero ---------- */
+.phero--careers .phero__in { padding-bottom: 64px; }
+.phero--careers .phero__title { grid-column: 1 / 8; grid-row: 2; }
+.phero--careers .phero__lead { grid-column: 1 / 7; grid-row: 3; max-width: 31em; }
+.phero--careers .reach { grid-row: 4; }
+.phero__ar { display: block; margin-top: 18px; font-size: clamp(22px, 2.2vw, 34px); font-weight: 600; line-height: 1.3; letter-spacing: 0; color: var(--ink-2); }
+
+/* Group summary: who you would be working for. */
+.group {
+  position: relative;
+  grid-column: 8 / 13;
+  grid-row: 2 / 4;
+  align-self: end;
+  margin-top: 40px;
+  border: 1px solid var(--ink);
+  background: var(--paper-hi);
+}
+.group__bar { display: flex; justify-content: space-between; gap: 12px; padding: 10px 14px; border-bottom: 1px solid var(--ink); color: var(--ink-2); }
+.group__list li {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) auto;
+  align-items: baseline;
+  column-gap: 12px;
+  padding: 11px 16px 12px;
+  border-bottom: 1px solid var(--rule);
+}
+.group__list .mono { color: var(--red-ink); }
+.group__list b { font-size: 18px; font-weight: 700; font-stretch: 90%; letter-spacing: -0.01em; line-height: 1.2; }
+.group__list span:last-child { color: var(--ink-2); font-size: 14px; text-align: right; }
+.group__facts { display: grid; grid-template-columns: 1fr 1fr; }
+.group__facts > div { padding: 12px 16px 14px; }
+.group__facts > div + div { border-left: 1px solid var(--rule); }
+.group__facts dt { color: var(--ink-2); }
+.group__facts dd { margin-top: 6px; font-size: 15px; line-height: 1.35; }
+
+/* Stat cells in the apply board. */
+.reach__big {
+  margin-top: auto;
+  font-size: clamp(40px, 3.6vw, 60px);
+  font-weight: 800;
+  font-stretch: 80%;
+  line-height: 0.9;
+  letter-spacing: -0.035em;
+}
+.reach__big small { display: block; margin-top: 10px; font: 500 12px/1.4 var(--f-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-2); }
+
+/* ---------- Role list ---------- */
+.roles { border-top: 1px solid var(--ink); counter-reset: role; }
+.role { border-bottom: 1px solid var(--rule); }
+.role__link {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gut);
+  align-items: center;
+  padding: 26px 0 28px;
+  text-decoration: none;
+  isolation: isolate;
+}
+/* Ink sweep on hover, drawn behind the row content. */
+.role__link::before {
+  content: "";
+  position: absolute;
+  inset: 0 calc(var(--pad) * -1);
+  z-index: -1;
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform 0.45s var(--ease-out);
+}
+.role__link:hover::before, .role__link:focus-visible::before { transform: none; }
+.role__link:hover, .role__link:focus-visible { color: var(--paper); }
+.role__link:focus-visible { outline: none; }
+.role__no { grid-column: 1; align-self: start; padding-top: 8px; color: var(--red-ink); transition: color 0.3s; }
+.role__titles { grid-column: 2 / 8; }
+.role__title {
+  display: block;
+  font-size: clamp(26px, 2.6vw, 40px);
+  font-weight: 750;
+  font-stretch: 86%;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+.role__ar { display: block; margin-top: 10px; font-size: 17px; line-height: 1.4; color: var(--ink-2); transition: color 0.3s; }
+.role__dept { grid-column: 8 / 11; color: var(--ink-2); transition: color 0.3s; }
+.role__meta { grid-column: 11 / 12; color: var(--ink-2); transition: color 0.3s; }
+.role__go {
+  grid-column: 12;
+  justify-self: end;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border: 2px solid currentColor;
+  font-size: 22px;
+  transition: transform 0.35s var(--ease-out), background-color 0.3s, border-color 0.3s;
+}
+.role__link:hover .role__go, .role__link:focus-visible .role__go { background: var(--red); border-color: var(--red); color: #fff; transform: translateX(-6px); }
+.role__link:hover :is(.role__no, .role__ar, .role__dept, .role__meta),
+.role__link:focus-visible :is(.role__no, .role__ar, .role__dept, .role__meta) { color: rgba(243, 241, 236, 0.75); }
+.role__link:hover .role__no, .role__link:focus-visible .role__no { color: #FF8A8A; }
+
+.roles.is-armed .role { opacity: 0; transform: translateY(14px); }
+.roles.is-in .role { opacity: 1; transform: none; transition: opacity 0.45s, transform 0.6s var(--ease-out); transition-delay: calc(var(--i, 0) * 70ms); }
+
+.roles__foot { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px 24px; margin-top: 28px; }
+.roles__foot p { font-size: 18px; line-height: 1.45; max-width: 36em; }
+
+/* ---------- General application ---------- */
+.aform__lead { margin-top: 14px; font-size: 18px; line-height: 1.45; max-width: 26em; }
+
+/* ---------- Role page hero ---------- */
+.phero--job .phero__in { padding-bottom: 48px; }
+.phero__back {
+  position: relative;
+  grid-column: 1 / -1;
+  justify-self: start;
+  margin-top: 28px;
+  padding: 8px 0;
+  color: var(--ink-2);
+  text-decoration: none;
+}
+.phero__back:hover { color: var(--red-ink); }
+.phero--job .phero__title { grid-column: 1 / 11; margin-top: clamp(20px, 4vh, 48px); font-size: clamp(46px, 6.4vw, 104px); }
+.phero--job .phero__ar { position: relative; grid-column: 1 / 11; }
+
+/* ---------- Role page body: sticky role card + tabs ---------- */
+.job {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  column-gap: var(--gut);
+  row-gap: 40px;
+  align-items: start;
+}
+.job__side { grid-column: 1 / 5; }
+.job__main { grid-column: 5 / 13; min-width: 0; }
+@media (min-width: 900px) and (min-height: 760px) {
+  .job__side { position: sticky; top: calc(var(--hdr-h) + 28px); }
+}
+
+.jcard { border: 1px solid var(--ink); background: var(--paper-hi); }
+.jcard__bar { display: flex; justify-content: space-between; gap: 12px; padding: 10px 14px; border-bottom: 1px solid var(--ink); color: var(--ink-2); }
+.jcard__bar .k { color: var(--red-ink); }
+.jcard__list > div { display: grid; grid-template-columns: 9.5em minmax(0, 1fr); gap: 12px; padding: 12px 16px 13px; border-bottom: 1px solid var(--rule); }
+.jcard__list dt { color: var(--ink-2); padding-top: 2px; }
+.jcard__list dd { font-size: 16px; font-weight: 600; line-height: 1.35; }
+.jcard__acts { display: grid; gap: 10px; padding: 16px; }
+.jcard__acts .btn { width: 100%; }
+.jcard__acts .btn.is-done { background: var(--ink); color: var(--paper); }
+
+.jothers { margin-top: 28px; }
+.jothers__k { padding-bottom: 10px; border-bottom: 1px solid var(--ink); color: var(--ink-2); }
+.jothers a {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  align-items: baseline;
+  column-gap: 8px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.3;
+  text-decoration: none;
+}
+.jothers a .mono { color: var(--red-ink); }
+.jothers a:hover { color: var(--red-ink); }
+.jothers a span:last-child { transition: transform 0.3s var(--ease-out); }
+.jothers a:hover span:last-child { transform: translateX(4px); }
+
+/* Tabs: a ruled strip with a red indicator that slides between tabs. */
+.tabs { position: relative; display: flex; border-bottom: 1px solid var(--ink); margin-bottom: 36px; }
+.tabs__btn {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  min-height: 56px;
+  padding: 14px 26px 14px 0;
+  border: 0;
+  background: none;
+  font-size: clamp(22px, 2vw, 28px);
+  font-weight: 750;
+  font-stretch: 88%;
+  letter-spacing: -0.02em;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.tabs__btn + .tabs__btn { padding-left: 26px; border-left: 1px solid var(--rule); }
+.tabs__btn .mono { color: var(--red-ink); }
+.tabs__btn:hover, .tabs__btn[aria-selected="true"] { color: var(--ink); }
+.tabs__btn:focus-visible { outline-offset: -3px; }
+.tabs__ink {
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: var(--w, 0);
+  height: 4px;
+  background: var(--red);
+  transform: translateX(var(--x, 0));
+  pointer-events: none;
+}
+.tabs.is-ready .tabs__ink { transition: transform 0.45s var(--ease-out), width 0.45s var(--ease-out); }
+
+.tabpanel:focus-visible { outline-offset: 8px; }
+.tabpanel.is-entering { animation: panel-in 0.5s var(--ease-out) both; }
+@keyframes panel-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+/* Without JS both panels show, one after the other. */
+.tabpanel + .tabpanel { margin-top: 56px; }
+.tabs.is-ready ~ .tabpanel + .tabpanel { margin-top: 0; }
+
+/* Bilingual description: English and Arabic side by side, read as one spec sheet. */
+.jd { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--gut); }
+.jd__col { min-width: 0; padding-top: 18px; border-top: 3px solid var(--ink); }
+.jd__col[lang="ar"] { border-top-color: var(--red); }
+.jd__k { display: flex; justify-content: space-between; gap: 12px; color: var(--ink-2); }
+.jd__k .k { color: var(--red-ink); }
+.jd__p { margin-top: 18px; font-size: 18px; line-height: 1.55; text-wrap: pretty; }
+.jd__col[lang="ar"] .jd__p { line-height: 1.8; }
+.jd__h { margin-top: 32px; padding-bottom: 10px; border-bottom: 1px solid var(--ink); font-size: 20px; font-weight: 700; font-stretch: 90%; letter-spacing: -0.01em; }
+.jd__col[lang="ar"] .jd__h { font-weight: 600; }
+.jd__list li {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  column-gap: 10px;
+  padding: 12px 0 13px;
+  border-bottom: 1px solid var(--rule);
+  font-size: 16px;
+  line-height: 1.5;
+}
+.jd__col[lang="ar"] .jd__list li { line-height: 1.75; }
+.jd__list .mono { padding-top: 3px; color: var(--red-ink); }
+
+.jd__cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 24px;
+  margin-top: 48px;
+  padding: 22px 24px;
+  background: var(--ink);
+  color: var(--paper);
+}
+.jd__cta p { font-size: 22px; font-weight: 700; font-stretch: 88%; letter-spacing: -0.015em; line-height: 1.2; }
+.jd__cta p span { display: block; margin-top: 4px; font-size: 16px; font-weight: 500; color: rgba(243, 241, 236, 0.75); }
+.jd__cta .btn:focus-visible { outline-color: var(--paper); }
+
+/* ---------- Application panel ---------- */
+.apanel { border: 1px solid var(--ink); background: var(--paper-hi); }
+.iform__drop--one .iform__drop-hint { margin-top: 6px; }
+.iform__pill.is-new { animation: pill-in 0.4s var(--ease-out) both; }
+@keyframes pill-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Fields rise in once, the first time the application opens. */
+.aform.is-armed .iform__set, .aform.is-armed .iform__foot { opacity: 0; transform: translateY(14px); }
+.aform.is-in .iform__set, .aform.is-in .iform__foot {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.45s, transform 0.6s var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 80ms);
+}
+
+/* Sending: a red bar runs along the panel's top edge. */
+.aform { position: relative; }
+.aform[aria-busy="true"]::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--red) 30%, var(--red) 70%, transparent) 0 0 / 40% 100% no-repeat;
+  animation: sending 1.1s linear infinite;
+}
+@keyframes sending {
+  from { background-position: -40% 0; }
+  to { background-position: 140% 0; }
+}
+
+/* Done: the tick draws on. */
+.adone__tick { stroke-dasharray: 1; stroke-dashoffset: 0; }
+.adone.is-in .adone__tick { animation: tick-draw 0.6s var(--ease-out) 0.15s both; }
+@keyframes tick-draw { from { stroke-dashoffset: 1; } }
+.adone.is-in .iform__done-body > :not(svg) { animation: panel-in 0.5s var(--ease-out) both; }
+.adone.is-in .iform__done-body > :nth-child(3) { animation-delay: 0.08s; }
+.adone.is-in .iform__done-body > :nth-child(4) { animation-delay: 0.14s; }
+.adone.is-in .iform__done-body > :nth-child(5) { animation-delay: 0.2s; }
+.adone__acts { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+.adone__acts .btn { margin-top: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tabpanel.is-entering, .iform__pill.is-new, .adone.is-in *, .aform[aria-busy="true"]::before { animation: none !important; }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1180px) {
+  .phero--careers .phero__title { grid-column: 1 / 7; }
+  .group { grid-column: 7 / 13; }
+  .role__titles { grid-column: 2 / 9; }
+  .role__dept { grid-column: 9 / 12; }
+  .role__meta { display: none; }
+  .jd { grid-template-columns: 1fr; row-gap: 48px; }
+}
+
+@media (max-width: 899px) {
+  .phero--careers .phero__in { padding-bottom: 48px; }
+  .phero--careers .phero__title, .phero--careers .phero__lead { grid-column: 1 / -1; }
+  .phero--careers .reach { grid-row: auto; }
+  .group { grid-column: 1 / -1; grid-row: auto; margin-top: 28px; }
+  .group__list li { grid-template-columns: 40px minmax(0, 1fr); padding-inline: 14px; }
+  .group__list span:last-child { grid-column: 2; text-align: left; }
+  .reach__big { margin-top: 18px; font-size: 44px; }
+
+  .role__link { grid-template-columns: 36px minmax(0, 1fr) 44px; column-gap: 12px; row-gap: 8px; padding: 20px 0 22px; }
+  .role__no { grid-column: 1; grid-row: 1 / 3; padding-top: 4px; }
+  .role__titles { grid-column: 2; grid-row: 1; }
+  .role__dept { grid-column: 2; grid-row: 2; }
+  .role__go { grid-column: 3; grid-row: 1 / 3; width: 44px; height: 44px; font-size: 18px; }
+  .role__title { font-size: 26px; }
+  .role__ar { font-size: 15px; }
+
+  .phero--job .phero__title, .phero--job .phero__ar { grid-column: 1 / -1; }
+  .phero--job .phero__title { font-size: clamp(38px, 10.4vw, 56px); }
+  .job__side, .job__main { grid-column: 1 / -1; }
+  .job__main { order: -1; }
+  .jcard__list > div { grid-template-columns: 8em minmax(0, 1fr); padding-inline: 14px; }
+  .tabs { margin-bottom: 28px; }
+  .tabs__btn { flex: 1; justify-content: center; padding: 12px 8px; font-size: 20px; }
+  .tabs__btn + .tabs__btn { padding-left: 8px; }
+  .jd__p { font-size: 17px; }
+  .jd__cta { padding: 20px 16px; }
+  .jd__cta .btn { width: 100%; }
+  .adone__acts .btn { width: 100%; }
+}
