@@ -13,16 +13,73 @@ const REQUEST_TIMEOUT_MS = 120000;
 const PREVIEW_DELAY_MS = 800;
 const PREVIEW_HOSTS = new Set(["localhost", "127.0.0.1"]);
 const CONTACT_EMAIL = "info@tsf.com.eg";
-const SUBMIT_LABEL = "Submit inquiry";
-const SENDING_LABEL = "Sending…";
-const DONE_LABEL = "Inquiry received";
-const INVALID_SUMMARY = "Check the highlighted fields.";
-const QUANTITY_ERROR = "Enter a whole number between 1 and 10,000,000.";
 const EMAIL_DOMAIN_PATTERN = /@[^@\s]+\.[^@\s.]+$/;
 const COUNT_FORMAT = new Intl.NumberFormat("en-US");
+const IS_AR = document.documentElement.lang === "ar";
 
 const pad2 = (n) => String(n).padStart(2, "0");
-const pluralize = (count, word) => `${count} ${word}${count === 1 ? "" : "s"}`;
+// Keeps a Latin file name in one piece inside Arabic text.
+const isolate = (text) => `\u2068${text}\u2069`;
+const countFilesEn = (count) => `${count} file${count === 1 ? "" : "s"}`;
+
+// Visitor-facing text in the page's language. Data sent to the endpoint (field names, option values) stays as is.
+const T = IS_AR ? {
+  submit: "أرسل الاستفسار",
+  sending: "جارٍ الإرسال…",
+  done: "تم استلام الاستفسار",
+  invalid: "راجع الحقول المحددة.",
+  quantityBad: "اكتب عددًا صحيحًا بين 1 و10,000,000.",
+  nameMissing: "اكتب اسمك بالكامل.",
+  emailMissing: "اكتب البريد الإلكتروني للعمل.",
+  emailBad: "اكتب بريدًا إلكترونيًا صحيحًا، مثل buyer@brand.com.",
+  mb: "ميجابايت",
+  kb: "كيلوبايت",
+  fileDuplicate: (name) => `الملف ${isolate(name)} مرفق بالفعل.`,
+  fileType: (name) => `نوع الملف ${isolate(name)} غير مدعوم.`,
+  fileEmpty: (name) => `الملف ${isolate(name)} فارغ.`,
+  fileBig: (name) => `الملف ${isolate(name)} أكبر من ${MAX_TOTAL_MB} ميجابايت.`,
+  tooMany: (name) => `يمكنك إرفاق ${MAX_FILES} ملفات بحد أقصى. احذف ملفًا لإضافة ${isolate(name)}.`,
+  tooLarge: (name) => `الحد الأقصى لإجمالي الملفات ${MAX_TOTAL_MB} ميجابايت. احذف ملفًا لإضافة ${isolate(name)}.`,
+  remove: (name) => `حذف ${name}`,
+  attachedSummary: (count, size) => `الملفات المرفقة: ${count}، بحجم ${size} من ${MAX_TOTAL_MB} ميجابايت.`,
+  noFiles: "لا توجد ملفات مرفقة.",
+  removed: (name) => `تم حذف ${isolate(name)}. `,
+  failure: ["تعذّر إرسال استفسارك. حاول مرة أخرى، أو راسلنا على ", "."],
+  pieces: (count) => `${count} قطعة`,
+  brief: "وصف المشروع",
+  filesAttached: (count) => `المرفقات: ${count}`,
+  thanks: (name) => `شكرًا، ${name}.`,
+  reply: ["سنرد عليك على ", "."],
+  sent: "أُرسل",
+} : {
+  submit: "Submit inquiry",
+  sending: "Sending…",
+  done: "Inquiry received",
+  invalid: "Check the highlighted fields.",
+  quantityBad: "Enter a whole number between 1 and 10,000,000.",
+  nameMissing: "Enter your full name.",
+  emailMissing: "Enter your business email.",
+  emailBad: "Enter a valid email address, like buyer@brand.com.",
+  mb: "MB",
+  kb: "KB",
+  fileDuplicate: (name) => `${name} is already attached.`,
+  fileType: (name) => `${name} isn't a supported file type.`,
+  fileEmpty: (name) => `${name} is empty.`,
+  fileBig: (name) => `${name} is larger than ${MAX_TOTAL_MB} MB.`,
+  tooMany: (name) => `You can attach up to ${MAX_FILES} files. Remove a file to add ${name}.`,
+  tooLarge: (name) => `Files can total ${MAX_TOTAL_MB} MB. Remove a file to add ${name}.`,
+  remove: (name) => `Remove ${name}`,
+  attachedSummary: (count, size) => `${countFilesEn(count)} attached, ${size} of ${MAX_TOTAL_MB} MB.`,
+  noFiles: "No files attached.",
+  removed: (name) => `Removed ${name}. `,
+  failure: ["We couldn't send your inquiry. Try again, or email ", "."],
+  pieces: (count) => `${count} pcs`,
+  brief: "Brief",
+  filesAttached: (count) => `${countFilesEn(count)} attached`,
+  thanks: (name) => `Thank you, ${name}.`,
+  reply: ["We'll reply to ", "."],
+  sent: "Sent",
+};
 
 function createText(tag, className, text) {
   const el = document.createElement(tag);
@@ -34,22 +91,22 @@ function createText(tag, className, text) {
 /* ---------- Validation ---------- */
 
 function getNameError(field) {
-  return field.value.trim() ? "" : "Enter your full name.";
+  return field.value.trim() ? "" : T.nameMissing;
 }
 
 function getEmailError(field) {
   const value = field.value.trim();
-  if (!value) return "Enter your business email.";
-  if (!field.checkValidity() || !EMAIL_DOMAIN_PATTERN.test(value)) return "Enter a valid email address, like buyer@brand.com.";
+  if (!value) return T.emailMissing;
+  if (!field.checkValidity() || !EMAIL_DOMAIN_PATTERN.test(value)) return T.emailBad;
   return "";
 }
 
 function getQuantityError(field) {
-  if (field.validity.badInput) return QUANTITY_ERROR;
+  if (field.validity.badInput) return T.quantityBad;
   if (field.value === "") return "";
   const quantity = Number(field.value);
   const isInRange = quantity >= QUANTITY_MIN && quantity <= QUANTITY_MAX;
-  return Number.isInteger(quantity) && isInRange ? "" : QUANTITY_ERROR;
+  return Number.isInteger(quantity) && isInRange ? "" : T.quantityBad;
 }
 
 const VALIDATORS = { name: getNameError, email: getEmailError, quantity: getQuantityError };
@@ -93,18 +150,18 @@ const getFileKey = (file) => `${file.name}:${file.size}:${file.lastModified}`;
 const getTotalBytes = (files) => files.reduce((sum, file) => sum + file.size, 0);
 
 function formatSize(bytes) {
-  if (bytes >= BYTES_PER_MB) return `${(bytes / BYTES_PER_MB).toFixed(1)} MB`;
-  return `${Math.max(1, Math.round(bytes / BYTES_PER_KB))} KB`;
+  if (bytes >= BYTES_PER_MB) return `${(bytes / BYTES_PER_MB).toFixed(1)} ${T.mb}`;
+  return `${Math.max(1, Math.round(bytes / BYTES_PER_KB))} ${T.kb}`;
 }
 
 function getFileError(files, file) {
   const { name } = file;
-  if (files.some((added) => getFileKey(added) === getFileKey(file))) return `${name} is already attached.`;
-  if (!ALLOWED_EXTENSIONS.has(getExtension(name))) return `${name} isn't a supported file type.`;
-  if (file.size === 0) return `${name} is empty.`;
-  if (file.size > MAX_TOTAL_BYTES) return `${name} is larger than ${MAX_TOTAL_MB} MB.`;
-  if (files.length >= MAX_FILES) return `You can attach up to ${MAX_FILES} files. Remove a file to add ${name}.`;
-  if (getTotalBytes(files) + file.size > MAX_TOTAL_BYTES) return `Files can total ${MAX_TOTAL_MB} MB. Remove a file to add ${name}.`;
+  if (files.some((added) => getFileKey(added) === getFileKey(file))) return T.fileDuplicate(name);
+  if (!ALLOWED_EXTENSIONS.has(getExtension(name))) return T.fileType(name);
+  if (file.size === 0) return T.fileEmpty(name);
+  if (file.size > MAX_TOTAL_BYTES) return T.fileBig(name);
+  if (files.length >= MAX_FILES) return T.tooMany(name);
+  if (getTotalBytes(files) + file.size > MAX_TOTAL_BYTES) return T.tooLarge(name);
   return "";
 }
 
@@ -112,7 +169,7 @@ function createRemoveButton(name, index) {
   const button = createText("button", "iform__pill-x", "×");
   button.type = "button";
   button.dataset.index = String(index);
-  button.setAttribute("aria-label", `Remove ${name}`);
+  button.setAttribute("aria-label", T.remove(name));
   return button;
 }
 
@@ -137,8 +194,8 @@ function renderFiles(ctx) {
 function announceFiles(ctx, prefix = "") {
   const { files } = ctx;
   const summary = files.length
-    ? `${pluralize(files.length, "file")} attached, ${formatSize(getTotalBytes(files))} of ${MAX_TOTAL_MB} MB.`
-    : "No files attached.";
+    ? T.attachedSummary(files.length, formatSize(getTotalBytes(files)))
+    : T.noFiles;
   ctx.ui.fileLive.textContent = `${prefix}${summary}`;
 }
 
@@ -159,7 +216,7 @@ function removeFile(ctx, index) {
   ctx.files = ctx.files.filter((_, i) => i !== index);
   ctx.ui.fileError.textContent = "";
   renderFiles(ctx);
-  announceFiles(ctx, `Removed ${removed.name}. `);
+  announceFiles(ctx, T.removed(removed.name));
   const buttons = ctx.ui.fileList.querySelectorAll("[data-index]");
   (buttons[Math.min(index, buttons.length - 1)] || ctx.ui.picker).focus();
 }
@@ -269,7 +326,7 @@ function setSending(ctx, isSending) {
   const { form, submit, submitLabel } = ctx.ui;
   ctx.isSending = isSending;
   submit.disabled = isSending;
-  submitLabel.textContent = isSending ? SENDING_LABEL : SUBMIT_LABEL;
+  submitLabel.textContent = isSending ? T.sending : T.submit;
   if (isSending) form.setAttribute("aria-busy", "true");
   else form.removeAttribute("aria-busy");
 }
@@ -277,7 +334,7 @@ function setSending(ctx, isSending) {
 function showFailure(ui) {
   const link = createText("a", "", CONTACT_EMAIL);
   link.href = `mailto:${CONTACT_EMAIL}`;
-  setStatus(ui, ["We couldn't send your inquiry. Try again, or email ", link, "."], true);
+  setStatus(ui, [T.failure[0], link, T.failure[1]], true);
   ui.submit.focus();
 }
 
@@ -296,20 +353,20 @@ function getSentParts(ctx) {
   const { product, quantity, message } = ctx.ui.fields;
   return [
     product.value.trim(),
-    quantity.value ? `${COUNT_FORMAT.format(Number(quantity.value))} pcs` : "",
+    quantity.value ? T.pieces(COUNT_FORMAT.format(Number(quantity.value))) : "",
     getMarketLabel(ctx.ui),
-    message.value.trim() ? "Brief" : "",
-    ctx.files.length ? `${pluralize(ctx.files.length, "file")} attached` : "",
+    message.value.trim() ? T.brief : "",
+    ctx.files.length ? T.filesAttached(ctx.files.length) : "",
   ].filter(Boolean);
 }
 
 function fillDone(ctx, reference) {
   const { done, fields } = ctx.ui;
   const parts = getSentParts(ctx);
-  done.label.textContent = reference ? `${DONE_LABEL} · ${reference}` : DONE_LABEL;
-  done.title.textContent = `Thank you, ${getFirstName(fields.name.value)}.`;
-  done.reply.replaceChildren("We'll reply to ", createText("b", "", fields.email.value.trim()), ".");
-  done.sent.replaceChildren(createText("span", "k", "Sent"), ` · ${parts.join(" · ")}`);
+  done.label.textContent = reference ? `${T.done} · ${reference}` : T.done;
+  done.title.textContent = T.thanks(getFirstName(fields.name.value));
+  done.reply.replaceChildren(T.reply[0], createText("b", "", fields.email.value.trim()), T.reply[1]);
+  done.sent.replaceChildren(createText("span", "k", T.sent), ` · ${parts.join(" · ")}`);
   done.sent.hidden = parts.length === 0;
 }
 
@@ -364,7 +421,7 @@ function handleSubmit(event, ctx) {
   setStatus(ctx.ui, [], false);
   const invalid = ctx.ui.validated.filter((field) => !validateField(field));
   if (invalid.length) {
-    setStatus(ctx.ui, [INVALID_SUMMARY], true);
+    setStatus(ctx.ui, [T.invalid], true);
     focusField(invalid[0]);
     return;
   }

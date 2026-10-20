@@ -10,6 +10,22 @@ const COPY_RESET_MS = 2200;
 const EDGE_ALIGN_PCT = 8;
 const REVEAL_THRESHOLD = 0.2;
 const REDUCED_MOTION = matchMedia("(prefers-reduced-motion: reduce)");
+const IS_AR = document.documentElement.lang === "ar";
+// Isolates Latin runs (UTC offsets, city names) so they keep their order inside Arabic text.
+const isolate = (text) => (IS_AR ? `\u2066${text}\u2069` : text);
+
+// Visitor-facing text in the page's language.
+const T = IS_AR ? {
+  localLead: (place) => `بتوقيتك${place ? ` (${isolate(place)})` : ""}، يوافق ذلك `,
+  sameZone: "ساعتك مضبوطة بالفعل على توقيت مصر.",
+  copied: "تم النسخ ✓",
+  copyFailed: "تعذّر النسخ. حدّد النص وانسخه يدويًا.",
+} : {
+  localLead: (place) => `In your time${place ? ` (${place})` : ""}, that is `,
+  sameZone: "Your clock is already on Egypt time.",
+  copied: "Copied ✓",
+  copyFailed: "Copy failed. Select the text and copy it manually.",
+};
 
 const cairoParts = new Intl.DateTimeFormat("en-GB", {
   timeZone: CAIRO_TZ,
@@ -76,13 +92,13 @@ function setLocalText(el, range) {
   const place = getLocalPlace();
   const strong = document.createElement("b");
   strong.textContent = range;
-  el.replaceChildren(`In your time${place ? ` (${place})` : ""}, that is `, strong, ".");
+  el.replaceChildren(T.localLead(place), strong, ".");
 }
 
 function renderLocal(ui, cairoMin, shift) {
   ui.localRuler.hidden = shift === 0;
   if (shift === 0) {
-    ui.localText.textContent = "Your clock is already on Egypt time.";
+    ui.localText.textContent = T.sameZone;
     return;
   }
   const start = wrapDay(WORK_START_MIN + shift);
@@ -90,7 +106,7 @@ function renderLocal(ui, cairoMin, shift) {
   placeBands(ui.bands, start, end);
   ui.edges.forEach((edge, i) => placeEdge(edge, i === 0 ? start : end));
   ui.localNow.style.left = toPct(wrapDay(cairoMin + shift));
-  setLocalText(ui.localText, `${formatHm(start)}–${formatHm(end)}`);
+  setLocalText(ui.localText, isolate(`${formatHm(start)}–${formatHm(end)}`));
 }
 
 function renderClock(ui) {
@@ -98,7 +114,7 @@ function renderClock(ui) {
   const cairoOffset = getCairoOffsetMin(now);
   const cairoMin = wrapDay(now.getUTCHours() * 60 + now.getUTCMinutes() + cairoOffset);
   ui.alx.textContent = formatHm(cairoMin);
-  ui.offset.textContent = `· ${formatOffset(cairoOffset)}`;
+  ui.offset.textContent = `· ${isolate(formatOffset(cairoOffset))}`;
   ui.alxNow.style.left = toPct(cairoMin);
   renderLocal(ui, cairoMin, -now.getTimezoneOffset() - cairoOffset);
 }
@@ -151,7 +167,7 @@ function getCopyText(button) {
 function flashDone(button, status) {
   const original = [...button.childNodes];
   button.classList.add("is-done");
-  button.replaceChildren("Copied ✓");
+  button.replaceChildren(T.copied);
   status.textContent = button.dataset.copyLabel;
   setTimeout(() => {
     button.classList.remove("is-done");
@@ -166,7 +182,7 @@ async function handleCopy(button, status) {
     flashDone(button, status);
   } catch (error) {
     console.warn("Clipboard write failed.", error);
-    status.textContent = "Copy failed. Select the text and copy it manually.";
+    status.textContent = T.copyFailed;
   }
 }
 

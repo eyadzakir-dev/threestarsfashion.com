@@ -361,6 +361,11 @@
 [dir="rtl"] .iform__select { background-position: left 16px center; }
 /* The time rulers are a clock face: they read left to right in both languages. */
 .ruler, .ruler__scale { direction: ltr; }
+/* Email and phone fields type left to right; keep them aligned with the Arabic labels. */
+[dir="rtl"] .iform__input[dir="ltr"] { text-align: right; }
+/* Underline sweeps start from the reading edge. */
+[dir="rtl"] .reach__val,
+[dir="rtl"] .reach__tel span:first-child { background-position: 100% 100%; }
 .iform__textarea { min-height: 168px; resize: vertical; line-height: 1.5; }
 
 .iform__err { margin-top: 6px; font-size: 14px; font-weight: 500; line-height: 1.35; color: var(--red-ink); }
@@ -421,7 +426,7 @@
 .iform__pill-x:focus-visible { outline-offset: -3px; }
 
 /* Off-screen rather than display:none so bots still fill it. */
-.iform__hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.iform__hp { position: absolute; inset-inline-start: -10000px; width: 1px; height: 1px; overflow: hidden; }
 
 .iform__foot {
   display: grid;
