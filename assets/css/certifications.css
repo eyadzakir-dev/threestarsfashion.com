@@ -350,3 +350,7 @@ a.proof:focus-visible { outline-offset: 4px; }
   .keep__item { padding: 16px 16px 22px; }
   .keep__icon { width: 36px; height: 36px; margin-bottom: 8px; }
 }
+
+/* ---------- Arabic (RTL) ---------- */
+/* Register codes stay Latin; keep "A/01–08" in reading order on one line. */
+[dir="rtl"] .toc__no { direction: ltr; unicode-bidi: isolate; white-space: nowrap; }

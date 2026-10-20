@@ -88,9 +88,9 @@
   font-stretch: 88%;
   letter-spacing: -0.01em;
 }
-.org__list li::before { content: ""; position: absolute; top: 0; bottom: 0; left: 0; border-inline-start: 1px solid var(--ink); }
+.org__list li::before { content: ""; position: absolute; top: 0; bottom: 0; inset-inline-start: 0; border-inline-start: 1px solid var(--ink); }
 .org__list li:last-child::before { bottom: 50%; }
-.org__list li::after { content: ""; position: absolute; top: 50%; left: 0; width: 28px; border-top: 1px solid var(--ink); }
+.org__list li::after { content: ""; position: absolute; top: 50%; inset-inline-start: 0; width: 28px; border-top: 1px solid var(--ink); }
 .org__list .mono { color: var(--ink-2); font-size: 11px; }
 .org__list .org__gpl { padding-block: 10px 0; }
 .org__list li.org__gpl::before { bottom: calc(50% - 5px); }
@@ -262,7 +262,7 @@
 .vis__h { color: #FF8A8A; font-size: 12px; font-weight: 500; }
 .mis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: var(--gut); row-gap: 32px; margin-top: 28px; }
 .mis__item { position: relative; padding-top: 16px; border-top: 1px solid var(--paper); }
-.mis__item::before { content: ""; position: absolute; top: -2px; left: 0; width: 28px; height: 3px; background: var(--red); }
+.mis__item::before { content: ""; position: absolute; top: -2px; inset-inline-start: 0; width: 28px; height: 3px; background: var(--red); }
 .mis__no { color: rgb(243 241 236 / 0.66); font-size: 11px; }
 .mis__title { margin-top: 22px; font-size: clamp(22px, 1.9vw, 28px); font-weight: 750; font-stretch: 88%; line-height: 1.02; letter-spacing: -0.02em; }
 .mis__copy { margin-top: 10px; max-width: 22em; font-size: 15.5px; line-height: 1.45; color: rgb(243 241 236 / 0.8); text-wrap: pretty; }
@@ -374,4 +374,25 @@
   .ldr__role, .ldr__focus { grid-column: 2; }
   .ldr__focus { margin-top: 6px; font-size: 15px; }
   .ldr__focus b { font-size: 16px; }
+}
+
+/* ---------- Arabic (RTL) ---------- */
+/* Hero file: the tally and the machine split fill from the reading start. */
+[dir="rtl"] .file__split i { transform-origin: 100% 50%; }
+@media (prefers-reduced-motion: no-preference) {
+  [dir="rtl"] .file__units { animation-name: file-tally-rtl; }
+}
+@keyframes file-tally-rtl { from { clip-path: inset(0 0 0 100%); } to { clip-path: inset(0); } }
+/* The tick mark is drawn from the physical left + bottom borders. */
+[dir="rtl"] .val__proof li::before { border-inline-start: 0; border-left: 2px solid var(--red); }
+[dir="rtl"] .next li::before { content: "←"; }
+/* Timeline: time runs left to right in both languages; only the labels read RTL. */
+[dir="rtl"] .tl__plot, [dir="rtl"] .tl__events { direction: ltr; }
+[dir="rtl"] .tl__ev { direction: rtl; }
+[dir="rtl"] .tl__big { direction: ltr; unicode-bidi: isolate; }
+[dir="rtl"] .tl__ev--found { text-align: left; }
+[dir="rtl"] .tl__ev--now, [dir="rtl"] .tl__ev--goal { text-align: right; }
+@media (max-width: 899px) {
+  [dir="rtl"] .tl__events { direction: rtl; }
+  [dir="rtl"] .tl__ev, [dir="rtl"] .tl__ev--found, [dir="rtl"] .tl__ev--now, [dir="rtl"] .tl__ev--goal { text-align: start; }
 }
