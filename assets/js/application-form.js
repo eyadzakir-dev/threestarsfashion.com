@@ -1,5 +1,6 @@
 // Careers application form: inline validation, one CV with drag and drop, multipart submit.
-// No intake endpoint is wired yet: with data-endpoint empty, local previews simulate a successful send.
+// Posts to Fabrik's careers intake (data-endpoint). On a local preview, ?endpoint=http://localhost:3000/api/website/careers/applications
+// points the form at a local Fabrik; with no endpoint at all, a local preview simulates a successful send.
 
 const BYTES_PER_KB = 1024;
 const BYTES_PER_MB = 1024 * 1024;
@@ -11,6 +12,7 @@ const PHONE_MAX_DIGITS = 15;
 const REQUEST_TIMEOUT_MS = 120000;
 const PREVIEW_DELAY_MS = 1100;
 const PREVIEW_HOST_PATTERN = /^(localhost|127\.0\.0\.1|\[::1\]|.+\.local|192\.168\.\d+\.\d+|10\.\d+\.\d+\.\d+)$/;
+const LOCAL_ENDPOINT_PATTERN = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?\//;
 const CONTACT_EMAIL = "info@tsf.com.eg";
 const IS_AR = document.documentElement.lang === "ar";
 
@@ -235,6 +237,7 @@ function buildBody(ctx) {
     if (typeof value === "string") body.set(key, value.trim());
   });
   if (ctx.cv) body.append("cv", ctx.cv, ctx.cv.name);
+  body.set("role_title", getRoleLabel(ctx.ui));
   return body;
 }
 
@@ -261,7 +264,7 @@ async function postApplication(endpoint, body) {
   }
 }
 
-// Stand-in until the intake integration is wired: logs what would be sent and resolves.
+// Local preview with no endpoint: logs what would be sent and resolves.
 function previewApplication(body) {
   const summary = Object.fromEntries([...body.entries()].map(([key, value]) => [key, typeof value === "string" ? value : `${value.name} (${formatSize(value.size)})`]));
   console.info(`[careers] Preview only, nothing was sent. Payload: ${JSON.stringify(summary)}`);
@@ -270,8 +273,17 @@ function previewApplication(body) {
   });
 }
 
+// A local preview may point the form at a local Fabrik with ?endpoint=; the live site always uses data-endpoint.
+function getEndpoint(form) {
+  if (PREVIEW_HOST_PATTERN.test(location.hostname)) {
+    const override = new URLSearchParams(location.search).get("endpoint");
+    if (override && LOCAL_ENDPOINT_PATTERN.test(override)) return override;
+  }
+  return (form.dataset.endpoint || "").trim();
+}
+
 function sendApplication(form, body) {
-  const endpoint = (form.dataset.endpoint || "").trim();
+  const endpoint = getEndpoint(form);
   if (endpoint) return postApplication(endpoint, body);
   if (PREVIEW_HOST_PATTERN.test(location.hostname)) return previewApplication(body);
   return Promise.reject(new Error("Application endpoint is not configured."));
