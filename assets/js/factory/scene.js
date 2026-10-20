@@ -45,7 +45,20 @@ const COLORS = {
   dusk: new THREE.Color('#1e2230'),
 };
 
-const HUD_LABELS = {
+const IS_AR = document.documentElement.lang === 'ar';
+// Arabic pages mirror the layout, so the chapter panel sits on the right of the stage instead of the left.
+const IS_RTL = document.documentElement.dir === 'rtl';
+
+const HUD_LABELS = IS_AR ? {
+  entry: '00 · نموذج المصنع',
+  knitting: '01 · التريكو',
+  dyeing: '02 · الصباغة',
+  cutting: '03 · صالة القص',
+  sewing: '04 · صالة الخياطة',
+  embellishment: '05 · الطباعة',
+  dispatch: '06 · رصيف الشحن',
+  site: '07 · المجموعة، 24/7',
+} : {
   entry: '00 · Model Factory',
   knitting: '01 · Knitting',
   dyeing: '02 · Dyeing',
@@ -240,13 +253,14 @@ export async function initScene({ canvas, stage, counters, hudLabel, hudFill, un
     return THREE.MathUtils.lerp(valueOf(keyframes[i]), valueOf(keyframes[j]), u - i);
   }
 
-  // Leaves room for a panel laid over the left (landscape) or bottom (portrait) of the stage.
+  // Leaves room for a panel laid over the left (landscape; the right on RTL pages) or bottom (portrait) of the stage.
   function frameShift(u) {
     if (!isPanelBeside()) return 0;
     const isPortrait = state.aspect < 1;
+    const side = IS_RTL ? -1 : 1;
     const shiftOf = (k) => {
       if (isPortrait) return k.frame === 'wide' ? -0.12 : -0.19;
-      return k.frame === 'wide' ? 0.12 : 0.15;
+      return (k.frame === 'wide' ? 0.12 : 0.15) * side;
     };
     return blendFrames(u, shiftOf);
   }
