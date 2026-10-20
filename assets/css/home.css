@@ -261,9 +261,9 @@
 .mult__link { margin-top: 28px; }
 
 .cap .nums__cell { position: relative; }
-.star-dock { position: absolute; top: 12px; right: 14px; width: 30px; height: 30px; pointer-events: none; }
+.star-dock { position: absolute; top: 12px; inset-inline-end: 14px; width: 30px; height: 30px; pointer-events: none; }
 @media (max-width: 899px) {
-  .star-dock { right: 0; width: 24px; height: 24px; }
+  .star-dock { inset-inline-end: 0; width: 24px; height: 24px; }
 }
 
 /* ---------- 04 Production line ---------- */
@@ -724,3 +724,32 @@
 .journey-on .hero__logo-stars,
 .journey-on .line .stencil--stars,
 .journey-on .cta__logo-stars { visibility: hidden; }
+
+/* ---------- RTL (ar/index.html) ---------- */
+/* Arabic hero: whole words, taller line box so the script's ascenders and descenders are not clipped. */
+[dir="rtl"] .hero__big { line-height: 1.25; margin-inline-start: 0; }
+[dir="rtl"] .hero__line { padding-block: 0; }
+@media (max-width: 899px) {
+  [dir="rtl"] .hero__big { font-size: 19vw; }
+}
+/* Drawings keep their own coordinate system: SVG text anchors stay left to right. */
+[dir="rtl"] .stage__svg,
+[dir="rtl"] .globe__diagram { direction: ltr; }
+/* Progress fills grow from the reading start. */
+[dir="rtl"] .rail a::after,
+[dir="rtl"] .belt-bar__meter i { transform-origin: 100% 50%; }
+[dir="rtl"] .meter__bar i { transform-origin: right center; }
+/* Split-flap digits read left to right; the board sits at the far (inline-end) side. */
+[dir="rtl"] .meter__board { direction: ltr; justify-content: flex-start; }
+@media (max-width: 899px) {
+  [dir="rtl"] .meter__board { justify-content: flex-end; }
+}
+/* Pinned line: the track hangs from the right edge and slides right, so the next station enters from the left. */
+@media (min-width: 900px) {
+  [dir="rtl"].motion .track {
+    inset: 0 0 0 auto;
+    transform: translateX(calc(var(--x) * 100% / var(--stations)));
+  }
+}
+/* "01/10": the rolling digits are an inline-block, so keep the counter in LTR order. */
+[dir="rtl"] .tblock__st dd { direction: ltr; text-align: right; }

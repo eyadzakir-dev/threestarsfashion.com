@@ -115,7 +115,7 @@
 .fab__no {
   position: absolute;
   top: 12%;
-  left: 10%;
+  inset-inline-start: 10%;
   padding: 2px 5px 3px;
   border: 1px solid var(--ink);
   background: var(--paper);
@@ -194,7 +194,7 @@
 .ship__stamp {
   position: absolute;
   top: 22px;
-  right: 20px;
+  inset-inline-end: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -231,8 +231,11 @@
   .ship__code, .ship__count .num { font-size: 56px; }
   .ship__name { margin-top: 12px; font-size: 18px; }
   .ship__meta { flex-direction: column; font-size: 10px; }
-  .ship__stamp { top: 14px; right: 10px; gap: 2px; padding: 5px 7px 5px; border-width: 2px; outline-offset: -5px; }
+  .ship__stamp { top: 14px; inset-inline-end: 10px; gap: 2px; padding: 5px 7px 5px; border-width: 2px; outline-offset: -5px; }
   .ship__stamp b { font-size: 24px; }
   .ship__stamp small { font-size: 8px; letter-spacing: 0.12em; }
   .ship__gpl { width: 104px; margin-top: 14px; }
 }
+
+/* RTL: the founding ruler is a timeline and keeps reading left to right. */
+[dir="rtl"] .ruler { direction: ltr; }

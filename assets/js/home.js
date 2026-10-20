@@ -2,6 +2,7 @@
 // station rail, star journey.
 
 const root = document.documentElement;
+const IS_AR = root.lang === "ar";
 const REDUCED_MOTION = matchMedia("(prefers-reduced-motion: reduce)");
 const NARROW = matchMedia("(max-width: 899px)");
 const HAS_SCROLL_TIMELINE = CSS.supports("animation-timeline: view()");
@@ -19,8 +20,18 @@ const LIVE_TICK_MS = 250;
 const METER_THRESHOLD = 0.4;
 const METER_HOLD_MS = 1600;
 const METER_SHRINK_MS = 750;
-const METER_UNIT_TEXT = { shift: "pieces.", live: "pieces in one hour of a shift." };
-const LIVE_NOTE_TEXT = `Time-lapse: every second here is one minute on our floor, at about ${PER_MINUTE} pieces a minute on average.`;
+const STRINGS = {
+  en: {
+    unit: { shift: "pieces.", live: "pieces in one hour of a shift." },
+    liveNote: `Time-lapse: every second here is one minute on our floor, at about ${PER_MINUTE} pieces a minute on average.`,
+  },
+  ar: {
+    unit: { shift: "قطعة.", live: "قطعة في ساعة واحدة من الوردية." },
+    liveNote: `تسريع زمني: كل ثانية هنا تعادل دقيقة في صالة الإنتاج، بمتوسط نحو ${PER_MINUTE} قطعة في الدقيقة.`,
+  },
+}[IS_AR ? "ar" : "en"];
+const METER_UNIT_TEXT = STRINGS.unit;
+const LIVE_NOTE_TEXT = STRINGS.liveNote;
 const FLIP_STEP_MS = 240;
 const HERO_RANGE = 0.8;
 const BOARD_DIGITS = 6;
@@ -30,7 +41,8 @@ const STATION_LEAD = 0.1;
 const COUNT_MS = 1100;
 // Matches REVEAL_THRESHOLD in site.js, so the numbers count while the isotypes tick in.
 const COUNT_THRESHOLD = 0.3;
-const TAB_STEP = { ArrowRight: 1, ArrowLeft: -1 };
+// Arrow keys follow the visual order of the tabs, which mirrors in RTL.
+const TAB_STEP = root.dir === "rtl" ? { ArrowLeft: 1, ArrowRight: -1 } : { ArrowRight: 1, ArrowLeft: -1 };
 
 const cairoFormat = new Intl.DateTimeFormat("en-GB", {
   timeZone: "Africa/Cairo",

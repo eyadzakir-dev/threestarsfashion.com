@@ -1,5 +1,5 @@
 // Homepage star journey: the three stars of the TSF logo travel the page as you scroll.
-// Hero logo → key figures → right-hand margin (while the page runs on) → screen-printing stencil (printed onto
+// Hero logo → key figures → page margin (while the page runs on) → screen-printing stencil (printed onto
 // the shirt) → globe routes → closing logo.
 // Star shapes come from the shared #three-stars symbol, and every position is derived from live element rects,
 // so the stars stay attached to the page at any scroll offset.
@@ -140,7 +140,8 @@ function clampGroupToStage(points, stage) {
 
 function parkAnchors() {
   const park = NARROW.matches ? PARK.narrow : PARK.wide;
-  const x = document.documentElement.clientWidth - park.inset;
+  // The margin on the inline-end side: right in LTR, left in RTL.
+  const x = document.documentElement.dir === 'rtl' ? park.inset : document.documentElement.clientWidth - park.inset;
   return park.radii.map((r, i) => ({ x, y: innerHeight / 2 + (i - 1) * park.gap, r, rot: 0 }));
 }
 

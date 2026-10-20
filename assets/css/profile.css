@@ -22,7 +22,7 @@
 .adv__n {
   position: absolute;
   top: 16px;
-  right: 18px;
+  inset-inline-end: 18px;
   font: 800 48px/0.82 var(--f-sans);
   font-stretch: 72%;
   letter-spacing: -0.04em;
@@ -70,7 +70,7 @@
   .adv { grid-template-columns: 1fr; }
   .adv__item { display: grid; grid-template-columns: 52px minmax(0, 1fr); column-gap: 16px; min-height: 0; padding: 18px 14px 20px; }
   .adv__icon { grid-row: span 2; width: 48px; height: 48px; }
-  .adv__n { top: 14px; right: 14px; font-size: 30px; }
+  .adv__n { top: 14px; inset-inline-end: 14px; font-size: 30px; }
   .adv__title { margin-top: 0; padding: 4px 40px 0 0; font-size: 21px; }
   .adv__copy { margin-top: 6px; font-size: 15px; }
 }
@@ -172,8 +172,8 @@
   .rack li:hover .rack__g { animation: swing 1.3s ease-out; }
 }
 @keyframes hang-in {
-  0% { opacity: 0; transform: translateX(64px) rotate(11deg); }
-  45% { opacity: 1; transform: translateX(-4px) rotate(-4deg); }
+  0% { opacity: 0; transform: translateX(calc(64px * var(--dir, 1))) rotate(11deg); }
+  45% { opacity: 1; transform: translateX(calc(-4px * var(--dir, 1))) rotate(-4deg); }
   70% { transform: rotate(2deg); }
   88% { transform: rotate(-0.8deg); }
   100% { opacity: 1; transform: none; }
@@ -412,3 +412,6 @@
   .solar { grid-column: 1 / -1; margin-top: 72px; }
   .solar__pin b { font-size: 24px; }
 }
+
+/* RTL: the solar share bar is a data chart and stays left to right. */
+[dir="rtl"] .solar { direction: ltr; }
