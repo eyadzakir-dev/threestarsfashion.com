@@ -31,7 +31,8 @@
 }
 /* Tracking breaks Arabic letter joining; uppercase and condensed widths don't apply to it. */
 :lang(ar) { letter-spacing: 0 !important; }
-.mono:lang(ar) { text-transform: none; font-size: 13px; font-weight: 500; }
+/* Plex Mono has no Arabic and its wide space gaps Arabic words, so Arabic labels use the sans stack. */
+.mono:lang(ar) { font-family: var(--f-sans); font-variant-numeric: tabular-nums; text-transform: none; font-size: 13px; font-weight: 500; }
 html:lang(ar) body { line-height: 1.7; }
 html:lang(ar) :is(h1, h2, h3, h4) { line-height: 1.25; }
 /* Phone numbers, emails and codes read left to right inside Arabic text. */
