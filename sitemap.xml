@@ -1,98 +1,290 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://threestarsfashion.com/</loc>
-    <lastmod>2026-09-29</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/"/>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://threestarsfashion.com/ar/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/"/>
+    <lastmod>2026-10-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://threestarsfashion.com/about</loc>
-    <lastmod>2026-09-29</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/about"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/about"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/about"/>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://threestarsfashion.com/ar/about</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/about"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/about"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/about"/>
+    <lastmod>2026-10-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://threestarsfashion.com/services</loc>
-    <lastmod>2026-09-29</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/services"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/services"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/services"/>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://threestarsfashion.com/ar/services</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/services"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/services"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/services"/>
+    <lastmod>2026-10-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://threestarsfashion.com/facilities</loc>
-    <lastmod>2026-09-29</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/facilities"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/facilities"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/facilities"/>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://threestarsfashion.com/ar/facilities</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/facilities"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/facilities"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/facilities"/>
+    <lastmod>2026-10-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://threestarsfashion.com/certifications</loc>
-    <lastmod>2026-09-29</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/certifications"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/certifications"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/certifications"/>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://threestarsfashion.com/ar/certifications</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/certifications"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/certifications"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/certifications"/>
+    <lastmod>2026-10-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://threestarsfashion.com/logistics</loc>
-    <lastmod>2026-09-29</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/logistics"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/logistics"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/logistics"/>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://threestarsfashion.com/ar/logistics</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/logistics"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/logistics"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/logistics"/>
+    <lastmod>2026-10-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://threestarsfashion.com/faq</loc>
-    <lastmod>2026-09-29</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/faq"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/faq"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/faq"/>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://threestarsfashion.com/ar/faq</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/faq"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/faq"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/faq"/>
+    <lastmod>2026-10-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://threestarsfashion.com/careers/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/careers/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/careers/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/careers/"/>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://threestarsfashion.com/ar/careers/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/careers/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/careers/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/careers/"/>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://threestarsfashion.com/careers/apparel-production-merchandiser</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/careers/apparel-production-merchandiser"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/careers/apparel-production-merchandiser"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/careers/apparel-production-merchandiser"/>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://threestarsfashion.com/ar/careers/apparel-production-merchandiser</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/careers/apparel-production-merchandiser"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/careers/apparel-production-merchandiser"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/careers/apparel-production-merchandiser"/>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://threestarsfashion.com/careers/export-logistics-shipping-specialist</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/careers/export-logistics-shipping-specialist"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/careers/export-logistics-shipping-specialist"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/careers/export-logistics-shipping-specialist"/>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://threestarsfashion.com/ar/careers/export-logistics-shipping-specialist</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/careers/export-logistics-shipping-specialist"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/careers/export-logistics-shipping-specialist"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/careers/export-logistics-shipping-specialist"/>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://threestarsfashion.com/careers/factory-human-resources-officer</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/careers/factory-human-resources-officer"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/careers/factory-human-resources-officer"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/careers/factory-human-resources-officer"/>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://threestarsfashion.com/ar/careers/factory-human-resources-officer</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/careers/factory-human-resources-officer"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/careers/factory-human-resources-officer"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/careers/factory-human-resources-officer"/>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://threestarsfashion.com/careers/industrial-cost-financial-accountant</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/careers/industrial-cost-financial-accountant"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/careers/industrial-cost-financial-accountant"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/careers/industrial-cost-financial-accountant"/>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://threestarsfashion.com/ar/careers/industrial-cost-financial-accountant</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/careers/industrial-cost-financial-accountant"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/careers/industrial-cost-financial-accountant"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/careers/industrial-cost-financial-accountant"/>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://threestarsfashion.com/careers/quality-assurance-manager</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/careers/quality-assurance-manager"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/careers/quality-assurance-manager"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/careers/quality-assurance-manager"/>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://threestarsfashion.com/ar/careers/quality-assurance-manager</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/careers/quality-assurance-manager"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/careers/quality-assurance-manager"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/careers/quality-assurance-manager"/>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://threestarsfashion.com/careers/garment-production-manager</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/careers/garment-production-manager"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/careers/garment-production-manager"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/careers/garment-production-manager"/>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://threestarsfashion.com/ar/careers/garment-production-manager</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/careers/garment-production-manager"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/careers/garment-production-manager"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/careers/garment-production-manager"/>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://threestarsfashion.com/contact</loc>
-    <lastmod>2026-09-29</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/contact"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/contact"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/contact"/>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://threestarsfashion.com/ar/contact</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/contact"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/contact"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/contact"/>
+    <lastmod>2026-10-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://threestarsfashion.com/privacy-policy</loc>
-    <lastmod>2026-09-29</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/privacy-policy"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/privacy-policy"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/privacy-policy"/>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://threestarsfashion.com/ar/privacy-policy</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/privacy-policy"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/privacy-policy"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/privacy-policy"/>
+    <lastmod>2026-10-20</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>

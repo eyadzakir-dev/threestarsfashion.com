@@ -1,6 +1,10 @@
 // Shared behaviour for every page: language switch, mobile menu, one-shot reveals, image lightbox.
 
 const REDUCED_MOTION = matchMedia("(prefers-reduced-motion: reduce)");
+const IS_RTL = document.documentElement.dir === "rtl";
+const LIGHTBOX_TEXT = document.documentElement.lang === "ar"
+  ? { viewer: "عارض الصور", close: "إغلاق", prev: "الصورة السابقة", next: "الصورة التالية" }
+  : { viewer: "Image viewer", close: "Close", prev: "Previous image", next: "Next image" };
 const DESKTOP_NAV = matchMedia("(min-width: 1181px)");
 const REVEAL_THRESHOLD = 0.3;
 const GLOBE_PRELOAD_MARGIN = "150% 0px";
@@ -75,16 +79,16 @@ function initGlobes() {
 function buildLightbox() {
   const dialog = document.createElement("dialog");
   dialog.className = "lightbox";
-  dialog.setAttribute("aria-label", "Image viewer");
+  dialog.setAttribute("aria-label", LIGHTBOX_TEXT.viewer);
   dialog.innerHTML = `
     <div class="lightbox__in">
       <div class="lightbox__bar">
         <p class="mono" data-lb-count></p>
-        <button class="lightbox__btn mono" type="button" data-lb-close>Close <span aria-hidden="true">×</span></button>
+        <button class="lightbox__btn mono" type="button" data-lb-close>${LIGHTBOX_TEXT.close} <span aria-hidden="true">×</span></button>
       </div>
-      <button class="lightbox__btn lightbox__prev mono" type="button" data-lb-step="-1" aria-label="Previous image">←</button>
+      <button class="lightbox__btn lightbox__prev mono" type="button" data-lb-step="-1" aria-label="${LIGHTBOX_TEXT.prev}">${IS_RTL ? "→" : "←"}</button>
       <img class="lightbox__img" alt="">
-      <button class="lightbox__btn lightbox__next mono" type="button" data-lb-step="1" aria-label="Next image">→</button>
+      <button class="lightbox__btn lightbox__next mono" type="button" data-lb-step="1" aria-label="${LIGHTBOX_TEXT.next}">${IS_RTL ? "←" : "→"}</button>
       <p class="lightbox__cap mono" data-lb-caption></p>
     </div>`;
   document.body.append(dialog);
@@ -136,8 +140,9 @@ function initLightbox() {
     if (isBackdrop || event.target.closest("[data-lb-close]")) ui.dialog.close();
   });
   ui.dialog.addEventListener("keydown", (event) => {
-    if (event.key === "ArrowLeft") show(state.index - 1);
-    if (event.key === "ArrowRight") show(state.index + 1);
+    // In RTL the previous image sits on the right, so the arrow keys swap.
+    if (event.key === (IS_RTL ? "ArrowRight" : "ArrowLeft")) show(state.index - 1);
+    if (event.key === (IS_RTL ? "ArrowLeft" : "ArrowRight")) show(state.index + 1);
   });
   ui.dialog.addEventListener("close", () => state.trigger?.focus());
 }
