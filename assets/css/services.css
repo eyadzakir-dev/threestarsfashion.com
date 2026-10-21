@@ -314,6 +314,16 @@
 
 /* Timeline: one grid column per day from bulk start (8 weeks); sampling sits in an unscaled first column. */
 .tl { margin-top: 72px; border-top: 1px solid var(--ink); }
+
+/* Commercial terms buyers ask first: shipping terms, MOQ, private label. */
+.terms { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: var(--gut); margin-top: 56px; }
+.terms__cell { padding-top: 16px; border-top: 3px solid var(--ink); }
+.terms__cell dt { color: var(--red-ink); font-size: 12px; }
+.terms__cell dd { margin-top: 10px; max-width: 24em; font-size: clamp(18px, 1.4vw, 21px); font-weight: 600; line-height: 1.35; text-wrap: pretty; }
+.terms__cell a { color: inherit; text-decoration-color: var(--red); text-underline-offset: 3px; }
+@media (max-width: 899px) {
+  .terms { grid-template-columns: 1fr; row-gap: 24px; margin-top: 40px; }
+}
 .tl__lane {
   display: grid;
   grid-template-columns: 8.5em minmax(0, 1fr);
