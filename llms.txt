@@ -22,6 +22,12 @@
 - [Home](https://threestarsfashion.com/): overview, capacity and product portfolio
 - [About](https://threestarsfashion.com/about): history, group companies and leadership
 - [Services](https://threestarsfashion.com/services): cutting, sewing, printing, embroidery, products and order terms
+- [Products](https://threestarsfashion.com/products/): what we make, all private label, made in Alexandria, Egypt
+  - [T-shirts and polos](https://threestarsfashion.com/products/t-shirts)
+  - [Hoodies, sweatshirts and fleece](https://threestarsfashion.com/products/hoodies)
+  - [Activewear and sportswear](https://threestarsfashion.com/products/activewear)
+  - [Kidswear](https://threestarsfashion.com/products/kidswear)
+  - [Uniforms and innerwear](https://threestarsfashion.com/products/uniforms-innerwear)
 - [Facilities](https://threestarsfashion.com/facilities): the 10 production units
 - [Certifications](https://threestarsfashion.com/certifications): compliance and buyer approvals
 - [Logistics](https://threestarsfashion.com/logistics): Green Point Logistics and duty-free routes

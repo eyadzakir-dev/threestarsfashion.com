@@ -288,4 +288,112 @@
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
+  <url>
+    <loc>https://threestarsfashion.com/products/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/products/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/products/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/products/"/>
+    <lastmod>2026-10-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://threestarsfashion.com/ar/products/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/products/"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/products/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/products/"/>
+    <lastmod>2026-10-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://threestarsfashion.com/products/t-shirts</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/products/t-shirts"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/products/t-shirts"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/products/t-shirts"/>
+    <lastmod>2026-10-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://threestarsfashion.com/ar/products/t-shirts</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/products/t-shirts"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/products/t-shirts"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/products/t-shirts"/>
+    <lastmod>2026-10-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://threestarsfashion.com/products/hoodies</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/products/hoodies"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/products/hoodies"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/products/hoodies"/>
+    <lastmod>2026-10-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://threestarsfashion.com/ar/products/hoodies</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/products/hoodies"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/products/hoodies"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/products/hoodies"/>
+    <lastmod>2026-10-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://threestarsfashion.com/products/activewear</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/products/activewear"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/products/activewear"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/products/activewear"/>
+    <lastmod>2026-10-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://threestarsfashion.com/ar/products/activewear</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/products/activewear"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/products/activewear"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/products/activewear"/>
+    <lastmod>2026-10-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://threestarsfashion.com/products/kidswear</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/products/kidswear"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/products/kidswear"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/products/kidswear"/>
+    <lastmod>2026-10-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://threestarsfashion.com/ar/products/kidswear</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/products/kidswear"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/products/kidswear"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/products/kidswear"/>
+    <lastmod>2026-10-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://threestarsfashion.com/products/uniforms-innerwear</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/products/uniforms-innerwear"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/products/uniforms-innerwear"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/products/uniforms-innerwear"/>
+    <lastmod>2026-10-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://threestarsfashion.com/ar/products/uniforms-innerwear</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/products/uniforms-innerwear"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/products/uniforms-innerwear"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/products/uniforms-innerwear"/>
+    <lastmod>2026-10-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>

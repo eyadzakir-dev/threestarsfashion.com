@@ -77,6 +77,8 @@ def page_key(base: Path) -> str:
         return "home"
     if first == "careers":
         return "careers"
+    if first == "products":
+        return "services"  # product pages sit under Services in the nav
     return first[: -len(".html")]
 
 
