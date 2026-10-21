@@ -50,15 +50,12 @@
 /* Red banner that marks the list below as open jobs, distinct from the role titles. */
 .roles__head {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: end;
-  column-gap: var(--gut);
   row-gap: 10px;
   padding: 22px 28px 24px;
   background: var(--red);
   color: #fff;
 }
-.roles__live { grid-column: 1 / -1; display: flex; align-items: center; gap: 10px; font-size: 12px; color: rgba(255, 255, 255, 0.85); }
+.roles__live { display: flex; align-items: center; gap: 10px; font-size: 12px; color: rgba(255, 255, 255, 0.85); }
 .roles__dot { width: 9px; height: 9px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); animation: roles-pulse 2s ease-out infinite; }
 @keyframes roles-pulse { 70% { box-shadow: 0 0 0 9px rgba(255, 255, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); } }
 .roles__title {
@@ -82,7 +79,6 @@
   font-size: 0.72em;
   letter-spacing: 0;
 }
-.roles__where { font-size: 12px; text-align: end; color: rgba(255, 255, 255, 0.85); }
 
 /* Column labels so the rows read as a table of jobs. */
 .roles__cols {
@@ -387,8 +383,7 @@
   .role__dept { grid-column: 2; grid-row: 2; }
   .role__go { grid-column: 3; grid-row: 1 / 3; width: 44px; height: 44px; font-size: 18px; }
   .role__title { font-size: 21px; }
-  .roles__head { grid-template-columns: 1fr; padding: 18px 18px 20px; }
-  .roles__where { text-align: start; }
+  .roles__head { padding: 18px 18px 20px; }
   .roles__cols { display: none; }
   .roles { margin-top: 8px; }
 
