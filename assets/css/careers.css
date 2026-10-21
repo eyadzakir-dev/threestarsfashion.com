@@ -46,7 +46,57 @@
 .jfacts dd.jfacts__small { font-size: clamp(15px, 1.2vw, 18px); font-weight: 700; letter-spacing: 0; }
 
 .sec--roles { padding-top: 56px; }
-.sec--roles .sec__head { margin-bottom: 36px; }
+
+/* Red banner that marks the list below as open jobs, distinct from the role titles. */
+.roles__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  column-gap: var(--gut);
+  row-gap: 10px;
+  padding: 22px 28px 24px;
+  background: var(--red);
+  color: #fff;
+}
+.roles__live { grid-column: 1 / -1; display: flex; align-items: center; gap: 10px; font-size: 12px; color: rgba(255, 255, 255, 0.85); }
+.roles__dot { width: 9px; height: 9px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); animation: roles-pulse 2s ease-out infinite; }
+@keyframes roles-pulse { 70% { box-shadow: 0 0 0 9px rgba(255, 255, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); } }
+.roles__title {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: clamp(36px, 4vw, 60px);
+  font-weight: 800;
+  font-stretch: 86%;
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+.roles__count {
+  display: grid;
+  place-items: center;
+  min-width: 1.15em;
+  height: 1.15em;
+  padding-inline: 0.12em;
+  background: #fff;
+  color: var(--red);
+  font-size: 0.72em;
+  letter-spacing: 0;
+}
+.roles__where { font-size: 12px; text-align: end; color: rgba(255, 255, 255, 0.85); }
+
+/* Column labels so the rows read as a table of jobs. */
+.roles__cols {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gut);
+  padding: 22px 0 10px;
+  font-size: 11px;
+  color: var(--ink-2);
+}
+.roles__cols span:nth-child(1) { grid-column: 1; }
+.roles__cols span:nth-child(2) { grid-column: 2 / 8; }
+.roles__cols span:nth-child(3) { grid-column: 8 / 11; }
+.roles__cols span:nth-child(4) { grid-column: 11 / 13; }
 
 /* ---------- Role list ---------- */
 .roles { border-top: 1px solid var(--ink); counter-reset: role; }
@@ -80,9 +130,9 @@
 .role__title {
   grid-column: 2 / 8;
   display: block;
-  font-size: clamp(26px, 2.6vw, 40px);
-  font-weight: 750;
-  font-stretch: 86%;
+  font-size: clamp(22px, 1.9vw, 30px);
+  font-weight: 700;
+  font-stretch: 90%;
   line-height: 1;
   letter-spacing: -0.03em;
 }
@@ -305,6 +355,7 @@
 .adone__acts .btn { margin-top: 0; }
 
 @media (prefers-reduced-motion: reduce) {
+  .roles__dot { animation: none; }
   .tabpanel.is-entering, .iform__pill.is-new, .adone.is-in *, .aform[aria-busy="true"]::before { animation: none !important; }
 }
 
@@ -315,6 +366,9 @@
   .role__title { grid-column: 2 / 9; }
   .role__dept { grid-column: 9 / 12; }
   .role__meta { display: none; }
+  .roles__cols span:nth-child(2) { grid-column: 2 / 9; }
+  .roles__cols span:nth-child(3) { grid-column: 9 / 12; }
+  .roles__cols span:nth-child(4) { display: none; }
 }
 
 @media (max-width: 899px) {
@@ -332,7 +386,11 @@
   .role__title { grid-column: 2; grid-row: 1; }
   .role__dept { grid-column: 2; grid-row: 2; }
   .role__go { grid-column: 3; grid-row: 1 / 3; width: 44px; height: 44px; font-size: 18px; }
-  .role__title { font-size: 26px; }
+  .role__title { font-size: 21px; }
+  .roles__head { grid-template-columns: 1fr; padding: 18px 18px 20px; }
+  .roles__where { text-align: start; }
+  .roles__cols { display: none; }
+  .roles { margin-top: 8px; }
 
   .phero--job .phero__title { grid-column: 1 / -1; }
   .phero--job .phero__title { font-size: clamp(38px, 10.4vw, 56px); }
