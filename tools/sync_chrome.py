@@ -25,6 +25,11 @@ FONTS = {
     "ar": "family=Archivo:wdth,wght@62..125,300..900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700",
 }
 
+# Cloudflare Web Analytics (cookieless, so no consent banner). Paste the site token from
+# dash.cloudflare.com > Analytics & Logs > Web Analytics, then re-run this script.
+# Left empty, no analytics script is added to any page.
+CLOUDFLARE_ANALYTICS_TOKEN = ""
+
 # An explicit choice from the header switch wins; otherwise a browser set to Arabic first
 # lands on the Arabic twin of an English page. Arabic URLs are never redirected away for
 # first-time visitors, so shared Arabic links and search crawlers always see Arabic.
@@ -74,6 +79,12 @@ def page_key(base: Path) -> str:
     return first[: -len(".html")]
 
 
+ANALYTICS_SCRIPT = (
+    "  <script defer src=\"https://static.cloudflareinsights.com/beacon.min.js\" "
+    "data-cf-beacon='{{\"token\": \"{token}\"}}'></script>"
+)
+
+
 def head_block(lang: str, base: Path) -> str:
     en = url_path(base)
     ar = "/ar" + en
@@ -86,6 +97,7 @@ def head_block(lang: str, base: Path) -> str:
         '  <link rel="preconnect" href="https://fonts.googleapis.com">',
         '  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>',
         f'  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?{FONTS[lang]}&display=swap">',
+        *([ANALYTICS_SCRIPT.format(token=CLOUDFLARE_ANALYTICS_TOKEN)] if CLOUDFLARE_ANALYTICS_TOKEN else []),
         "<!-- /chrome:head -->",
     ])
 
