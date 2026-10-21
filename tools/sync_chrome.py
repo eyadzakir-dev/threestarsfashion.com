@@ -25,10 +25,11 @@ FONTS = {
     "ar": "family=Archivo:wdth,wght@62..125,300..900&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700",
 }
 
-# Cloudflare Web Analytics (cookieless, so no consent banner). Paste the site token from
+# Cloudflare Web Analytics (cookieless, so no consent banner). Module scripts run after the
+# page is parsed, so loading it in <head> behaves like Cloudflare's end-of-body snippet. Paste the site token from
 # dash.cloudflare.com > Analytics & Logs > Web Analytics, then re-run this script.
 # Left empty, no analytics script is added to any page.
-CLOUDFLARE_ANALYTICS_TOKEN = ""
+CLOUDFLARE_ANALYTICS_TOKEN = "cd7ba63539984a3bbb3b4295923c2b8a"
 
 # An explicit choice from the header switch wins; otherwise a browser set to Arabic first
 # lands on the Arabic twin of an English page. Arabic URLs are never redirected away for
@@ -80,7 +81,7 @@ def page_key(base: Path) -> str:
 
 
 ANALYTICS_SCRIPT = (
-    "  <script defer src=\"https://static.cloudflareinsights.com/beacon.min.js\" "
+    "  <script type=\"module\" src=\"https://static.cloudflareinsights.com/beacon.min.js\" "
     "data-cf-beacon='{{\"token\": \"{token}\"}}'></script>"
 )
 
