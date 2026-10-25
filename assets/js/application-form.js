@@ -1,6 +1,9 @@
 // Careers application form: inline validation, one CV with drag and drop, multipart submit.
 // Posts to Fabrik's careers intake (data-endpoint). On a local preview, ?endpoint=http://localhost:3000/api/website/careers/applications
 // points the form at a local Fabrik; with no endpoint at all, a local preview simulates a successful send.
+// CRM: parallel webhook (no files) or Twenty-native upload + Attachment (with CV) via data-crm-api-key.
+
+import { getCrmConfig, submitToTwentyCrm } from "./twenty-crm.js";
 
 const BYTES_PER_KB = 1024;
 const BYTES_PER_MB = 1024 * 1024;
@@ -10,7 +13,6 @@ const ALLOWED_EXTENSIONS = new Set(["pdf", "doc", "docx"]);
 const PHONE_MIN_DIGITS = 8;
 const PHONE_MAX_DIGITS = 15;
 const REQUEST_TIMEOUT_MS = 120000;
-const CRM_TIMEOUT_MS = 15000;
 const PREVIEW_DELAY_MS = 1100;
 const PREVIEW_HOST_PATTERN = /^(localhost|127\.0\.0\.1|\[::1\]|.+\.local|192\.168\.\d+\.\d+|10\.\d+\.\d+\.\d+)$/;
 const LOCAL_ENDPOINT_PATTERN = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?\//;
@@ -299,8 +301,9 @@ function trimField(value) {
 
 function buildCrmPayload(ctx) {
   const { fields } = ctx.ui;
+  // Careers index (general apply) uses a <select name="role">; role pages use a hidden input + data-role-title.
   const role = fields.role;
-  const careerRole = role.tagName === "SELECT" ? trimField(role.value) : trimField(role?.value);
+  const careerRole = role?.tagName === "SELECT" ? trimField(role.value) : trimField(role?.value);
   const roleTitle = getRoleLabel(ctx.ui);
   const payload = {
     formType: CRM_FORM_TYPE,
@@ -316,33 +319,18 @@ function buildCrmPayload(ctx) {
   if (phone) payload.phone = phone;
   if (careerRole) payload.careerRole = careerRole;
   if (roleTitle) payload.roleTitle = roleTitle;
+  // Message = user text only. CV bytes go to Twenty storage when data-crm-api-key is set.
   if (message) payload.message = message;
-  if (ctx.cv) payload.message = [payload.message, `CV attached: ${ctx.cv.name}`].filter(Boolean).join("\n");
   return payload;
 }
 
-async function postCrm(form, payload) {
-  const endpoint = (form.dataset.crmEndpoint || "").trim();
-  if (!endpoint) return null;
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), CRM_TIMEOUT_MS);
-  try {
-    const response = await fetch(endpoint, {
-      method: "POST",
-      body: JSON.stringify(payload),
-      headers: { Accept: "application/json", "Content-Type": "application/json" },
-      signal: controller.signal,
-    });
-    if (!response.ok) throw new Error(`CRM endpoint responded with ${response.status}.`);
-    return true;
-  } finally {
-    clearTimeout(timer);
-  }
-}
-
 function sendCrm(ctx) {
-  if (!(ctx.ui.form.dataset.crmEndpoint || "").trim()) return Promise.resolve(null);
-  return postCrm(ctx.ui.form, buildCrmPayload(ctx));
+  const cfg = getCrmConfig(ctx.ui.form);
+  if (!cfg.webhook && !cfg.apiKey) return Promise.resolve(null);
+  return submitToTwentyCrm(ctx.ui.form, {
+    payload: buildCrmPayload(ctx),
+    files: ctx.cv ? [ctx.cv] : [],
+  });
 }
 
 function setStatus(ui, content, isError) {
@@ -372,7 +360,11 @@ const getFirstName = (name) => name.trim().split(/\s+/)[0];
 
 function getRoleLabel(ui) {
   const { role } = ui.fields;
-  if (role.tagName === "SELECT") return role.selectedOptions[0].textContent.replace(/^R\/\d+ · /, "").trim();
+  if (role?.tagName === "SELECT") {
+    // General application on /careers/ (and AR) — keep CRM roleTitle short and language-local.
+    if (trimField(role.value) === "general") return T.general;
+    return role.selectedOptions[0].textContent.replace(/^R\/\d+ · /, "").trim();
+  }
   return ui.form.dataset.roleTitle || T.general;
 }
 
@@ -417,6 +409,7 @@ function resetApplication(ctx) {
 async function submitApplication(ctx) {
   const body = buildBody(ctx);
   setSending(ctx, true);
+  // Fabrik ERP + Twenty CRM stay parallel. CV bytes go to Twenty storage independently of Fabrik.
   const [fabrik, crm] = await Promise.allSettled([
     sendApplication(ctx.ui.form, body),
     sendCrm(ctx),
