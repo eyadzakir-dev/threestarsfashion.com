@@ -1,6 +1,9 @@
 // Careers application form: inline validation, one CV with drag and drop, multipart submit.
 // Posts to Fabrik's careers intake (data-endpoint). On a local preview, ?endpoint=http://localhost:3000/api/website/careers/applications
 // points the form at a local Fabrik; with no endpoint at all, a local preview simulates a successful send.
+// CRM: parallel webhook (no files) or Twenty-native upload + Attachment (with CV) via data-crm-api-key.
+
+import { getCrmConfig, submitToTwentyCrm } from "./twenty-crm.js";
 
 const BYTES_PER_KB = 1024;
 const BYTES_PER_MB = 1024 * 1024;
@@ -10,7 +13,6 @@ const ALLOWED_EXTENSIONS = new Set(["pdf", "doc", "docx"]);
 const PHONE_MIN_DIGITS = 8;
 const PHONE_MAX_DIGITS = 15;
 const REQUEST_TIMEOUT_MS = 120000;
-const CRM_TIMEOUT_MS = 15000;
 const PREVIEW_DELAY_MS = 1100;
 const PREVIEW_HOST_PATTERN = /^(localhost|127\.0\.0\.1|\[::1\]|.+\.local|192\.168\.\d+\.\d+|10\.\d+\.\d+\.\d+)$/;
 const LOCAL_ENDPOINT_PATTERN = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?\//;
@@ -245,14 +247,10 @@ function buildBody(ctx) {
   return body;
 }
 
-async function readFabrikResult(response) {
-  if (!response.headers.get("content-type")?.includes("json")) return { reference: "", id: "", hasCv: false };
+async function readReference(response) {
+  if (!response.headers.get("content-type")?.includes("json")) return "";
   const data = await response.json().catch(() => null);
-  return {
-    reference: typeof data?.reference === "string" ? data.reference.trim() : "",
-    id: typeof data?.id === "string" ? data.id.trim() : "",
-    hasCv: data?.hasCv === true,
-  };
+  return typeof data?.reference === "string" ? data.reference.trim() : "";
 }
 
 async function postApplication(endpoint, body) {
@@ -266,7 +264,7 @@ async function postApplication(endpoint, body) {
       signal: controller.signal,
     });
     if (!response.ok) throw new Error(`Application endpoint responded with ${response.status}.`);
-    return { ...await readFabrikResult(response), origin: new URL(endpoint, location.href).origin };
+    return { reference: await readReference(response) };
   } finally {
     clearTimeout(timer);
   }
@@ -277,7 +275,7 @@ function previewApplication(body) {
   const summary = Object.fromEntries([...body.entries()].map(([key, value]) => [key, typeof value === "string" ? value : `${value.name} (${formatSize(value.size)})`]));
   console.info(`[careers] Preview only, nothing was sent. Payload: ${JSON.stringify(summary)}`);
   return new Promise((resolve) => {
-    setTimeout(() => resolve({ reference: "", id: "", hasCv: false, origin: "" }), PREVIEW_DELAY_MS);
+    setTimeout(() => resolve({ reference: "" }), PREVIEW_DELAY_MS);
   });
 }
 
@@ -301,35 +299,7 @@ function trimField(value) {
   return typeof value === "string" ? value.trim() : "";
 }
 
-function toAttachmentLinks(items) {
-  if (!items.length) return null;
-  const [first, ...rest] = items;
-  return {
-    primaryLinkUrl: first.url,
-    primaryLinkLabel: first.label,
-    secondaryLinks: rest.length ? rest.map((item) => ({ url: item.url, label: item.label })) : null,
-  };
-}
-
-function careerAttachmentLinks(fabrik) {
-  if (!fabrik?.origin || !fabrik.id) return null;
-  const links = [];
-  if (fabrik.hasCv) {
-    links.push({
-      label: "CV",
-      url: `${fabrik.origin}/api/careers/applications/${encodeURIComponent(fabrik.id)}/cv`,
-    });
-  }
-  if (fabrik.reference) {
-    links.push({
-      label: `Fabrik ${fabrik.reference}`,
-      url: `${fabrik.origin}/inquiries?company=CAREERS&open=${encodeURIComponent(fabrik.id)}`,
-    });
-  }
-  return toAttachmentLinks(links);
-}
-
-function buildCrmPayload(ctx, fabrik = null) {
+function buildCrmPayload(ctx) {
   const { fields } = ctx.ui;
   const role = fields.role;
   const careerRole = role.tagName === "SELECT" ? trimField(role.value) : trimField(role?.value);
@@ -349,35 +319,16 @@ function buildCrmPayload(ctx, fabrik = null) {
   if (careerRole) payload.careerRole = careerRole;
   if (roleTitle) payload.roleTitle = roleTitle;
   if (message) payload.message = message;
-  if (fabrik?.reference) payload.fabrikReference = fabrik.reference;
-  if (fabrik?.id) payload.fabrikRecordId = fabrik.id;
-  const attachmentLinks = careerAttachmentLinks(fabrik);
-  if (attachmentLinks) payload.attachmentLinks = attachmentLinks;
   return payload;
 }
 
-async function postCrm(form, payload) {
-  const endpoint = (form.dataset.crmEndpoint || "").trim();
-  if (!endpoint) return null;
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), CRM_TIMEOUT_MS);
-  try {
-    const response = await fetch(endpoint, {
-      method: "POST",
-      body: JSON.stringify(payload),
-      headers: { Accept: "application/json", "Content-Type": "application/json" },
-      signal: controller.signal,
-    });
-    if (!response.ok) throw new Error(`CRM endpoint responded with ${response.status}.`);
-    return true;
-  } finally {
-    clearTimeout(timer);
-  }
-}
-
-function sendCrm(ctx, fabrik = null) {
-  if (!(ctx.ui.form.dataset.crmEndpoint || "").trim()) return Promise.resolve(null);
-  return postCrm(ctx.ui.form, buildCrmPayload(ctx, fabrik));
+function sendCrm(ctx) {
+  const cfg = getCrmConfig(ctx.ui.form);
+  if (!cfg.webhook && !cfg.apiKey) return Promise.resolve(null);
+  return submitToTwentyCrm(ctx.ui.form, {
+    payload: buildCrmPayload(ctx),
+    files: ctx.cv ? [ctx.cv] : [],
+  });
 }
 
 function setStatus(ui, content, isError) {
@@ -449,29 +400,14 @@ function resetApplication(ctx) {
   fields.name.focus();
 }
 
-async function settle(work) {
-  try {
-    return { status: "fulfilled", value: await work };
-  } catch (reason) {
-    return { status: "rejected", reason };
-  }
-}
-
 async function submitApplication(ctx) {
   const body = buildBody(ctx);
   setSending(ctx, true);
-  // With a CV, wait for Fabrik so CRM can receive openable attachmentLinks. Without files, keep parallel.
-  let fabrik;
-  let crm;
-  if (ctx.cv) {
-    fabrik = await settle(sendApplication(ctx.ui.form, body));
-    crm = await settle(sendCrm(ctx, fabrik.status === "fulfilled" ? fabrik.value : null));
-  } else {
-    [fabrik, crm] = await Promise.allSettled([
-      sendApplication(ctx.ui.form, body),
-      sendCrm(ctx),
-    ]);
-  }
+  // Fabrik ERP + Twenty CRM stay parallel. CV bytes go to Twenty storage independently of Fabrik.
+  const [fabrik, crm] = await Promise.allSettled([
+    sendApplication(ctx.ui.form, body),
+    sendCrm(ctx),
+  ]);
   setSending(ctx, false);
   if (crm.status === "rejected") console.warn("CRM application submission failed.", crm.reason);
   if (fabrik.status === "fulfilled") showSuccess(ctx, fabrik.value.reference);

@@ -1,4 +1,7 @@
 // Contact page inquiry form: inline validation, multi-file attachments with drag and drop, multipart submit.
+// CRM: parallel webhook (no files) or Twenty-native upload + Attachment (with files) via data-crm-api-key.
+
+import { getCrmConfig, submitToTwentyCrm } from "./twenty-crm.js";
 
 const MAX_FILES = 10;
 const BYTES_PER_KB = 1024;
@@ -10,7 +13,6 @@ const QUANTITY_MIN = 1;
 const QUANTITY_MAX = 10000000;
 const OTHER_MARKET = "other";
 const REQUEST_TIMEOUT_MS = 120000;
-const CRM_TIMEOUT_MS = 15000;
 const PREVIEW_DELAY_MS = 800;
 const PREVIEW_HOSTS = new Set(["localhost", "127.0.0.1"]);
 const CONTACT_EMAIL = "info@tsf.com.eg";
@@ -284,27 +286,11 @@ function buildBody(ctx) {
   return body;
 }
 
-function readFabrikFiles(data) {
-  if (!Array.isArray(data?.files)) return [];
-  return data.files
-    .map((file) => ({
-      id: typeof file?.id === "string" ? file.id.trim() : "",
-      filename: typeof file?.filename === "string" ? file.filename.trim() : "",
-    }))
-    .filter((file) => file.id);
-}
-
-async function readFabrikResult(response) {
-  if (!response.headers.get("content-type")?.includes("json")) {
-    return { reference: "", id: "", files: [] };
-  }
+async function readReference(response) {
+  if (!response.headers.get("content-type")?.includes("json")) return "";
   // A 2xx already means success; the JSON body is optional.
   const data = await response.json().catch(() => null);
-  return {
-    reference: typeof data?.reference === "string" ? data.reference.trim() : "",
-    id: typeof data?.id === "string" ? data.id.trim() : "",
-    files: readFabrikFiles(data),
-  };
+  return typeof data?.reference === "string" ? data.reference.trim() : "";
 }
 
 async function postInquiry(endpoint, body) {
@@ -318,7 +304,7 @@ async function postInquiry(endpoint, body) {
       signal: controller.signal,
     });
     if (!response.ok) throw new Error(`Inquiry endpoint responded with ${response.status}.`);
-    return { ...await readFabrikResult(response), origin: new URL(endpoint, location.href).origin };
+    return { reference: await readReference(response) };
   } finally {
     clearTimeout(timer);
   }
@@ -326,7 +312,7 @@ async function postInquiry(endpoint, body) {
 
 function previewInquiry() {
   return new Promise((resolve) => {
-    setTimeout(() => resolve({ reference: "", id: "", files: [], origin: "" }), PREVIEW_DELAY_MS);
+    setTimeout(() => resolve({ reference: "" }), PREVIEW_DELAY_MS);
   });
 }
 
@@ -341,32 +327,7 @@ function trimField(value) {
   return typeof value === "string" ? value.trim() : "";
 }
 
-function toAttachmentLinks(items) {
-  if (!items.length) return null;
-  const [first, ...rest] = items;
-  return {
-    primaryLinkUrl: first.url,
-    primaryLinkLabel: first.label,
-    secondaryLinks: rest.length ? rest.map((item) => ({ url: item.url, label: item.label })) : null,
-  };
-}
-
-function inquiryAttachmentLinks(fabrik) {
-  if (!fabrik?.origin || !fabrik.id) return null;
-  const links = (fabrik.files || []).map((file) => ({
-    label: file.filename || "Attachment",
-    url: `${fabrik.origin}/api/inquiries/files/${encodeURIComponent(file.id)}`,
-  }));
-  if (fabrik.reference) {
-    links.push({
-      label: `Fabrik ${fabrik.reference}`,
-      url: `${fabrik.origin}/inquiries/${encodeURIComponent(fabrik.id)}`,
-    });
-  }
-  return toAttachmentLinks(links);
-}
-
-function buildCrmPayload(ctx, fabrik = null) {
+function buildCrmPayload(ctx) {
   const { fields, marketOther } = ctx.ui;
   const market = fields.market.value === OTHER_MARKET
     ? trimField(marketOther.value) || OTHER_MARKET
@@ -391,44 +352,16 @@ function buildCrmPayload(ctx, fabrik = null) {
   if (quantity) payload.quantity = quantity;
   if (market) payload.market = market;
   if (message) payload.message = message;
-  if (fabrik?.reference) payload.fabrikReference = fabrik.reference;
-  if (fabrik?.id) payload.fabrikRecordId = fabrik.id;
-  const attachmentLinks = inquiryAttachmentLinks(fabrik);
-  if (attachmentLinks) payload.attachmentLinks = attachmentLinks;
   return payload;
 }
 
-async function postCrm(form, payload) {
-  const endpoint = (form.dataset.crmEndpoint || "").trim();
-  if (!endpoint) return null;
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), CRM_TIMEOUT_MS);
-  try {
-    const response = await fetch(endpoint, {
-      method: "POST",
-      body: JSON.stringify(payload),
-      headers: { Accept: "application/json", "Content-Type": "application/json" },
-      signal: controller.signal,
-    });
-    if (!response.ok) throw new Error(`CRM endpoint responded with ${response.status}.`);
-    return true;
-  } finally {
-    clearTimeout(timer);
-  }
-}
-
-function sendCrm(ctx, fabrik = null) {
-  const endpoint = (ctx.ui.form.dataset.crmEndpoint || "").trim();
-  if (!endpoint) return Promise.resolve(null);
-  return postCrm(ctx.ui.form, buildCrmPayload(ctx, fabrik));
-}
-
-async function settle(work) {
-  try {
-    return { status: "fulfilled", value: await work };
-  } catch (reason) {
-    return { status: "rejected", reason };
-  }
+function sendCrm(ctx) {
+  const cfg = getCrmConfig(ctx.ui.form);
+  if (!cfg.webhook && !cfg.apiKey) return Promise.resolve(null);
+  return submitToTwentyCrm(ctx.ui.form, {
+    payload: buildCrmPayload(ctx),
+    files: ctx.files,
+  });
 }
 
 function setStatus(ui, content, isError) {
@@ -518,18 +451,11 @@ function resetInquiry(ctx) {
 async function submitInquiry(ctx) {
   const body = buildBody(ctx);
   setSending(ctx, true);
-  // With files, wait for Fabrik so CRM can receive openable attachmentLinks. Without files, keep parallel.
-  let fabrik;
-  let crm;
-  if (ctx.files.length) {
-    fabrik = await settle(sendInquiry(ctx.ui.form, body));
-    crm = await settle(sendCrm(ctx, fabrik.status === "fulfilled" ? fabrik.value : null));
-  } else {
-    [fabrik, crm] = await Promise.allSettled([
-      sendInquiry(ctx.ui.form, body),
-      sendCrm(ctx),
-    ]);
-  }
+  // Fabrik ERP + Twenty CRM stay parallel. File bytes go to Twenty storage independently of Fabrik.
+  const [fabrik, crm] = await Promise.allSettled([
+    sendInquiry(ctx.ui.form, body),
+    sendCrm(ctx),
+  ]);
   setSending(ctx, false);
   if (crm.status === "rejected") console.warn("CRM inquiry submission failed.", crm.reason);
   if (fabrik.status === "fulfilled") showSuccess(ctx, fabrik.value.reference);
