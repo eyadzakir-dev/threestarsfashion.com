@@ -10,11 +10,15 @@ const ALLOWED_EXTENSIONS = new Set(["pdf", "doc", "docx"]);
 const PHONE_MIN_DIGITS = 8;
 const PHONE_MAX_DIGITS = 15;
 const REQUEST_TIMEOUT_MS = 120000;
+const CRM_TIMEOUT_MS = 15000;
 const PREVIEW_DELAY_MS = 1100;
 const PREVIEW_HOST_PATTERN = /^(localhost|127\.0\.0\.1|\[::1\]|.+\.local|192\.168\.\d+\.\d+|10\.\d+\.\d+\.\d+)$/;
 const LOCAL_ENDPOINT_PATTERN = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?\//;
 const CONTACT_EMAIL = "info@tsf.com.eg";
 const IS_AR = document.documentElement.lang === "ar";
+const CRM_FORM_TYPE = "TSF_CAREER";
+const CRM_SOURCE_SITE = "THREE_STARS_FASHION";
+const CRM_SOURCE_LOGO = "https://threestarsfashion.com/assets/Brands/tsflogo.png";
 
 // Visitor-facing text in the page's language. Data sent to the intake (role slugs, field names) stays in English.
 const T = IS_AR ? {
@@ -289,6 +293,58 @@ function sendApplication(form, body) {
   return Promise.reject(new Error("Application endpoint is not configured."));
 }
 
+function trimField(value) {
+  return typeof value === "string" ? value.trim() : "";
+}
+
+function buildCrmPayload(ctx) {
+  const { fields } = ctx.ui;
+  const role = fields.role;
+  const careerRole = role.tagName === "SELECT" ? trimField(role.value) : trimField(role?.value);
+  const roleTitle = getRoleLabel(ctx.ui);
+  const payload = {
+    formType: CRM_FORM_TYPE,
+    sourceSite: CRM_SOURCE_SITE,
+    name: trimField(fields.name.value),
+    email: trimField(fields.email.value),
+    sourceLogoUrl: CRM_SOURCE_LOGO,
+    sourcePageUrl: location.href.split("#")[0],
+    submittedAt: new Date().toISOString(),
+  };
+  const phone = trimField(fields.phone.value);
+  const message = trimField(ctx.ui.form.elements.namedItem("message")?.value);
+  if (phone) payload.phone = phone;
+  if (careerRole) payload.careerRole = careerRole;
+  if (roleTitle) payload.roleTitle = roleTitle;
+  if (message) payload.message = message;
+  if (ctx.cv) payload.message = [payload.message, `CV attached: ${ctx.cv.name}`].filter(Boolean).join("\n");
+  return payload;
+}
+
+async function postCrm(form, payload) {
+  const endpoint = (form.dataset.crmEndpoint || "").trim();
+  if (!endpoint) return null;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), CRM_TIMEOUT_MS);
+  try {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: { Accept: "application/json", "Content-Type": "application/json" },
+      signal: controller.signal,
+    });
+    if (!response.ok) throw new Error(`CRM endpoint responded with ${response.status}.`);
+    return true;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function sendCrm(ctx) {
+  if (!(ctx.ui.form.dataset.crmEndpoint || "").trim()) return Promise.resolve(null);
+  return postCrm(ctx.ui.form, buildCrmPayload(ctx));
+}
+
 function setStatus(ui, content, isError) {
   ui.status.replaceChildren(...content);
   ui.status.classList.toggle("is-error", isError);
@@ -360,16 +416,18 @@ function resetApplication(ctx) {
 
 async function submitApplication(ctx) {
   const body = buildBody(ctx);
-  let result = null;
   setSending(ctx, true);
-  try {
-    result = await sendApplication(ctx.ui.form, body);
-  } catch (error) {
-    console.warn("Application submission failed.", error);
-  }
+  const [fabrik, crm] = await Promise.allSettled([
+    sendApplication(ctx.ui.form, body),
+    sendCrm(ctx),
+  ]);
   setSending(ctx, false);
-  if (result) showSuccess(ctx, result.reference);
-  else showFailure(ctx.ui);
+  if (crm.status === "rejected") console.warn("CRM application submission failed.", crm.reason);
+  if (fabrik.status === "fulfilled") showSuccess(ctx, fabrik.value.reference);
+  else {
+    console.warn("Application submission failed.", fabrik.reason);
+    showFailure(ctx.ui);
+  }
 }
 
 function handleSubmit(event, ctx) {
