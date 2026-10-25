@@ -245,10 +245,14 @@ function buildBody(ctx) {
   return body;
 }
 
-async function readReference(response) {
-  if (!response.headers.get("content-type")?.includes("json")) return "";
+async function readFabrikResult(response) {
+  if (!response.headers.get("content-type")?.includes("json")) return { reference: "", id: "", hasCv: false };
   const data = await response.json().catch(() => null);
-  return typeof data?.reference === "string" ? data.reference.trim() : "";
+  return {
+    reference: typeof data?.reference === "string" ? data.reference.trim() : "",
+    id: typeof data?.id === "string" ? data.id.trim() : "",
+    hasCv: data?.hasCv === true,
+  };
 }
 
 async function postApplication(endpoint, body) {
@@ -262,7 +266,7 @@ async function postApplication(endpoint, body) {
       signal: controller.signal,
     });
     if (!response.ok) throw new Error(`Application endpoint responded with ${response.status}.`);
-    return { reference: await readReference(response) };
+    return { ...await readFabrikResult(response), origin: new URL(endpoint, location.href).origin };
   } finally {
     clearTimeout(timer);
   }
@@ -273,7 +277,7 @@ function previewApplication(body) {
   const summary = Object.fromEntries([...body.entries()].map(([key, value]) => [key, typeof value === "string" ? value : `${value.name} (${formatSize(value.size)})`]));
   console.info(`[careers] Preview only, nothing was sent. Payload: ${JSON.stringify(summary)}`);
   return new Promise((resolve) => {
-    setTimeout(() => resolve({ reference: "" }), PREVIEW_DELAY_MS);
+    setTimeout(() => resolve({ reference: "", id: "", hasCv: false, origin: "" }), PREVIEW_DELAY_MS);
   });
 }
 
@@ -297,7 +301,35 @@ function trimField(value) {
   return typeof value === "string" ? value.trim() : "";
 }
 
-function buildCrmPayload(ctx) {
+function toAttachmentLinks(items) {
+  if (!items.length) return null;
+  const [first, ...rest] = items;
+  return {
+    primaryLinkUrl: first.url,
+    primaryLinkLabel: first.label,
+    secondaryLinks: rest.length ? rest.map((item) => ({ url: item.url, label: item.label })) : null,
+  };
+}
+
+function careerAttachmentLinks(fabrik) {
+  if (!fabrik?.origin || !fabrik.id) return null;
+  const links = [];
+  if (fabrik.hasCv) {
+    links.push({
+      label: "CV",
+      url: `${fabrik.origin}/api/careers/applications/${encodeURIComponent(fabrik.id)}/cv`,
+    });
+  }
+  if (fabrik.reference) {
+    links.push({
+      label: `Fabrik ${fabrik.reference}`,
+      url: `${fabrik.origin}/inquiries?company=CAREERS&open=${encodeURIComponent(fabrik.id)}`,
+    });
+  }
+  return toAttachmentLinks(links);
+}
+
+function buildCrmPayload(ctx, fabrik = null) {
   const { fields } = ctx.ui;
   const role = fields.role;
   const careerRole = role.tagName === "SELECT" ? trimField(role.value) : trimField(role?.value);
@@ -317,7 +349,10 @@ function buildCrmPayload(ctx) {
   if (careerRole) payload.careerRole = careerRole;
   if (roleTitle) payload.roleTitle = roleTitle;
   if (message) payload.message = message;
-  if (ctx.cv) payload.message = [payload.message, `CV attached: ${ctx.cv.name}`].filter(Boolean).join("\n");
+  if (fabrik?.reference) payload.fabrikReference = fabrik.reference;
+  if (fabrik?.id) payload.fabrikRecordId = fabrik.id;
+  const attachmentLinks = careerAttachmentLinks(fabrik);
+  if (attachmentLinks) payload.attachmentLinks = attachmentLinks;
   return payload;
 }
 
@@ -340,9 +375,9 @@ async function postCrm(form, payload) {
   }
 }
 
-function sendCrm(ctx) {
+function sendCrm(ctx, fabrik = null) {
   if (!(ctx.ui.form.dataset.crmEndpoint || "").trim()) return Promise.resolve(null);
-  return postCrm(ctx.ui.form, buildCrmPayload(ctx));
+  return postCrm(ctx.ui.form, buildCrmPayload(ctx, fabrik));
 }
 
 function setStatus(ui, content, isError) {
@@ -414,13 +449,29 @@ function resetApplication(ctx) {
   fields.name.focus();
 }
 
+async function settle(work) {
+  try {
+    return { status: "fulfilled", value: await work };
+  } catch (reason) {
+    return { status: "rejected", reason };
+  }
+}
+
 async function submitApplication(ctx) {
   const body = buildBody(ctx);
   setSending(ctx, true);
-  const [fabrik, crm] = await Promise.allSettled([
-    sendApplication(ctx.ui.form, body),
-    sendCrm(ctx),
-  ]);
+  // With a CV, wait for Fabrik so CRM can receive openable attachmentLinks. Without files, keep parallel.
+  let fabrik;
+  let crm;
+  if (ctx.cv) {
+    fabrik = await settle(sendApplication(ctx.ui.form, body));
+    crm = await settle(sendCrm(ctx, fabrik.status === "fulfilled" ? fabrik.value : null));
+  } else {
+    [fabrik, crm] = await Promise.allSettled([
+      sendApplication(ctx.ui.form, body),
+      sendCrm(ctx),
+    ]);
+  }
   setSending(ctx, false);
   if (crm.status === "rejected") console.warn("CRM application submission failed.", crm.reason);
   if (fabrik.status === "fulfilled") showSuccess(ctx, fabrik.value.reference);

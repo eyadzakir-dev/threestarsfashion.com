@@ -284,11 +284,27 @@ function buildBody(ctx) {
   return body;
 }
 
-async function readReference(response) {
-  if (!response.headers.get("content-type")?.includes("json")) return "";
+function readFabrikFiles(data) {
+  if (!Array.isArray(data?.files)) return [];
+  return data.files
+    .map((file) => ({
+      id: typeof file?.id === "string" ? file.id.trim() : "",
+      filename: typeof file?.filename === "string" ? file.filename.trim() : "",
+    }))
+    .filter((file) => file.id);
+}
+
+async function readFabrikResult(response) {
+  if (!response.headers.get("content-type")?.includes("json")) {
+    return { reference: "", id: "", files: [] };
+  }
   // A 2xx already means success; the JSON body is optional.
   const data = await response.json().catch(() => null);
-  return typeof data?.reference === "string" ? data.reference.trim() : "";
+  return {
+    reference: typeof data?.reference === "string" ? data.reference.trim() : "",
+    id: typeof data?.id === "string" ? data.id.trim() : "",
+    files: readFabrikFiles(data),
+  };
 }
 
 async function postInquiry(endpoint, body) {
@@ -302,7 +318,7 @@ async function postInquiry(endpoint, body) {
       signal: controller.signal,
     });
     if (!response.ok) throw new Error(`Inquiry endpoint responded with ${response.status}.`);
-    return { reference: await readReference(response) };
+    return { ...await readFabrikResult(response), origin: new URL(endpoint, location.href).origin };
   } finally {
     clearTimeout(timer);
   }
@@ -310,7 +326,7 @@ async function postInquiry(endpoint, body) {
 
 function previewInquiry() {
   return new Promise((resolve) => {
-    setTimeout(() => resolve({ reference: "" }), PREVIEW_DELAY_MS);
+    setTimeout(() => resolve({ reference: "", id: "", files: [], origin: "" }), PREVIEW_DELAY_MS);
   });
 }
 
@@ -325,7 +341,32 @@ function trimField(value) {
   return typeof value === "string" ? value.trim() : "";
 }
 
-function buildCrmPayload(ctx) {
+function toAttachmentLinks(items) {
+  if (!items.length) return null;
+  const [first, ...rest] = items;
+  return {
+    primaryLinkUrl: first.url,
+    primaryLinkLabel: first.label,
+    secondaryLinks: rest.length ? rest.map((item) => ({ url: item.url, label: item.label })) : null,
+  };
+}
+
+function inquiryAttachmentLinks(fabrik) {
+  if (!fabrik?.origin || !fabrik.id) return null;
+  const links = (fabrik.files || []).map((file) => ({
+    label: file.filename || "Attachment",
+    url: `${fabrik.origin}/api/inquiries/files/${encodeURIComponent(file.id)}`,
+  }));
+  if (fabrik.reference) {
+    links.push({
+      label: `Fabrik ${fabrik.reference}`,
+      url: `${fabrik.origin}/inquiries/${encodeURIComponent(fabrik.id)}`,
+    });
+  }
+  return toAttachmentLinks(links);
+}
+
+function buildCrmPayload(ctx, fabrik = null) {
   const { fields, marketOther } = ctx.ui;
   const market = fields.market.value === OTHER_MARKET
     ? trimField(marketOther.value) || OTHER_MARKET
@@ -350,6 +391,10 @@ function buildCrmPayload(ctx) {
   if (quantity) payload.quantity = quantity;
   if (market) payload.market = market;
   if (message) payload.message = message;
+  if (fabrik?.reference) payload.fabrikReference = fabrik.reference;
+  if (fabrik?.id) payload.fabrikRecordId = fabrik.id;
+  const attachmentLinks = inquiryAttachmentLinks(fabrik);
+  if (attachmentLinks) payload.attachmentLinks = attachmentLinks;
   return payload;
 }
 
@@ -372,10 +417,18 @@ async function postCrm(form, payload) {
   }
 }
 
-function sendCrm(ctx) {
+function sendCrm(ctx, fabrik = null) {
   const endpoint = (ctx.ui.form.dataset.crmEndpoint || "").trim();
   if (!endpoint) return Promise.resolve(null);
-  return postCrm(ctx.ui.form, buildCrmPayload(ctx));
+  return postCrm(ctx.ui.form, buildCrmPayload(ctx, fabrik));
+}
+
+async function settle(work) {
+  try {
+    return { status: "fulfilled", value: await work };
+  } catch (reason) {
+    return { status: "rejected", reason };
+  }
 }
 
 function setStatus(ui, content, isError) {
@@ -465,10 +518,18 @@ function resetInquiry(ctx) {
 async function submitInquiry(ctx) {
   const body = buildBody(ctx);
   setSending(ctx, true);
-  const [fabrik, crm] = await Promise.allSettled([
-    sendInquiry(ctx.ui.form, body),
-    sendCrm(ctx),
-  ]);
+  // With files, wait for Fabrik so CRM can receive openable attachmentLinks. Without files, keep parallel.
+  let fabrik;
+  let crm;
+  if (ctx.files.length) {
+    fabrik = await settle(sendInquiry(ctx.ui.form, body));
+    crm = await settle(sendCrm(ctx, fabrik.status === "fulfilled" ? fabrik.value : null));
+  } else {
+    [fabrik, crm] = await Promise.allSettled([
+      sendInquiry(ctx.ui.form, body),
+      sendCrm(ctx),
+    ]);
+  }
   setSending(ctx, false);
   if (crm.status === "rejected") console.warn("CRM inquiry submission failed.", crm.reason);
   if (fabrik.status === "fulfilled") showSuccess(ctx, fabrik.value.reference);
