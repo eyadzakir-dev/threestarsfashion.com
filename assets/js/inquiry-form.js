@@ -10,12 +10,16 @@ const QUANTITY_MIN = 1;
 const QUANTITY_MAX = 10000000;
 const OTHER_MARKET = "other";
 const REQUEST_TIMEOUT_MS = 120000;
+const CRM_TIMEOUT_MS = 15000;
 const PREVIEW_DELAY_MS = 800;
 const PREVIEW_HOSTS = new Set(["localhost", "127.0.0.1"]);
 const CONTACT_EMAIL = "info@tsf.com.eg";
 const EMAIL_DOMAIN_PATTERN = /@[^@\s]+\.[^@\s.]+$/;
 const COUNT_FORMAT = new Intl.NumberFormat("en-US");
 const IS_AR = document.documentElement.lang === "ar";
+const CRM_FORM_TYPE = "TSF_INQUIRY";
+const CRM_SOURCE_SITE = "THREE_STARS_FASHION";
+const CRM_SOURCE_LOGO = "https://threestarsfashion.com/assets/Brands/tsflogo.png";
 
 const pad2 = (n) => String(n).padStart(2, "0");
 // Keeps a Latin file name in one piece inside Arabic text.
@@ -317,6 +321,63 @@ function sendInquiry(form, body) {
   return Promise.reject(new Error("Inquiry endpoint is not configured."));
 }
 
+function trimField(value) {
+  return typeof value === "string" ? value.trim() : "";
+}
+
+function buildCrmPayload(ctx) {
+  const { fields, marketOther } = ctx.ui;
+  const market = fields.market.value === OTHER_MARKET
+    ? trimField(marketOther.value) || OTHER_MARKET
+    : trimField(fields.market.selectedOptions[0]?.textContent || fields.market.value);
+  const payload = {
+    formType: CRM_FORM_TYPE,
+    sourceSite: CRM_SOURCE_SITE,
+    name: trimField(fields.name.value),
+    email: trimField(fields.email.value),
+    sourceLogoUrl: CRM_SOURCE_LOGO,
+    sourcePageUrl: location.href.split("#")[0],
+    submittedAt: new Date().toISOString(),
+  };
+  const company = trimField(ctx.ui.form.elements.namedItem("company")?.value);
+  const phone = trimField(ctx.ui.form.elements.namedItem("phone")?.value);
+  const product = trimField(fields.product.value);
+  const quantity = trimField(fields.quantity.value);
+  const message = trimField(fields.message.value);
+  if (company) payload.company = company;
+  if (phone) payload.phone = phone;
+  if (product) payload.product = product;
+  if (quantity) payload.quantity = quantity;
+  if (market) payload.market = market;
+  if (message) payload.message = message;
+  return payload;
+}
+
+async function postCrm(form, payload) {
+  const endpoint = (form.dataset.crmEndpoint || "").trim();
+  if (!endpoint) return null;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), CRM_TIMEOUT_MS);
+  try {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: { Accept: "application/json", "Content-Type": "application/json" },
+      signal: controller.signal,
+    });
+    if (!response.ok) throw new Error(`CRM endpoint responded with ${response.status}.`);
+    return true;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function sendCrm(ctx) {
+  const endpoint = (ctx.ui.form.dataset.crmEndpoint || "").trim();
+  if (!endpoint) return Promise.resolve(null);
+  return postCrm(ctx.ui.form, buildCrmPayload(ctx));
+}
+
 function setStatus(ui, content, isError) {
   ui.status.replaceChildren(...content);
   ui.status.classList.toggle("is-error", isError);
@@ -403,16 +464,18 @@ function resetInquiry(ctx) {
 
 async function submitInquiry(ctx) {
   const body = buildBody(ctx);
-  let result = null;
   setSending(ctx, true);
-  try {
-    result = await sendInquiry(ctx.ui.form, body);
-  } catch (error) {
-    console.warn("Inquiry submission failed.", error);
-  }
+  const [fabrik, crm] = await Promise.allSettled([
+    sendInquiry(ctx.ui.form, body),
+    sendCrm(ctx),
+  ]);
   setSending(ctx, false);
-  if (result) showSuccess(ctx, result.reference);
-  else showFailure(ctx.ui);
+  if (crm.status === "rejected") console.warn("CRM inquiry submission failed.", crm.reason);
+  if (fabrik.status === "fulfilled") showSuccess(ctx, fabrik.value.reference);
+  else {
+    console.warn("Inquiry submission failed.", fabrik.reason);
+    showFailure(ctx.ui);
+  }
 }
 
 function handleSubmit(event, ctx) {
