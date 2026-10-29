@@ -131,7 +131,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/careers/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/careers/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/careers/"/>
-    <lastmod>2026-10-20</lastmod>
+    <lastmod>2026-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -140,7 +140,7 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/careers/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/careers/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/careers/"/>
-    <lastmod>2026-10-20</lastmod>
+    <lastmod>2026-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -195,6 +195,24 @@
     <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/careers/factory-human-resources-officer"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/careers/factory-human-resources-officer"/>
     <lastmod>2026-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://threestarsfashion.com/careers/finance-accounting-manager</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/careers/finance-accounting-manager"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/careers/finance-accounting-manager"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/careers/finance-accounting-manager"/>
+    <lastmod>2026-10-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://threestarsfashion.com/ar/careers/finance-accounting-manager</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://threestarsfashion.com/careers/finance-accounting-manager"/>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://threestarsfashion.com/ar/careers/finance-accounting-manager"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://threestarsfashion.com/careers/finance-accounting-manager"/>
+    <lastmod>2026-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
