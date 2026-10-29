@@ -416,11 +416,12 @@ async function submitApplication(ctx) {
   ]);
   setSending(ctx, false);
   if (crm.status === "rejected") console.warn("CRM application submission failed.", crm.reason);
+  if (fabrik.status === "rejected") console.warn("Application submission failed.", fabrik.reason);
+  // Either system holding the application counts: the CRM alone still reaches the team when Fabrik is down or
+  // does not know the role yet. Only Fabrik issues a reference number.
   if (fabrik.status === "fulfilled") showSuccess(ctx, fabrik.value.reference);
-  else {
-    console.warn("Application submission failed.", fabrik.reason);
-    showFailure(ctx.ui);
-  }
+  else if (crm.status === "fulfilled" && crm.value) showSuccess(ctx, "");
+  else showFailure(ctx.ui);
 }
 
 function handleSubmit(event, ctx) {
