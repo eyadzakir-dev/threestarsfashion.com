@@ -33,6 +33,8 @@ const T = IS_AR ? {
   emailBad: "اكتب بريدًا إلكترونيًا صحيحًا، مثل name@example.com.",
   phoneMissing: "اكتب رقم هاتفك.",
   phoneBad: "اكتب رقم هاتف صحيحًا، مثل 01000000000.",
+  roleMissing: "اكتب الوظيفة التي تتقدم لها.",
+  cvMissing: "أرفق سيرتك الذاتية، PDF أو Word.",
   fileType: (name) => `الملف ${name} ليس ملف PDF أو Word.`,
   fileEmpty: (name) => `الملف ${name} فارغ.`,
   fileBig: (name) => `الملف ${name} أكبر من ${MAX_CV_MB} ميجابايت.`,
@@ -59,6 +61,8 @@ const T = IS_AR ? {
   emailBad: "Enter a valid email address, like name@example.com.",
   phoneMissing: "Enter your phone number.",
   phoneBad: "Enter a valid phone number, like +20 100 000 0000.",
+  roleMissing: "Enter the role you're applying for.",
+  cvMissing: "Attach your CV, as a PDF or Word file.",
   fileType: (name) => `${name} isn't a PDF or Word file.`,
   fileEmpty: (name) => `${name} is empty.`,
   fileBig: (name) => `${name} is larger than ${MAX_CV_MB} MB.`,
@@ -109,7 +113,11 @@ function getPhoneError(field) {
   return "";
 }
 
-const VALIDATORS = { name: getNameError, email: getEmailError, phone: getPhoneError };
+function getRoleTitleError(field) {
+  return field.value.trim() ? "" : T.roleMissing;
+}
+
+const VALIDATORS = { name: getNameError, email: getEmailError, phone: getPhoneError, role_title: getRoleTitleError };
 
 function setFieldError(field, message) {
   document.getElementById(`${field.id}-err`).textContent = message;
@@ -301,9 +309,8 @@ function trimField(value) {
 
 function buildCrmPayload(ctx) {
   const { fields } = ctx.ui;
-  // Careers index (general apply) uses a <select name="role">; role pages use a hidden input + data-role-title.
-  const role = fields.role;
-  const careerRole = role?.tagName === "SELECT" ? trimField(role.value) : trimField(role?.value);
+  // Every form sends its role slug in a hidden input: a role page's slug, or "general" on the careers index.
+  const careerRole = trimField(fields.role?.value);
   const roleTitle = getRoleLabel(ctx.ui);
   const payload = {
     formType: CRM_FORM_TYPE,
@@ -358,13 +365,10 @@ function showFailure(ui) {
 
 const getFirstName = (name) => name.trim().split(/\s+/)[0];
 
+// Role pages carry their title on the form; the general application on /careers/ (and AR) asks for it in free text.
 function getRoleLabel(ui) {
-  const { role } = ui.fields;
-  if (role?.tagName === "SELECT") {
-    // General application on /careers/ (and AR) — keep CRM roleTitle short and language-local.
-    if (trimField(role.value) === "general") return T.general;
-    return role.selectedOptions[0].textContent.replace(/^R\/\d+ · /, "").trim();
-  }
+  const typed = ui.fields.role_title;
+  if (typed) return trimField(typed.value) || T.general;
   return ui.form.dataset.roleTitle || T.general;
 }
 
@@ -424,14 +428,23 @@ async function submitApplication(ctx) {
   else showFailure(ctx.ui);
 }
 
+// Every application carries a CV. The dropzone's error line says so until one is attached.
+function validateCv(ctx) {
+  if (ctx.cv) return true;
+  ctx.ui.fileError.textContent = T.cvMissing;
+  return false;
+}
+
 function handleSubmit(event, ctx) {
   event.preventDefault();
   if (ctx.isSending) return;
   setStatus(ctx.ui, [], false);
   const invalid = ctx.ui.validated.filter((field) => !validateField(field));
-  if (invalid.length) {
+  const hasCv = validateCv(ctx);
+  if (invalid.length || !hasCv) {
     setStatus(ctx.ui, [T.invalid], true);
-    focusField(invalid[0]);
+    if (invalid.length) focusField(invalid[0]);
+    else focusField(ctx.ui.picker);
     return;
   }
   if (ctx.ui.fields.website.value) showSuccess(ctx, "");
@@ -455,13 +468,13 @@ function initEntrance(form) {
 /* ---------- Init ---------- */
 
 function getUi(form) {
-  const names = ["name", "email", "phone", "role", "website"];
+  const names = ["name", "email", "phone", "role", "role_title", "website"];
   const fields = Object.fromEntries(names.map((name) => [name, form.elements.namedItem(name)]));
   const doneRoot = form.parentElement.querySelector("[data-apply-done]");
   return {
     form,
     fields,
-    validated: [fields.name, fields.email, fields.phone],
+    validated: [fields.name, fields.email, fields.phone, fields.role_title].filter(Boolean),
     zone: form.querySelector("[data-dropzone]"),
     picker: form.querySelector("[data-file-picker]"),
     fileList: form.querySelector("[data-file-list]"),

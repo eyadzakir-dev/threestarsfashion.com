@@ -242,12 +242,9 @@
             <p class="aform__lead">لكل وظيفة صفحة خاصة بها فيها الوصف الكامل. يمكنك التقديم من هناك أو من هنا.</p>
             <ol class="brief">
               <li><span class="brief__no mono">A/01</span><b>بيانات التواصل</b><span class="brief__ex">الاسم بالكامل والبريد الإلكتروني ورقم هاتف يمكننا التواصل معك عليه، ويشمل ذلك واتساب</span></li>
-              <li><span class="brief__no mono">A/02</span><b>الوظيفة</b><span class="brief__ex">اختر واحدة من 7 وظائف متاحة، أو اتركه طلبًا عامًا</span></li>
+              <li><span class="brief__no mono">A/02</span><b>الوظيفة</b><span class="brief__ex">الوظيفة التي تريدها، بكلماتك</span></li>
               <li><span class="brief__no mono">A/03</span><b>سيرتك الذاتية</b><span class="brief__ex">PDF أو Word حتى 10 ميجابايت، بالعربية أو الإنجليزية</span></li>
             </ol>
-            <div class="inq__acts">
-              <a class="btn btn--line" href="mailto:info@tsf.com.eg?subject=%D8%B7%D9%84%D8%A8%20%D8%AA%D9%88%D8%B8%D9%8A%D9%81">أرسل سيرتك بالبريد بدلًا من ذلك <span aria-hidden="true">←</span></a>
-            </div>
           </div>
           <div class="inq__form">
             <form class="iform aform" data-apply-form data-endpoint="https://book.threestarsfashion.com/api/website/careers/applications" data-crm-endpoint="https://crm.tsf.com.eg/webhooks/workflows/eec9892d-af45-4f77-9db2-abc12f6e0dbd/aca7580c-63f5-4668-bb5d-9269abba5f6c" data-crm-api-key="eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImZkMDU2MTg2LWQ5N2MtNDZmYi05OWQ0LTBiNGYyOGNlZDcyZCJ9.eyJzdWIiOiJlZWM5ODkyZC1hZjQ1LTRmNzctOWRiMi1hYmMxMmY2ZTBkYmQiLCJ0eXBlIjoiQVBJX0tFWSIsIndvcmtzcGFjZUlkIjoiZWVjOTg5MmQtYWY0NS00Zjc3LTlkYjItYWJjMTJmNmUwZGJkIiwiaWF0IjoxNzkyOTU2MTU2LCJleHAiOjQ5NDY1NTYxNTUsImp0aSI6IjAxNzUxNTVlLTJhNDItNDllMi1hZGU2LWJkYTAzZjc4NGE4MCJ9.SYPGk5nQTJ-3fR71QkAtJ-9wYleAvDF8-o5csXP7FVHsQTzl3Bhx_igIZ2pPyVIw0hwoH84-Tap7XekC7JCQsw" method="post" enctype="multipart/form-data" novalidate aria-label="طلب عام">
@@ -273,23 +270,15 @@
                     <p class="iform__err" id="aform-phone-err"></p>
                   </div>
                   <div class="iform__field iform__field--full">
-                    <label class="iform__label" for="aform-role">الوظيفة <span class="iform__opt mono">اختياري</span></label>
-                    <select class="iform__input iform__select" id="aform-role" name="role">
-                      <option value="general" selected>طلب عام · أي وظيفة</option>
-                      <option value="finance-accounting-manager">R/01 · مدير الحسابات والشؤون المالية</option>
-                      <option value="apparel-production-merchandiser">R/02 · مسؤول تسويق وتنفيذ طلبيات الملابس (Merchandiser)</option>
-                      <option value="export-logistics-shipping-specialist">R/03 · أخصائي شحن ولوجستيات تصدير</option>
-                      <option value="factory-human-resources-officer">R/04 · مسؤول موارد بشرية وشؤون عاملين (مصانع)</option>
-                      <option value="industrial-cost-financial-accountant">R/05 · محاسب تكاليف ومالية صناعية</option>
-                      <option value="quality-assurance-manager">R/06 · مدير توكيد ومراقبة الجودة (QA/QC)</option>
-                      <option value="garment-production-manager">R/07 · مدير إنتاج مصنع ملابس جاهزة</option>
-                    </select>
+                    <label class="iform__label" for="aform-role">الوظيفة <span class="iform__req" aria-hidden="true">*</span></label>
+                    <input class="iform__input" id="aform-role" name="role_title" type="text" required maxlength="160" placeholder="مشرف خط خياطة" aria-describedby="aform-role-err">
+                    <p class="iform__err" id="aform-role-err"></p>
                   </div>
                 </div>
               </fieldset>
 
               <fieldset class="iform__set" style="--i:8">
-                <legend class="iform__legend"><span class="iform__no mono" aria-hidden="true">02</span><span class="iform__title">السيرة الذاتية</span><span class="iform__tag mono">اختياري</span></legend>
+                <legend class="iform__legend"><span class="iform__no mono" aria-hidden="true">02</span><span class="iform__title">السيرة الذاتية</span><span class="iform__tag mono">مطلوبة</span></legend>
                 <div class="iform__grid">
                   <div class="iform__field iform__field--full">
                     <p class="iform__label sr-only" id="aform-cv-label">السيرة الذاتية</p>
@@ -307,6 +296,7 @@
                 </div>
               </fieldset>
               <div class="iform__hp" aria-hidden="true"><label>Website <input name="website" type="text" tabindex="-1" autocomplete="off"></label></div>
+              <input type="hidden" name="role" value="general">
               <input type="hidden" name="origin" value="tsf-careers">
               <input type="hidden" name="lang" value="ar">
 
