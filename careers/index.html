@@ -242,12 +242,9 @@
             <p class="aform__lead">Each role has its own page with the full description. You can apply from there, or here.</p>
             <ol class="brief">
               <li><span class="brief__no mono">A/01</span><b>Your contact details</b><span class="brief__ex">Full name, email, and a phone number where we can reach you, WhatsApp included</span></li>
-              <li><span class="brief__no mono">A/02</span><b>The role</b><span class="brief__ex">Pick one of the 07 open roles, or leave it as a general application</span></li>
+              <li><span class="brief__no mono">A/02</span><b>The role</b><span class="brief__ex">The job you want, in your own words</span></li>
               <li><span class="brief__no mono">A/03</span><b>Your CV</b><span class="brief__ex">PDF or Word, up to 10&nbsp;MB, in English or Arabic</span></li>
             </ol>
-            <div class="inq__acts">
-              <a class="btn btn--line" href="mailto:info@tsf.com.eg?subject=Job%20application">Email your CV instead <span aria-hidden="true">→</span></a>
-            </div>
           </div>
           <div class="inq__form">
             <form class="iform aform" data-apply-form data-endpoint="https://book.threestarsfashion.com/api/website/careers/applications" data-crm-endpoint="https://crm.tsf.com.eg/webhooks/workflows/eec9892d-af45-4f77-9db2-abc12f6e0dbd/aca7580c-63f5-4668-bb5d-9269abba5f6c" data-crm-api-key="eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImZkMDU2MTg2LWQ5N2MtNDZmYi05OWQ0LTBiNGYyOGNlZDcyZCJ9.eyJzdWIiOiJlZWM5ODkyZC1hZjQ1LTRmNzctOWRiMi1hYmMxMmY2ZTBkYmQiLCJ0eXBlIjoiQVBJX0tFWSIsIndvcmtzcGFjZUlkIjoiZWVjOTg5MmQtYWY0NS00Zjc3LTlkYjItYWJjMTJmNmUwZGJkIiwiaWF0IjoxNzkyOTU2MTU2LCJleHAiOjQ5NDY1NTYxNTUsImp0aSI6IjAxNzUxNTVlLTJhNDItNDllMi1hZGU2LWJkYTAzZjc4NGE4MCJ9.SYPGk5nQTJ-3fR71QkAtJ-9wYleAvDF8-o5csXP7FVHsQTzl3Bhx_igIZ2pPyVIw0hwoH84-Tap7XekC7JCQsw" method="post" enctype="multipart/form-data" novalidate aria-label="General application">
@@ -273,23 +270,15 @@
                     <p class="iform__err" id="aform-phone-err"></p>
                   </div>
                   <div class="iform__field iform__field--full">
-                    <label class="iform__label" for="aform-role">Role <span class="iform__opt mono">Optional</span></label>
-                    <select class="iform__input iform__select" id="aform-role" name="role">
-                      <option value="general" selected>General application · any role</option>
-                      <option value="finance-accounting-manager">R/01 · Finance &amp; Accounting Manager</option>
-                      <option value="apparel-production-merchandiser">R/02 · Apparel Production Merchandiser</option>
-                      <option value="export-logistics-shipping-specialist">R/03 · Export Logistics &amp; Shipping Specialist</option>
-                      <option value="factory-human-resources-officer">R/04 · Factory Human Resources Officer</option>
-                      <option value="industrial-cost-financial-accountant">R/05 · Industrial Cost &amp; Financial Accountant</option>
-                      <option value="quality-assurance-manager">R/06 · Quality Assurance (QA/QC) Manager</option>
-                      <option value="garment-production-manager">R/07 · Garment Production Manager</option>
-                    </select>
+                    <label class="iform__label" for="aform-role">Role <span class="iform__req" aria-hidden="true">*</span></label>
+                    <input class="iform__input" id="aform-role" name="role_title" type="text" required maxlength="160" placeholder="Sewing line supervisor" aria-describedby="aform-role-err">
+                    <p class="iform__err" id="aform-role-err"></p>
                   </div>
                 </div>
               </fieldset>
 
               <fieldset class="iform__set" style="--i:8">
-                <legend class="iform__legend"><span class="iform__no mono" aria-hidden="true">02</span><span class="iform__title">CV / résumé</span><span class="iform__tag mono">Optional</span></legend>
+                <legend class="iform__legend"><span class="iform__no mono" aria-hidden="true">02</span><span class="iform__title">CV / résumé</span><span class="iform__tag mono">Required</span></legend>
                 <div class="iform__grid">
                   <div class="iform__field iform__field--full">
                     <p class="iform__label sr-only" id="aform-cv-label">CV or résumé</p>
@@ -307,6 +296,7 @@
                 </div>
               </fieldset>
               <div class="iform__hp" aria-hidden="true"><label>Website <input name="website" type="text" tabindex="-1" autocomplete="off"></label></div>
+              <input type="hidden" name="role" value="general">
               <input type="hidden" name="origin" value="tsf-careers">
               <input type="hidden" name="lang" value="en">
 
