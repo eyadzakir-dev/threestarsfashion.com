@@ -3,6 +3,7 @@
 // points the form at a local Fabrik; with no endpoint at all, a local preview simulates a successful send.
 // CRM: parallel webhook (no files) or Twenty-native upload + Attachment (with CV) via data-crm-api-key.
 
+import { BOT_CHECK_FIELD, createBotCheck } from "./bot-check.js";
 import { getCrmConfig, submitToTwentyCrm } from "./twenty-crm.js";
 
 const BYTES_PER_KB = 1024;
@@ -413,6 +414,8 @@ function resetApplication(ctx) {
 async function submitApplication(ctx) {
   const body = buildBody(ctx);
   setSending(ctx, true);
+  const answer = await ctx.botCheck.take();
+  if (answer) body.set(BOT_CHECK_FIELD, answer);
   // Fabrik ERP + Twenty CRM stay parallel. CV bytes go to Twenty storage independently of Fabrik.
   const [fabrik, crm] = await Promise.allSettled([
     sendApplication(ctx.ui.form, body),
@@ -498,6 +501,7 @@ function initApplicationForm() {
   const form = document.querySelector("[data-apply-form]");
   if (!form) return;
   const ctx = { ui: getUi(form), cv: null, isSending: false };
+  ctx.botCheck = createBotCheck(form, () => getEndpoint(form));
   bindRevalidation(ctx.ui);
   bindCv(ctx);
   initEntrance(form);

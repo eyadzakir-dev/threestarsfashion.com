@@ -1,6 +1,7 @@
 // Contact page inquiry form: inline validation, multi-file attachments with drag and drop, multipart submit.
 // CRM: parallel webhook (no files) or Twenty-native upload + Attachment (with files) via data-crm-api-key.
 
+import { BOT_CHECK_FIELD, createBotCheck } from "./bot-check.js";
 import { getCrmConfig, submitToTwentyCrm } from "./twenty-crm.js";
 
 const MAX_FILES = 10;
@@ -451,6 +452,8 @@ function resetInquiry(ctx) {
 async function submitInquiry(ctx) {
   const body = buildBody(ctx);
   setSending(ctx, true);
+  const answer = await ctx.botCheck.take();
+  if (answer) body.set(BOT_CHECK_FIELD, answer);
   // Fabrik ERP + Twenty CRM stay parallel. File bytes go to Twenty storage independently of Fabrik.
   const [fabrik, crm] = await Promise.allSettled([
     sendInquiry(ctx.ui.form, body),
@@ -529,6 +532,7 @@ function initInquiryForm() {
   const form = document.querySelector("[data-inquiry-form]");
   if (!form) return;
   const ctx = { ui: getUi(form), files: [], isSending: false };
+  ctx.botCheck = createBotCheck(form, () => (form.dataset.endpoint || "").trim());
   syncMarketOther(ctx.ui);
   ctx.ui.fields.market.addEventListener("change", () => syncMarketOther(ctx.ui));
   bindRevalidation(ctx.ui);
