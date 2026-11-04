@@ -1,7 +1,7 @@
 // Contact page inquiry form: inline validation, multi-file attachments with drag and drop, multipart submit.
-// CRM: parallel webhook (no files) or Twenty-native upload + Attachment (with files) via data-crm-api-key.
+// Fabrik stores it and copies it to the Twenty CRM from its server; the page never talks to the CRM.
 
-import { getCrmConfig, submitToTwentyCrm } from "./twenty-crm.js";
+import { BOT_CHECK_FIELD, createBotCheck } from "./bot-check.js";
 
 const MAX_FILES = 10;
 const BYTES_PER_KB = 1024;
@@ -19,9 +19,6 @@ const CONTACT_EMAIL = "info@tsf.com.eg";
 const EMAIL_DOMAIN_PATTERN = /@[^@\s]+\.[^@\s.]+$/;
 const COUNT_FORMAT = new Intl.NumberFormat("en-US");
 const IS_AR = document.documentElement.lang === "ar";
-const CRM_FORM_TYPE = "TSF_INQUIRY";
-const CRM_SOURCE_SITE = "THREE_STARS_FASHION";
-const CRM_SOURCE_LOGO = "https://threestarsfashion.com/assets/Brands/tsflogo.png";
 
 const pad2 = (n) => String(n).padStart(2, "0");
 // Keeps a Latin file name in one piece inside Arabic text.
@@ -323,47 +320,6 @@ function sendInquiry(form, body) {
   return Promise.reject(new Error("Inquiry endpoint is not configured."));
 }
 
-function trimField(value) {
-  return typeof value === "string" ? value.trim() : "";
-}
-
-function buildCrmPayload(ctx) {
-  const { fields, marketOther } = ctx.ui;
-  const market = fields.market.value === OTHER_MARKET
-    ? trimField(marketOther.value) || OTHER_MARKET
-    : trimField(fields.market.selectedOptions[0]?.textContent || fields.market.value);
-  const payload = {
-    formType: CRM_FORM_TYPE,
-    sourceSite: CRM_SOURCE_SITE,
-    name: trimField(fields.name.value),
-    email: trimField(fields.email.value),
-    sourceLogoUrl: CRM_SOURCE_LOGO,
-    sourcePageUrl: location.href.split("#")[0],
-    submittedAt: new Date().toISOString(),
-  };
-  const company = trimField(ctx.ui.form.elements.namedItem("company")?.value);
-  const phone = trimField(ctx.ui.form.elements.namedItem("phone")?.value);
-  const product = trimField(fields.product.value);
-  const quantity = trimField(fields.quantity.value);
-  const message = trimField(fields.message.value);
-  if (company) payload.company = company;
-  if (phone) payload.phone = phone;
-  if (product) payload.product = product;
-  if (quantity) payload.quantity = quantity;
-  if (market) payload.market = market;
-  if (message) payload.message = message;
-  return payload;
-}
-
-function sendCrm(ctx) {
-  const cfg = getCrmConfig(ctx.ui.form);
-  if (!cfg.webhook && !cfg.apiKey) return Promise.resolve(null);
-  return submitToTwentyCrm(ctx.ui.form, {
-    payload: buildCrmPayload(ctx),
-    files: ctx.files,
-  });
-}
-
 function setStatus(ui, content, isError) {
   ui.status.replaceChildren(...content);
   ui.status.classList.toggle("is-error", isError);
@@ -451,16 +407,15 @@ function resetInquiry(ctx) {
 async function submitInquiry(ctx) {
   const body = buildBody(ctx);
   setSending(ctx, true);
-  // Fabrik ERP + Twenty CRM stay parallel. File bytes go to Twenty storage independently of Fabrik.
-  const [fabrik, crm] = await Promise.allSettled([
-    sendInquiry(ctx.ui.form, body),
-    sendCrm(ctx),
-  ]);
-  setSending(ctx, false);
-  if (crm.status === "rejected") console.warn("CRM inquiry submission failed.", crm.reason);
-  if (fabrik.status === "fulfilled") showSuccess(ctx, fabrik.value.reference);
-  else {
-    console.warn("Inquiry submission failed.", fabrik.reason);
+  const answer = await ctx.botCheck.take();
+  if (answer) body.set(BOT_CHECK_FIELD, answer);
+  try {
+    const { reference } = await sendInquiry(ctx.ui.form, body);
+    setSending(ctx, false);
+    showSuccess(ctx, reference);
+  } catch (error) {
+    setSending(ctx, false);
+    console.warn("Inquiry submission failed.", error);
     showFailure(ctx.ui);
   }
 }
@@ -529,6 +484,7 @@ function initInquiryForm() {
   const form = document.querySelector("[data-inquiry-form]");
   if (!form) return;
   const ctx = { ui: getUi(form), files: [], isSending: false };
+  ctx.botCheck = createBotCheck(form, () => (form.dataset.endpoint || "").trim());
   syncMarketOther(ctx.ui);
   ctx.ui.fields.market.addEventListener("change", () => syncMarketOther(ctx.ui));
   bindRevalidation(ctx.ui);
