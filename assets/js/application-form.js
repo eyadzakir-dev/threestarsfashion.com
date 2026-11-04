@@ -1,10 +1,9 @@
 // Careers application form: inline validation, one CV with drag and drop, multipart submit.
 // Posts to Fabrik's careers intake (data-endpoint). On a local preview, ?endpoint=http://localhost:3000/api/website/careers/applications
 // points the form at a local Fabrik; with no endpoint at all, a local preview simulates a successful send.
-// CRM: parallel webhook (no files) or Twenty-native upload + Attachment (with CV) via data-crm-api-key.
+// Fabrik stores it and copies it to the Twenty CRM from its server; the page never talks to the CRM.
 
 import { BOT_CHECK_FIELD, createBotCheck } from "./bot-check.js";
-import { getCrmConfig, submitToTwentyCrm } from "./twenty-crm.js";
 
 const BYTES_PER_KB = 1024;
 const BYTES_PER_MB = 1024 * 1024;
@@ -19,9 +18,6 @@ const PREVIEW_HOST_PATTERN = /^(localhost|127\.0\.0\.1|\[::1\]|.+\.local|192\.16
 const LOCAL_ENDPOINT_PATTERN = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?\//;
 const CONTACT_EMAIL = "info@tsf.com.eg";
 const IS_AR = document.documentElement.lang === "ar";
-const CRM_FORM_TYPE = "TSF_CAREER";
-const CRM_SOURCE_SITE = "THREE_STARS_FASHION";
-const CRM_SOURCE_LOGO = "https://threestarsfashion.com/assets/Brands/tsflogo.png";
 
 // Visitor-facing text in the page's language. Data sent to the intake (role slugs, field names) stays in English.
 const T = IS_AR ? {
@@ -308,39 +304,6 @@ function trimField(value) {
   return typeof value === "string" ? value.trim() : "";
 }
 
-function buildCrmPayload(ctx) {
-  const { fields } = ctx.ui;
-  // Every form sends its role slug in a hidden input: a role page's slug, or "general" on the careers index.
-  const careerRole = trimField(fields.role?.value);
-  const roleTitle = getRoleLabel(ctx.ui);
-  const payload = {
-    formType: CRM_FORM_TYPE,
-    sourceSite: CRM_SOURCE_SITE,
-    name: trimField(fields.name.value),
-    email: trimField(fields.email.value),
-    sourceLogoUrl: CRM_SOURCE_LOGO,
-    sourcePageUrl: location.href.split("#")[0],
-    submittedAt: new Date().toISOString(),
-  };
-  const phone = trimField(fields.phone.value);
-  const message = trimField(ctx.ui.form.elements.namedItem("message")?.value);
-  if (phone) payload.phone = phone;
-  if (careerRole) payload.careerRole = careerRole;
-  if (roleTitle) payload.roleTitle = roleTitle;
-  // Message = user text only. CV bytes go to Twenty storage when data-crm-api-key is set.
-  if (message) payload.message = message;
-  return payload;
-}
-
-function sendCrm(ctx) {
-  const cfg = getCrmConfig(ctx.ui.form);
-  if (!cfg.webhook && !cfg.apiKey) return Promise.resolve(null);
-  return submitToTwentyCrm(ctx.ui.form, {
-    payload: buildCrmPayload(ctx),
-    files: ctx.cv ? [ctx.cv] : [],
-  });
-}
-
 function setStatus(ui, content, isError) {
   ui.status.replaceChildren(...content);
   ui.status.classList.toggle("is-error", isError);
@@ -416,19 +379,15 @@ async function submitApplication(ctx) {
   setSending(ctx, true);
   const answer = await ctx.botCheck.take();
   if (answer) body.set(BOT_CHECK_FIELD, answer);
-  // Fabrik ERP + Twenty CRM stay parallel. CV bytes go to Twenty storage independently of Fabrik.
-  const [fabrik, crm] = await Promise.allSettled([
-    sendApplication(ctx.ui.form, body),
-    sendCrm(ctx),
-  ]);
-  setSending(ctx, false);
-  if (crm.status === "rejected") console.warn("CRM application submission failed.", crm.reason);
-  if (fabrik.status === "rejected") console.warn("Application submission failed.", fabrik.reason);
-  // Either system holding the application counts: the CRM alone still reaches the team when Fabrik is down or
-  // does not know the role yet. Only Fabrik issues a reference number.
-  if (fabrik.status === "fulfilled") showSuccess(ctx, fabrik.value.reference);
-  else if (crm.status === "fulfilled" && crm.value) showSuccess(ctx, "");
-  else showFailure(ctx.ui);
+  try {
+    const { reference } = await sendApplication(ctx.ui.form, body);
+    setSending(ctx, false);
+    showSuccess(ctx, reference);
+  } catch (error) {
+    setSending(ctx, false);
+    console.warn("Application submission failed.", error);
+    showFailure(ctx.ui);
+  }
 }
 
 // Every application carries a CV. The dropzone's error line says so until one is attached.
