@@ -82,20 +82,6 @@
   border-top: 1px solid var(--rule);
   color: var(--ink-2);
 }
-.reach__copy {
-  position: relative;
-  z-index: 1;
-  min-width: 72px;
-  min-height: 40px;
-  padding: 8px 12px;
-  border: 1.5px solid var(--ink);
-  background: var(--paper-hi);
-  color: var(--ink);
-  cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
-}
-.reach__copy:hover { background: var(--ink); color: var(--paper); }
-.reach__copy.is-done { background: var(--ink); color: var(--paper); }
 
 .reach__tel {
   display: flex;
@@ -115,6 +101,9 @@
 }
 .reach__tel:hover span:first-child { background-size: 100% 2px; }
 .reach__tel:hover .mono { color: var(--red-ink); }
+/* Email rows: addresses are longer than phone numbers, so they run smaller and let the label wrap. */
+.reach__mail { flex-wrap: wrap; row-gap: 2px; }
+.reach__mail span:first-child { min-width: 0; font-size: clamp(18px, 1.5vw, 22px); overflow-wrap: anywhere; }
 
 /* Primary channel: the whole red cell is one link. */
 .reach__item--main { padding: 0; background: var(--red); color: #fff; }
