@@ -15,7 +15,7 @@ const OTHER_MARKET = "other";
 const REQUEST_TIMEOUT_MS = 120000;
 const PREVIEW_DELAY_MS = 800;
 const PREVIEW_HOSTS = new Set(["localhost", "127.0.0.1"]);
-const CONTACT_EMAIL = "info@tsf.com.eg";
+const CONTACT_EMAIL = "inquiries@tsf.com.eg";
 const EMAIL_DOMAIN_PATTERN = /@[^@\s]+\.[^@\s.]+$/;
 const COUNT_FORMAT = new Intl.NumberFormat("en-US");
 const IS_AR = document.documentElement.lang === "ar";
