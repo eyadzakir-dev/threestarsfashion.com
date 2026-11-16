@@ -282,8 +282,26 @@ button { font: inherit; color: inherit; }
 @media (max-width: 760px) {
   .hdr__careers { display: none; }
 }
+/* Wide headers spell the inquiry button and language switch out; phones use the short labels. */
+.hdr__short { display: none; }
 @media (max-width: 520px) {
-  .hdr__cta, .hdr__social { display: none; }
+  .hdr__social { display: none; }
+  .hdr__in { gap: 8px; }
+  .hdr__long { display: none; }
+  .hdr__short { display: inline; }
+  /* The inquiry button stays on every phone; each control keeps a 44px tap target. */
+  .hdr__cta { min-height: 44px; padding: 0 12px; }
+  .hdr__lang { width: 44px; height: 44px; min-width: 0; padding: 0; font-size: 15px; }
+  .hdr__lang:lang(ar) { font-size: 20px; }
+  .menu__btn { display: flex; align-items: center; min-height: 44px; padding: 0 10px; }
+  .hdr__word { white-space: nowrap; }
+}
+@media (max-width: 400px) {
+  .hdr__word { font-size: 13px; }
+}
+/* The narrowest phones keep the star mark only, so the inquiry button never has to leave. */
+@media (max-width: 359px) {
+  .hdr__word { display: none; }
 }
 
 /* ---------- Section scaffolding ---------- */
