@@ -1,7 +1,7 @@
 // Careers application form: inline validation, one CV with drag and drop, multipart submit.
-// Posts to Fabrik's careers intake (data-endpoint). On a local preview, ?endpoint=http://localhost:3000/api/website/careers/applications
-// points the form at a local Fabrik; with no endpoint at all, a local preview simulates a successful send.
-// Fabrik stores it and copies it to the Twenty CRM from its server; the page never talks to the CRM.
+// Posts to the Polaris HR careers intake (data-endpoint), which stores the application and CV for the HR team.
+// On a local preview, ?endpoint=http://localhost:3000/api/website/careers/applications points the form at a local
+// Polaris; with no endpoint at all, a local preview simulates a successful send.
 
 import { BOT_CHECK_FIELD, createBotCheck } from "./bot-check.js";
 
@@ -284,7 +284,7 @@ function previewApplication(body) {
   });
 }
 
-// A local preview may point the form at a local Fabrik with ?endpoint=; the live site always uses data-endpoint.
+// A local preview may point the form at a local Polaris with ?endpoint=; the live site always uses data-endpoint.
 function getEndpoint(form) {
   if (PREVIEW_HOST_PATTERN.test(location.hostname)) {
     const override = new URLSearchParams(location.search).get("endpoint");

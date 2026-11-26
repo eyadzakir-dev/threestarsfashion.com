@@ -1,4 +1,4 @@
-// Bot check for the forms that post to Fabrik: an ALTCHA-style proof of work (open protocol, altcha.org).
+// Bot check for the forms that post to Fabrik (contact) and Polaris HR (careers): an ALTCHA-style proof of work (open protocol, altcha.org).
 // Fabrik hands out a signed challenge (GET /api/website/challenge on the form's endpoint host); the browser finds the
 // number whose SHA-256 matches it and posts the answer as the "altcha" field. Nothing to click and no third party.
 // Solving starts the first time the visitor touches the form, so it is done long before Submit.
